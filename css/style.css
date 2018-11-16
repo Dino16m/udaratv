@@ -1,0 +1,90 @@
+html,body {
+    height: 100%;
+    width: 100%;
+}
+nav.navbar {
+    background-color: #000;
+}
+.footer-copyright{
+    background-color: #0d0e11;
+}
+.page-footer{
+    background-color: #13151a;
+    
+}
+ul.li{
+    color: #fff;
+}
+
+
+.padding {
+    padding-top: 1rem;
+}
+
+.label{
+    font-family: sans-serif;
+    font-weight: bold;
+}
+ .guru a:hover,a:hover{
+    color: darkorange;
+    
+}
+
+
+.empty1{
+    height: 990px;
+}
+
+.underline{
+     border: 1px solid #d5d5d5;
+}
+
+
+
+
+
+
+
+
+
+.guru a{
+    color: #5cb85c;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.social a {
+    font-size: 4em;
+    padding: 1.5rem;
+}
+.fa-facebook {
+    color: #3b5598;
+}
+.fa-twitter {
+    color: #00aced;
+}
+
+
+
+footer {
+    
+}
+
+hr.light {
+    border-top: 1px solid #d5d5d5;
+}
+
+.footerlink,.whiteline,footer a,.small{
+    color: #a1a1a1;
+}
