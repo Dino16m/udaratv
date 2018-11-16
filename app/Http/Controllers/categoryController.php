@@ -53,17 +53,19 @@ class categoryController extends Controller
         {
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
-        $seasons = [];
-        foreach($models as $model)
+        return view('series_index')->with(['seasons'=>$models]);
+       
+    }
+    public function getEpisodeIndex($Type, $Name, $Season)
+    {
+        $models = $this->getSeasonsEpisode($Type, $Name, $season);
+        $name = Validator::sanitize($Name);
+        $season = Validator::sanitize($Season);
+        if (!$models)
         {
-            $seasons[$model->season_name]=
-            [
-                'name'=>$name,
-                'season'=>$model->season_name,
-                'id' => $model->id,
-                'link'=> url('/series/seasons/'.$model->id)
-            ];
-        }
+            return view('movie_not_found')->with(['movie_name'=> $name.'_'.$season]);
+        } 
+        return view('episode_index')->with(['episodes'=>$models]);
     }
 
     public function getCatIndex($Type, Request $request)
@@ -86,7 +88,7 @@ class categoryController extends Controller
             [
                 'name'=>$model->name,
                 'link'=>$this->baseMovieUrl().$type.$this::slash.$saneModelName,
-                'paginator'=> $models->links() 
+                'paginator'=> $models
             ];
 
         }
@@ -103,9 +105,24 @@ class categoryController extends Controller
         {
            return false;
         }
-        $model = allmovies::where('name', $name)->where('type', $type)->first();
-        $qualities = $model->quality()->get();
+        $qualities = allmovies::where('name', $name)->where('type', $type)->first()->quality()->get();
+        $qualities->withPath('movies/'.$name);
         return $qualities;
+    }
+
+    private function getSeasonsList($Type, $Name)
+    {
+       $Name = Validator::sanitize($Name);
+       $name = preg_replace('_', ' ', strtolower($Name));
+       $Type = Validator::sanitize($Type);
+       $type = strtolower($Type);
+       if(!Constants::inSeries($type))
+       {
+        return false;
+       }
+       $Seasons = series::where('name', $name)->where('type', $type)->seasons()->paginate(10);
+       $Seasons->withPath('series/'.$name);
+       return $Seasons;
     }
 
     private function getHomeCat()
