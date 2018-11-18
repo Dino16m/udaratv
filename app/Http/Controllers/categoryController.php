@@ -22,8 +22,39 @@ class categoryController extends Controller
     public function index()
     {
         $recents= $this::getHomeCat();
+        if(!$recents)
+        {
+            abort(404);
+        }
         return view('category_home')->with($recents);
     }
+      public function getCatIndex($Type, Request $request)
+    {
+        //category e.g movies starting with a, b or c will have category abc
+        $category = $request->get('cat');
+        if(!$this->validateRouteParameter($Type, 'routeParam') || !$this->validateRouteParameter($category, 'getParam')){
+            return back();
+        }
+        $type=strtolower($Type);
+        $models = $this::getCategoryModels($type, $category);
+        if(!$models)
+            { 
+                return back(); 
+            }
+        $categoryArray=[];
+        foreach ($models as  $model) {
+            $saneModelName= preg_replace('/\s+/', '_', $model->name);
+            $categoryArray[$model->name]=
+            [
+                'name'=>$model->name,
+                'link'=>$this->baseMovieUrl().$type.$this::slash.$saneModelName,
+                'paginator'=> $models
+            ];
+
+        }
+        return view('categories')->with($categoryArray);
+    }
+
 
     public function getMovieIndex($Type, $Name)
     {
@@ -45,7 +76,7 @@ class categoryController extends Controller
         }
         return view('movie_index')->with($qualityArray);
     }
-    public function getSeriesIndex($Type, $Name)
+    public function getSeasonsIndex($Type, $Name)
     {
         $models = $this->getSeasonsList($Type, $Name);
         $name = Validator::sanitize($Name);
@@ -56,9 +87,9 @@ class categoryController extends Controller
         return view('series_index')->with(['seasons'=>$models]);
        
     }
-    public function getEpisodeIndex($Type, $Name, $Season)
+    public function getEpisodesIndex($seasonId, $Name, $Season)
     {
-        $models = $this->getSeasonsEpisode($Type, $Name, $season);
+        $models = $this->getSeasonEpisodes($seasonId, $Name, $season);
         $name = Validator::sanitize($Name);
         $season = Validator::sanitize($Season);
         if (!$models)
@@ -67,34 +98,14 @@ class categoryController extends Controller
         } 
         return view('episode_index')->with(['episodes'=>$models]);
     }
-
-    public function getCatIndex($Type, Request $request)
+    public function getEpisode($Id)
     {
-        //category e.g movies starting with a, b or c will have category abc
-        $category = $request->get('cat');
-        if(!$this->validateRouteParameter($Type, 'routeParam') || !$this->validateRouteParameter($category, 'getParam')){
-            return back();
-        }
-        $type=strtolower($Type);
-        $models = $this::getType($type, $category);
-        if(!$models)
-            { 
-                return back(); 
-            }
-        $categoryArray=[];
-        foreach ($models as  $model) {
-            $saneModelName= preg_replace('/\s+/', '_', $model->name);
-            $categoryArray[$model->name]=
-            [
-                'name'=>$model->name,
-                'link'=>$this->baseMovieUrl().$type.$this::slash.$saneModelName,
-                'paginator'=> $models
-            ];
-
-        }
-        return view('categories')->with($categoryArray);
+        $id = Validator::sanitize($Id);
+        $qualities = episodes::find($id)->quality()->get();
+        return view('episode_page')->with(['qualities'=>$qualities]);
     }
 
+  
     private function getMovieModel($Type, $Name)
     {
         $Name = Validator::sanitize($Name);
@@ -107,7 +118,7 @@ class categoryController extends Controller
         }
         $qualities = allmovies::where('name', $name)->where('type', $type)->first()->quality()->get();
         $qualities->withPath('movies/'.$name);
-        return $qualities;
+        return $qualities ? $qualities : false;
     }
 
     private function getSeasonsList($Type, $Name)
@@ -122,12 +133,20 @@ class categoryController extends Controller
        }
        $Seasons = series::where('name', $name)->where('type', $type)->seasons()->paginate(10);
        $Seasons->withPath('series/'.$name);
-       return $Seasons;
+       return $Seasons ? $Seasons: false;
+    }
+    private function getSeasonEpisodes($SeasonId, $Name, $Season)
+    {
+       $SeasonId = Validator::sanitize($SeasonId);
+       $seasonId = strtolower($SeasonId);
+       $episodes = episodes::where('season_id', $seasonId)->get();
+       return $episodes? $episodes: false;
     }
 
     private function getHomeCat()
     {
         $recents = Recents::where('should_show', 1)->orderBy('created_at','desc')->take('10')->get();
+        if($recents==null){ return false;}
         $recentsArray=[];
         foreach ($recents as $recentVid)
         {
@@ -145,11 +164,13 @@ class categoryController extends Controller
     }
   /** e.g www.udaratv.com/naija/abc
     * here naija is the type whereas abc is the cat
+    * for e.g this category exemplified above will return an iterable of models that are naija and which their names
+    * start from a, b or c
     * @param String Type
     * @param String Cat
     * @return  
     **/
-    private function getType($Type, $Cat)
+    private function getCategoryModels($Type, $Cat)
     {
         
         $cat = strtolower($Cat);
