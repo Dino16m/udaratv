@@ -16,6 +16,7 @@ class MovieQuality extends Migration
         Schema::create('moviequality', function(Blueprint $table){
           $table->increments('id');
           $table->integer('allmovies_id');
+          $table->timestamps();
           $table->string('quality');
           $table->string('file_path');
           $table->integer('number_downloaded');

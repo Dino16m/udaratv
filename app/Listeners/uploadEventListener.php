@@ -6,6 +6,7 @@ use App\Events\uploadEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\recently_updated as Recents;
+use App\Constants;
 class uploadEventListener
 {
     /**
@@ -29,14 +30,20 @@ class uploadEventListener
         $model=$event->update;
         $update=[];
         $update['video_name']=$model['name'];
-        $video_link=url($model['file_path']);
-        if($model['season']!=null && $model['episode']!=null){
-            $update['season']=$model['season'];
-            $update['episode']=$model['episode'];
-            $update['should_show']=$model['should_show'];
-        }
+        $type = $model['type'];
+        $video_link = url('public/videos/'.$type.'/'.$model['name']);
+        if(Constants::inSeries($type))
+        {
+            if($model['season']!=null && $model['episode']!=null){
+                $update['season']=$model['season'];
+                $update['episode']=$model['episode'];
+               
+                                                                 }
+        } 
+        $update['should_show']= $model['should_show'] ==null ? 1 : $model['should_show'];  
+        $update['image_link']= $model['image_link'];
         $update['video_link']=$video_link;  
-        $recent = new Recents($update);
+        $recent = Recents::create($update);
     }
 
     

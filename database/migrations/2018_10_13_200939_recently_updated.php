@@ -19,6 +19,7 @@ class RecentlyUpdated extends Migration
           $table->string('season')->nullable();
           $table->string('episode')->nullable();
           $table->integer('should_show')->nullable();
+          $table->string('image_link');
           $table->string('video_link');
           $table->timestamps();
         });

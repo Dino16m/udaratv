@@ -17,6 +17,7 @@ class SeriesQuality extends Migration
           $table->increments('id');
           $table->integer('series_id');
           $table->integer('episodes_id');
+          $table->timestamps();
           $table->string('quality');
           $table->string('file_path');
           $table->integer('season_number');

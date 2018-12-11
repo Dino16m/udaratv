@@ -28,10 +28,10 @@ class categoryController extends Controller
         }
         return view('category_home')->with($recents);
     }
-      public function getCatIndex($Type, Request $request)
+    public function getCatIndex($Type, $Cat)
     {
         //category e.g movies starting with a, b or c will have category abc
-        $category = $request->get('cat');
+        $category = $Cat;
         if(!$this->validateRouteParameter($Type, 'routeParam') || !$this->validateRouteParameter($category, 'getParam')){
             return back();
         }
@@ -42,12 +42,13 @@ class categoryController extends Controller
                 return back(); 
             }
         $categoryArray=[];
+        $movOrSer = Constants::inseries ? 'series' : 'movies';
         foreach ($models as  $model) {
             $saneModelName= preg_replace('/\s+/', '_', $model->name);
             $categoryArray[$model->name]=
             [
                 'name'=>$model->name,
-                'link'=>$this->baseMovieUrl().$type.$this::slash.$saneModelName,
+                'link'=>url($movOrSer.'/'.$type.'/'.$saneModelName),
                 'paginator'=> $models
             ];
 
@@ -55,11 +56,25 @@ class categoryController extends Controller
         return view('categories')->with($categoryArray);
     }
 
+    public function download($Type, $id)
+    {
+        $Type = Validator::sanitize($Type);
+        $type = strtolower($Type);
+        if(!Validator::isInt($id))
+        {
+            return back();
+        }
+        $response = $this->getVideoLink($type, $id);
+        if(!$response){ return view('movie_not_found')->with(['movie_name'=>'$id']);}
+        return response()->download($response[$path], $response[$name]);
 
+    }
     public function getMovieIndex($Type, $Name)
     {
         $models=$this->getMovieModel($Type, $Name);
         $name = Validator::sanitize($Name);
+        $Type= Validator::sanitize($Type);
+        $type = strtolower($Type);
         if(!$models)
         {
             return view('movie_not_found')->with(['movie_name'=>$name]);
@@ -68,29 +83,35 @@ class categoryController extends Controller
         foreach($models as $model)
         {
             $qualityArray[$model->quality]=[
-                'name'=>$name.' '.$model->quality,
+                'name'=>$name.'-'.$model->quality,
                 'id'=>$model->id,
-                'link'=>url($model->file_path),
+                'link'=>url('download/'.$type.'/'.$id),
                 'parent_id'=>$model->allmovies_id
             ];
         }
         return view('movie_index')->with($qualityArray);
     }
+    /**
+    * any view called by this method must implemment a form of replacement
+    * of spaces in strings to underscores
+    *
+    **/
     public function getSeasonsIndex($Type, $Name)
     {
+        $name = Validator::makeInsane($name);
         $models = $this->getSeasonsList($Type, $Name);
-        $name = Validator::sanitize($Name);
         if(!$models)
         {
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
         return view('series_index')->with(['seasons'=>$models]);
-       
+    
     }
     public function getEpisodesIndex($seasonId, $Name, $Season)
     {
         $models = $this->getSeasonEpisodes($seasonId, $Name, $season);
         $name = Validator::sanitize($Name);
+        $name = Validator::makeInsane($name);
         $season = Validator::sanitize($Season);
         if (!$models)
         {
@@ -98,14 +119,38 @@ class categoryController extends Controller
         } 
         return view('episode_index')->with(['episodes'=>$models]);
     }
+    /** expect something like url(episodes/name/id)
+    * only the Id is required
+    *
+    **/
     public function getEpisode($Id)
     {
+        if (!Validator::isInt($Id))
+        {
+            abort(404);
+        }
         $id = Validator::sanitize($Id);
         $qualities = episodes::find($id)->quality()->get();
         return view('episode_page')->with(['qualities'=>$qualities]);
     }
 
-  
+    private function getVideoLink($Type, $Id)
+    {
+        $Type = Validator::sanitize($Type);
+        $type = strtolower($Type);
+        if(Constants::inSeries($type))
+        {
+            $model = seriesquality::find($Id);
+            $name = $model->series()->get()->name;
+        }
+        if(Constants::inMovie($type))
+        {
+            $model = moviequality::find($Id);
+            $name = $model->allmovies()->get()->name;
+        }
+        return ($model == null && $name == null) ? false : ['path'=>$model->file_path, 'name'=> $name ];
+
+    }
     private function getMovieModel($Type, $Name)
     {
         $Name = Validator::sanitize($Name);
@@ -139,7 +184,7 @@ class categoryController extends Controller
     {
        $SeasonId = Validator::sanitize($SeasonId);
        $seasonId = strtolower($SeasonId);
-       $episodes = episodes::where('season_id', $seasonId)->get();
+       $episodes = episodes::where('seasons_id', $seasonId)->get();
        return $episodes? $episodes: false;
     }
 
@@ -156,7 +201,8 @@ class categoryController extends Controller
             'link'=>$recentVid->video_link,
             'season'=>$recentVid->season,
             'episode'=>$recentVid->episode,
-            'updatedAt'=>$recentVid->updatedAt
+            'updatedAt'=>$recentVid->updatedAt,
+            'image_link'=>url($recentVid->image_link)
 
            ];
         }
@@ -193,7 +239,7 @@ class categoryController extends Controller
                   break;
             } 
         }
-            $models->withpath('/type/cat');
+            $models->withpath('categories/'.$type.'/'.$cat);
            return $models ? $models : false;
         
     }

@@ -13,17 +13,17 @@ namespace App;
  *
  * 
  */
-class constants {
+class Constants {
     
     public const supportedVideoTypes = [ 'naija', 'hollywood', 'naijaseries', 'hollywoodseries', 'comedy', 'bollywood']; 
     public const ismovie =  [ 'naija', 'hollywood', 'comedy', 'bollywood']; 
-    public const videoUploadLocation = '/public/resources/videos/';
-    public const imageUploadLocation = '/public/resources/images/'; 
+    public const videoUploadLocation = '/public/videos/';
+    public const imageUploadLocation = '/public/images/'; 
     public const isSeries = ['naijaseries', 'hollywoodseries'];
     
     public static function inSeries($Value)
     {
-        $series = $this::isSeries;
+        $series = self::isSeries;
         $value = strtolower($Value);
         foreach ($series as $serie)
         {
@@ -36,7 +36,7 @@ class constants {
     }
     public function inMovie($Value)
     {
-        $movies = $this::ismovie;
+        $movies = self::ismovie;
         $value = strtolower($Value);
         foreach ($series as $serie)
         {

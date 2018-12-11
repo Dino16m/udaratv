@@ -23,7 +23,7 @@ class Series extends Migration
           $table->string('short_description')->nullable();
           $table->string('image_link')->nullable();
           $table->string('imdb_link')->nullable();
-          $table->string('fist_letter_of_name');
+          $table->string('first_letter_of_name');
         });
     }
 

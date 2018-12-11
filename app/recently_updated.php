@@ -8,6 +8,7 @@ class recently_updated extends Model
 {
     
     public $table="recently_updated";
-    protected $fillable=['video_name', 'video_link', 'season', 'episode', 'should_show'];
+    protected $primaryKey = 'id';
+    protected $fillable=['video_name', 'image_link', 'video_link', 'season', 'episode', 'should_show'];
     
 }

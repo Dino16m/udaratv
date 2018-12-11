@@ -24,11 +24,19 @@ class Validator {
           return $input;
           
       }
+    public static function  isInt($var)
+    {
+      return (is_int($var) || ctype_digit($var));
+    }
     public static function isValid($value){
          if(isset($value)){
              return $this::sanitize($value);
          }
          else{return null;}
+     }
+     public static function makeInsane($Name)
+     {
+      return preg_replace('_',' ', $Name);
      }
     }
     
