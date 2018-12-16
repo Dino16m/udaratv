@@ -17,9 +17,9 @@ class Constants {
     
     public const supportedVideoTypes = [ 'naija', 'hollywood', 'naijaseries', 'hollywoodseries', 'comedy', 'bollywood']; 
     public const ismovie =  [ 'naija', 'hollywood', 'comedy', 'bollywood']; 
-    public const videoUploadLocation = '/public/videos/';
+    public const videoUploadLocation = '/videos/';
     public const imageUploadLocation = '/public/images/'; 
-    public const isSeries = ['naijaseries', 'hollywoodseries'];
+    public const isSeries = ['naijaseries', 'series', 'hollywoodseries'];
     
     public static function inSeries($Value)
     {
@@ -34,13 +34,13 @@ class Constants {
         return false;
 
     }
-    public function inMovie($Value)
+    public static function inMovie($Value)
     {
         $movies = self::ismovie;
         $value = strtolower($Value);
-        foreach ($series as $serie)
+        foreach ($movies as $movie)
         {
-            if ($serie == $value){
+            if ($movie == $value){
                 return true;
             }
         }

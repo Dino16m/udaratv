@@ -31,9 +31,10 @@ class uploadEventListener
         $update=[];
         $update['video_name']=$model['name'];
         $type = $model['type'];
-        $video_link = url('public/videos/'.$type.'/'.$model['name']);
+        $video_link = url('/movies/'.$type.'/'.$model['name']);
         if(Constants::inSeries($type))
         {
+            $video_link = url('/series/'.$type.'/'.$model['name']);
             if($model['season']!=null && $model['episode']!=null){
                 $update['season']=$model['season'];
                 $update['episode']=$model['episode'];

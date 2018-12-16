@@ -15,9 +15,12 @@ use App\series;
 Route::get('/me', function() {
     //echo $you.' are '. $me;
    // return view('welcome');
- $id = false;
- $retval = $id ? 'one' : 'two';
- echo $retval;
+$string = 'wwww.me.com/ypu/public/videos/love.mp4';
+//$bool = preg_match('~/public/videos/~', $string);
+$match = [];
+//preg_match('[^/]+$' , $string, $match);
+//print_r($match);
+echo basename($string);
 });
 
 //home i.e udaratv.com
@@ -25,15 +28,15 @@ Route::get('/', 'categoryController@index');
 //categories eg udaratv.com/movies/abc
 Route::get('/categories/{Type}/{Cat}', 'categoryController@getCatIndex');
 //e.g udaratv.com/download/series/1
-Route::get('/download/{Type}/{id}', 'categoryController@download');
+Route::get('/download/{Type}/{QualityId}', 'categoryController@download');
 //e.g udaratv.com/movies/naija/the_wedding_party 2
 Route::get('movies/{Type}/{Name}', 'categoryController@getMovieIndex');
 //e.g udaratv.com/naijaseries/jenifa's_diary
-Route::get('series/{Type}/{Name}', 'categoryController@getSeasonsList');
+Route::get('series/{Type}/{Name}', 'categoryController@getSeasonsIndex');
 // e.g udaratv.com/series/1/how_to_get_away_with_murder
 Route::get('series/{season_id}/{Name}/{Season}', 'categoryController@getEpisodesIndex');
-//e.g udaratv.com/series/episodes/the_flash_season1_episode_1/3
-Route::get('series/episodes/{Name}/{Id}', 'categoryController@getEpisode');
+//e.g udaratv.com/seriesepisodes/the_flash_season1_episode_1/3
+Route::get('seriesepisodes/{Name}/{Id}', 'categoryController@getEpisode');
 
 Route::get('uploader/index', 'uploadController@index');
 Route::post('uploader/newSeries', 'uploadController@addNewSeries');

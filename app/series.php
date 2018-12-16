@@ -22,7 +22,8 @@ class series extends Model
      return false;
     }
 
-    public function seasons(){
+    public function seasons()
+    {
       return $this->hasMany(seasons::class);
     }
 }

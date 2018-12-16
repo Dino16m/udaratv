@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use \App\Http\Requests\videoRequests;
 use \App\series;
 use \App\Events\uploadEvent;
@@ -153,7 +154,7 @@ class uploadController extends Controller
         $videoDetails['short_description']= $request->input('data'.$videoID.'.desc');
         $videoDetails['tags']= $request->input('data'.$videoID.'.tags');
         $videoDetails['imdb_link']= $request->input('data'.$videoID.'.imdblink');
-        $videoDetails['image']= $request->input('files'.$videoID.'.image');
+        $videoDetails['image']= $request->file('files'.$videoID.'.image');
         $videoDetails['first_letter_of_name']=substr($file_name,0 ,1);
         array_push($status, $this::handleNewMovies($videoDetails));
       }
@@ -208,12 +209,13 @@ class uploadController extends Controller
       }
       $file_name=$name.'.'.$ext;
       $file_path=$reqs.$file_name;
+      $storage_path= $reqs;
       $details['file_path'] = $file_path;
       $image_name = $name.'_image';
       $image_link = url($this::imageUploadLocation().$name);
-      $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image']);
+      $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
-      if(!$this::fileUpload($file_name, $file_path, $video)){
+      if(!$this::fileUpload($file_name, $storage_path, $video, true )){
         return  $file_name.' couldn\'t be uploaded';
       }
       $model = allmovies::create($details);
@@ -241,10 +243,10 @@ class uploadController extends Controller
       $model= $movie['model'];
       $image_path = $model->image_link;
       $file_name=$name.'.'.$ext;
-      $upload_path=$movie['path'];
+      $storage_path=$movie['path'];
       $should_show=$details['should_show'];
       $file_path= $movie['path'].stripslashes($file_name);
-      if(!$this::fileUpload($file_name, $upload_path, $video)){
+      if(!$this::fileUpload($file_name, $storage_path, $video, true)){
         return  $file_name.' couldn\'t be uploaded';
       }
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
@@ -272,10 +274,11 @@ class uploadController extends Controller
       $ext= $details['ext'];
       $series= series::where('name',$name)->first();
       $upload_path=$series->series_path;
+      $storage_path =$upload_path;
       $file_name= $name.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $upload_path.'/'.stripslashes($file_name);
-        if(!$this::fileUpload($file_name, $upload_path, $video)){
+        if(!$this::fileUpload($file_name, $upload_path, $video, true)){
         return  $file_name.' couldn\'t be uploaded';
       }
      if( $details['should_touch_season'] == 1) {
@@ -301,13 +304,13 @@ class uploadController extends Controller
       $type = $videoDetails['type'];
 
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
-        if(!is_dir(base_path($upload_path))){
-        if (!mkdir(base_path($upload_path), 0763)){
+        if(!is_dir(base_path('/storage/app'.$upload_path))){
+        if (!mkdir(base_path('/storage/app'.$upload_path), 0763)){
         return 'there was an error creating a folder for the new series '.$videoDetails['name'];
         }}
       $video = $Details['video'];
       // Attempt to upload the video
-      if(!$this::fileUpload($file_name, $upload_path, $video)){
+      if(!$this::fileUpload($file_name, $upload_path, $video, true)){
         return  $file_name.' couldn\'t be uploaded';
       }
       $videoDetails['series_path']=$upload_path;
@@ -315,7 +318,7 @@ class uploadController extends Controller
       $image_name =stripslashes($videoDetails['name'].'_image.'.$videoDetails['image_ext']);
       $image_link = url($this::imageUploadLocation().$image_name);
       // Attempt to upload the image 
-      $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $Details['image']);
+      $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $Details['image'], false);
       $videoDetails['image_link' ] = $imageUploadStatus == true ? $image_link : $videoDetails['imdb_link'];
       $series = series::create($videoDetails);
       if( $series->makeNew($videoDetails) != false){
@@ -333,9 +336,16 @@ class uploadController extends Controller
     * @param File
     * @return Boolean
     **/
-    private function fileUpload($filename, $filePath, $file){
+    private function fileUpload($filename, $filePath, $file, $bool){
       //please for the love of God uncomment the file move functionm below before pushing to production
-      return true; //$file->move($filePath, $filename);
+      if($bool)
+      {
+       return Storage::putFileAs($filePath, $file, $filename);
+      }
+      else 
+      {
+        return true;//$file->move($filePath, $filename);
+      }
     }
     /**
     * this method gets the record from the movie model matching the Name and type being uploaded
@@ -369,14 +379,6 @@ class uploadController extends Controller
       }
       return false;
     }
-     private function checkArray($array){
-      foreach($array as $element){
-        if ($element==null){
-          return function(){
-            return 'you have empty input in your array';
-          };
-        }
-      }
-    }
+    
 }
 

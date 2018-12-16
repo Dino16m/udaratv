@@ -13,6 +13,7 @@ class seasons extends Model
    public function series(){
      return $this->belongsTo(series::class);
    }
+   
    public function episodes(){
      return $this->hasMany(episodes::class, 'season_id', 'id');
    }

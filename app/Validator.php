@@ -36,7 +36,7 @@ class Validator {
      }
      public static function makeInsane($Name)
      {
-      return preg_replace('_',' ', $Name);
+      return preg_replace('~_~',' ', $Name);
      }
     }
     
