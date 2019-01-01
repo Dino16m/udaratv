@@ -11,16 +11,18 @@
 | RewriteRule ^.env - [F,L,NC]
 */
 use App\series;
+use App\Validator;
 
 Route::get('/me', function() {
     //echo $you.' are '. $me;
-   // return view('welcome');
-$string = 'wwww.me.com/ypu/public/videos/love.mp4';
+  return view('test');
+
+/**$string = 'wwww.me.com/ypu/public/videos/love.mp4';
 //$bool = preg_match('~/public/videos/~', $string);
 $match = [];
 //preg_match('[^/]+$' , $string, $match);
 //print_r($match);
-echo basename($string);
+echo basename($string);**/
 });
 
 //home i.e udaratv.com
@@ -37,6 +39,11 @@ Route::get('series/{Type}/{Name}', 'categoryController@getSeasonsIndex');
 Route::get('series/{season_id}/{Name}/{Season}', 'categoryController@getEpisodesIndex');
 //e.g udaratv.com/seriesepisodes/the_flash_season1_episode_1/3
 Route::get('seriesepisodes/{Name}/{Id}', 'categoryController@getEpisode');
+
+//e.g udaratv.com/tags/comedy
+Route::get('tags/{Tag}', 'categoryController@getVideosOfTag');
+//e.g uaratv.com/types/naija
+Route::get('types/{Type}', 'categoryController@getVideosOfType');
 
 Route::get('uploader/index', 'uploadController@index');
 Route::post('uploader/newSeries', 'uploadController@addNewSeries');

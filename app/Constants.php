@@ -19,7 +19,7 @@ class Constants {
     public const ismovie =  [ 'naija', 'hollywood', 'comedy', 'bollywood']; 
     public const videoUploadLocation = '/videos/';
     public const imageUploadLocation = '/public/images/'; 
-    public const isSeries = ['naijaseries', 'series', 'hollywoodseries'];
+    public const isSeries = ['naijaseries', 'series', 'hollywoodseries', 'nollywoodseries'];
     
     public static function inSeries($Value)
     {

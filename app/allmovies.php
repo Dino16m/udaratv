@@ -19,6 +19,7 @@ class allmovies extends Model
         $tags = $Tags;
             
             foreach($tags as $tag) {
+                $tag = strtolower($tag);
                  $this->tags()->create(['tag'=>$tag,'allmovies_id'=>$this->id]);
             }
           return $this; 

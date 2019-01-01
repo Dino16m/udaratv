@@ -21,12 +21,17 @@ class Validator {
           $input= trim($input);
           $input = stripslashes($input);
           $input= htmlspecialchars($input);
+          $input = self::isEmptyString($input) ? '0ith5' : $input;
           return $input;
           
       }
     public static function  isInt($var)
     {
       return (is_int($var) || ctype_digit($var));
+    }
+    public static function isEmptyString($var)
+    {
+      return(empty($var) && $var!='0');
     }
     public static function isValid($value){
          if(isset($value)){

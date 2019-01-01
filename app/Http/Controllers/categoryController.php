@@ -7,6 +7,7 @@ use App\allmovies;
 use App\Events\downloadEvent;
 use Illuminate\Support\Facades\Storage;
 use App\series;
+use App\tags;
 use App\episodes;
 use App\seriesquality;
 use App\recently_updated as Recents;
@@ -30,6 +31,99 @@ class categoryController extends Controller
             abort(404);
         }
         return view('category_home')->with($recents);
+    }
+
+    public function getVideosOfTag($Tag)
+    {
+        $tag = strtolower($Tag);
+        $tag = Validator::sanitize($tag);
+        $videos = tags::where('tag', $tags)->allmovies()->orderBy('name', 'ASC')->paginate(15);
+        $videos->withPath('tags/'.$tag);
+        if($videos->isEmpty)
+        {
+            return back();
+        }
+        $returnVids =[];
+        foreach ($videos as $video)
+        {
+          $saneModelName= preg_replace('/\s+/', '_', $video->name);
+            $returnVids[$video->name]=
+            [
+                'name'=>$video->name,
+                'link'=>url('movies/'.$type.'/'.$saneModelName),
+                'paginator'=> [
+                    'first_page_url'=>$videos->url(1),
+                    'previous_page_url'=> $videos->previousPageUrl(), 
+                    'next_page_url'=>$videos->nextPageUrl(),
+                    'last_page_url'=> $videos->url($videos->lastPage()),
+                    'last'=>$videos->lastPage(),
+                    'path'=>url('tags/'.$tag.'?page=')
+                            ]
+            ];
+        }
+        return view('video_index')->with(['videos'=>$returnVids]);
+
+    }
+    public function search(Request $request)
+    {
+        $name = strtolower($request->get('name'));
+        if(!$name)
+        {
+            return response()->json(['error'=>'empty search']);
+        }
+        $name = Validator::sanitize($name);
+        $queryVids = getSearch($name);
+        if(!$queryVids){ return response()->json(['error'=>$name.'not found']);}
+        $returnable = [];
+        foreach ($queryVids as $queryVid) {
+            # code...
+            $thisname = $queryVid->name;
+            $type = $queryVid->type;
+            if(Constants::inSeries($type)){
+                $link = url('series/'.$type.'/'.$thisname);
+            }
+            elseif (Constants::inMovie($type)) {
+                $link = url('movies/'.$type.'/'.$thisname);
+            }
+            else{ return response()->json(['error'=>$name.'not found']);}
+            $returnable[$thisname]=[
+                'name'=>$thisname,
+                'link'=>$link
+            ];
+            return response()->json($returnable);
+        }
+
+    }
+    public function getVideosOfType($Type)
+    {
+        $type = strtolower($Type);
+        $type = Validator::sanitize($type);
+        $videos =  $this::getVideos($type);
+        if (!$videos)
+        {
+            return back();
+        }
+        $movOrSer = Constants::inSeries($type) ? 'series' : 'movies';
+        $returnVids =[];
+        foreach ($videos as $video)
+        {
+            $saneModelName= preg_replace('/\s+/', '_', $video->name);
+            $returnVids[$video->name]=
+            [
+                'name'=>$video->name,
+                'link'=>url($movOrSer.'/'.$type.'/'.$saneModelName),
+                'paginator'=> [
+                    'first_page_url'=>$videos->url(1),
+                    'previous_page_url'=> $videos->previousPageUrl(), 
+                    'next_page_url'=>$videos->nextPageUrl(),
+                    'last_page_url'=> $videos->url($videos->lastPage()),
+                    'last'=>$videos->lastPage(),
+                    'path'=>url('getVideos/'.$type.'?page=')
+                            ]
+            ];
+        }
+        return view('video_index')->with(['videos'=>$returnVids]);
+
     }
     public function getCatIndex($Type, $Cat)
     {
@@ -58,7 +152,7 @@ class categoryController extends Controller
                     'next_page_url'=>$models->nextPageUrl(),
                     'last_page_url'=> $models->url($models->lastPage()),
                     'last'=>$models->lastPage(),
-                    'path'=>url('categories/'.$type.'category?page=')
+                    'path'=>url('categories/'.$type.'/'. $category .'?page=')
                             ]
             ];
 
@@ -187,7 +281,26 @@ class categoryController extends Controller
         $qualities = allmovies::where('name', $name)->where('type', $type)->first()->quality()->get();
         return $qualities->isNotEmpty() ? $qualities : false;
     }
-     /**
+    private function getVideos($type)
+    {
+        if(Constants::inSeries($type))
+        {
+            $models = series::where('type', $type)->orderBy('name', 'DESC')->paginate(10);
+            $models->withPath('getVideos/' .$type);
+        }
+        else if(Constants::inMovie($type))
+        {
+            $models = allmovies::where('type', $type)->paginate(10);
+            $modes->withPath('getVideos/'.$type);
+        }
+        else
+        {
+            return false;
+        }
+        return $models->isNotEmpty() ? $models : false;
+
+    }
+    /**
     * @param Type
     * @param $Name
     * @return bool or mpaginator model
@@ -207,6 +320,13 @@ class categoryController extends Controller
        $Seasons = series::where('name', $name)->where('type', $type)->first()->seasons()->paginate(10);
        $Seasons->withPath('series/'.$name);
        return $Seasons->isNotEmpty() ? $Seasons: false;
+    }
+    private function getSearch($Name)
+    {
+        $movies = allmovies::where('name', $Name)->orWhere('name', 'like', '%'.$Name.'%')->get();
+        $series= series::where('name', $Name)->orWhere('name', 'like', '%'.$Name.'%')->get();
+        $returnVids = $movies->merge($series);
+        return $returnVids->isNotEmpty() ? $returnVids : false;
     }
 
     /**
@@ -229,7 +349,7 @@ class categoryController extends Controller
     */
     private function getHomeCat()
     {
-        $recents = Recents::where('should_show', 1)->orderBy('created_at','desc')->take('10')->get();
+        $recents = Recents::where('should_show', 1)->orderBy('updatedAt','asc')->take('10')->get();
         if($recents->isEmpty()){ return false;}
         $recentsArray=[];
         foreach ($recents as $recentVid)
@@ -245,7 +365,7 @@ class categoryController extends Controller
 
            ];
         }
-        return $recentsArray;
+        return empty($recentsArray)? false : $recentsArray;
     }
 
   /** e.g www.udaratv.com/naija/abc
@@ -264,6 +384,10 @@ class categoryController extends Controller
         $type= strtolower($Type);
         $type = Validator::sanitize($type);
         $cat = Validator::sanitize($cat);
+        if (!ctype_alnum($cat) && !preg_match('/#/', $cat))
+        {
+            abort(404);
+        }
         $accepted = $this::typesOfVideo;
         foreach ($accepted as $accepted1)
         {
@@ -291,8 +415,10 @@ class categoryController extends Controller
     */
     private function getSubgroup($cat)
     {
+        $num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
         $sanitizedCat= preg_replace('/\s+/', '', $cat);
-        return str_split($sanitizedCat);
+        $returnArr= str_split($sanitizedCat);
+        return  preg_match('/#/', $cat) ? array_merge($returnArr, $num) : $returnArr; 
     }
     /**
     * @param $cat

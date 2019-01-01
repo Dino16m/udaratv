@@ -14,9 +14,21 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import axios from 'axios';
+//import VueAxios from 'vue-axios';
+Vue.use(axios);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('index-carousel', require('./components/indexCarousel.vue'));
+Vue.component('tab-component', require('./components/tabComponent.vue'));
+Vue.component('categorylist', require('./components/categorylist.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app', 
+    data(){
+    	return{
+    		name: 'Darlington'
+    	}
+    }
+
 });
