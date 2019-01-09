@@ -8,7 +8,7 @@ class allmovies extends Model
 {
     public $table ="allmovies";
     protected $primaryKey = 'id';
-    protected $fillable=['name','file_path','type','short_description','image_link','imdb_link','first_letter_of_name'];
+    protected $fillable=['name','file_path','type','short_description','image_link','run_time', 'views','imdb_link','first_letter_of_name'];
    
     public function quality()
     {

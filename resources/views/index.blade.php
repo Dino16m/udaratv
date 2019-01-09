@@ -1,20 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php 
+$movies=[];
+$series=[];
+foreach ($recents as $recent) {
+    if($recent['season']==null && $recent['season']==null)
+    {
+        array_push($movies, $recent);
+    }
+    else
+    {
+         array_push($series, $recent);
+    }
+}
+$all = array_merge($series, $movies);
+$carousel = [];
+$i = 0;
+$previous = '';
+foreach ($all as $all1)
+{ 
+    if($previous==$all1['name']){continue;}
+    $carousel[$i]=[
+        'name'=>$all1['name'],
+        'url'=>$all1['link'],
+        'imageurl'=>url($all1['image_link'])
+    ];
+    $previous=$all1['name'];
+    $i++;
+}
+$lacarousel=json_encode($carousel);
+?>
+<html> 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-
-    <title>Home</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-     <link rel="stylesheet" href="css/style2.css" type="text/css">
-    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="public/css/app.css">
+    <link rel="stylesheet" href="public/css/style.css" type="text/css">
+    <link rel="stylesheet" href="public/css/style2.css" type="text/css">
     <style type="text/css">
         body {
             padding-top: 2rem;
@@ -26,113 +44,57 @@
             text-align: center;
         }
     </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="csrf-token" content="{{csrf_token()}}" >
+    <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
+
+    <title>Home</title>
+
 </head>
-
 <body>
-
-
-
-    <header class="pl-4 ml-4">
-        <h1>UdaraTv.com</h1>
-        <p>A sticky navigation bar stays fixed at the top of the page when you scroll past it.</p>
-
-    </header>
+<div id="app"> 
 <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
-        <a class="navbar-brand" href="#"><img src="images/udaralogo.png" alt="udaratv" height="40px"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria- controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="#"><img src="public/images/udaralogo.png" alt="udaratv" height="40px"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
              <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="index2.html">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="movies2.html">Movies</a>
+                    <a class="nav-link" href="types/hollwood">Hollywood Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="tvseries2.html">TvSeries</a>
+                    <a class="nav-link" href="type/hollywoodseries">Hollywood TvSeries</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="types/naija">Nollywood Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="genres.html">Genres</a>
+                    <a class="nav-link" href="type/naijaseries">Nollywood TvSeries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Genres</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href=".top10.html"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
+                    <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" v-model='searchstring' aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" v-on:click='search()' type="submit">Search</button>
-            </form>
+           <search-bar></search-bar>
         </div>
     </nav>
 
-<!--nav-bar-end-->
+<!--nav-bar-end--> 
 
-    <!--carousel-->
-
-    <!--Carousel Wrapper-->
-    <div id="carousel-example-2" class="carousel slide carousel-fade" data-ride="carousel">
-        <!--Indicators-->
-        <ol class="carousel-indicators">
-            <li data-target="#carousel-example-2" data-slide-to="0" class="active"></li>
-            <li data-target="#carousel-example-2" data-slide-to="1"></li>
-            <li data-target="#carousel-example-2" data-slide-to="2"></li>
-        </ol>
-        <!--/.Indicators-->
-        <!--Slides-->
-        <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-                <div class="view">
-                    <img class="d-block w-100" src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg" alt="First slide">
-                    <div class="mask rgba-black-light"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Light mask</h3>
-                    <p>First text</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <!--Mask color-->
-                <div class="view">
-                    <img class="d-block w-100" src="https://mdbootstrap.com/img/Photos/Slides/img%20(6).jpg" alt="Second slide">
-                    <div class="mask rgba-black-strong"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Strong mask</h3>
-                    <p>Secondary text</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <!--Mask color-->
-                <div class="view">
-                    <img class="d-block w-100" src="https://mdbootstrap.com/img/Photos/Slides/img%20(9).jpg" alt="Third slide">
-                    <div class="mask rgba-black-slight"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Slight mask</h3>
-                    <p>Third text</p>
-                </div>
-            </div>
-        </div>
-        <!--/.Slides-->
-        <!--Controls-->
-        <a class="carousel-control-prev" href="#carousel-example-2" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carousel-example-2" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-        <!--/.Controls-->
-    </div>
-    <!--/.Carousel Wrapper-->
-    <!--carousel end-->
-    <br>
+<index-carousel v-bind:videodetails="{{$lacarousel}}" > </index-carousel>
 
 <section>
     <main role="main" class="container">
@@ -156,6 +118,9 @@
                     <li class="nav-item ">
                         <a class="nav-link bg-dark" data-toggle="tab" href="#menu1">Movies</a>
                     </li>
+                     <li class="nav-item ">
+                        <a class="nav-link bg-dark" data-toggle="tab" href="#seeall">See all</a>
+                    </li>
                     <li class="nav-item">
 
                     </li>
@@ -165,84 +130,18 @@
                 <div class="tab-content">
                     <div id="home" class="container tab-pane active"><br>
                         <div class="container">
-
+                            <!--here-->
                             <h1 class="my-4 text-center text-lg-left">
                                 <p class="text-center">Download latest Tvseries.</p>
                             </h1>
                             <br>
-                            <div class="row text-center text-lg-left">
-
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                   <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/6cbdea04ef11c41c9d6dd8af12b2daa9.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                  </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/b22afd615d390153527756dbb1d6cd3e.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/09/ae98fac00f2a70db54bcba6a041d0db4.jpg" alt="predator">
-                                    </a>
-                                     <a class="name">pharisee</a>
-                                </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="movie2/pharisee" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/c9dfdaaaddcd2df3f5da4f875f4572f3.jpg" alt="">
-                                          </a>
-                                        <a class="name">pharisee</a>
-                                    </div>
-                                   
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/13f8c7af5e87aa19bd69dff9e8623059.jpg" alt="">
-                                    </a>
-                                        <a class="name">pharisee</a>
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                     <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/a1df66c23dfc03408a5b08e19df2baeb.jpg" alt="">
-                                    </a>
-                                         <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                     <div class="poster-item">
-                                         <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/e397bf3557e43c0c449d8e6621c7cb55.jpg" alt="">
-                                    </a>
-                                         <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/05d614b2a84837a41840b14f0b1bca35.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                </div>
-                              
-                                </div>
-                            </div>
+                            <ul class="list-group bg-dark" >
+                            @foreach($series as $serie)
+                                <tab-component-text type='series' videourl='{{$serie["link"]}}' episode='{{$serie["episode"]}}' season='{{$serie["season"]}}' videoname='{{$serie["name"]}}' timestamp='{{$serie["updatedAt"]}}'></tab-component-text>  
+                            @endforeach 
+                            </ul>
 
                         </div>
-
                     </div>
                 
                     <div id="menu1" class="container tab-pane fade"><br>
@@ -252,83 +151,34 @@
                                 <p class="text-center"> Download latest Movies.</p>
                             </h1>
                             <br>
-                            <div class="row text-center text-lg-left">
-
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/13f8c7af5e87aa19bd69dff9e8623059.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/a1df66c23dfc03408a5b08e19df2baeb.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/e397bf3557e43c0c449d8e6621c7cb55.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/05d614b2a84837a41840b14f0b1bca35.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/c3fc9e8d528a57eb75fe2adb36f3ca0c.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/559734c2ccee7fad085c7077b97000b2.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/cd2e2e430e3792853282da7377ca5546.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/19b9b273bca8b232927a419138f4c653.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-
-                            </div>
+                            <ul class="list-group bg-dark" >
+                                @foreach($movies as $movie)
+                                <tab-component-text type='movies' videourl='{{$movie["link"]}}' videoname='{{$movie["name"]}}' timestamp='{{$movie["updatedAt"]}}' ></tab-component-text> 
+                                @endforeach
+                            </ul>
 
                         </div>
+                    </div>
+                     <div id="seeall" class="container tab-pane fade"><br>
+                      <h1>  <p class="text-center"> Download latest Movies and series.</p> </h1>
+                       <br>
+                        <ul class="list-group bg-dark" >
+                            @foreach($all as $all1)
+                              @if($all1['season']==null or $all1['episode']==null)
+                               <tab-component-text type='movies' videourl='{{$all1["link"]}}' videoname='{{$all1["name"]}}' timestamp='{{$all1["updatedAt"]}}' ></tab-component-text> 
+                               @endif
+                               @if($all1['season']!=null or $all1['episode']!=null)
+                               <tab-component-text type='series' videourl='{{$all1["link"]}}' season="{{$all1['season']}}" episode="{{$all1['episode']}}" videoname='{{$all1["name"]}}' timestamp='{{$all1["updatedAt"]}}' ></tab-component-text> 
+                               @endif
+                             @endforeach
+                         </ul>
                     </div>
                    
                 </div>
             </div>
 
             <div class="card-text">
-                <a href="movies.html">
+                <a href="recents/seemore">
                     <h1>See more</h1>
                 </a>
             </div>
@@ -337,240 +187,87 @@
     <hr class="underline">
 
 <section>
-        <!--RecOMMENDEd-->
-     <main role="main" class="container">
+    <main role="main" class="container">
 
 
 
         <div class="starter-template">
-            <h2 class="headit">Recommended</h2>
+            <h2 class="headit">Alphabetical listing of videos</h2>
             <hr class="">
 
             <br>
 
-            <div class="container">
+            <div class="container-fluid">
 
                 <br>
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs " role="tablist">
-                    <li class="nav-item ">
-                        <a class="nav-link active bg-dark" data-toggle="tab" href="#home2">TvSeries</a>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active bg-dark" data-toggle="tab" href="#hollywoodseries">Hollywood TvSeries</a>
                     </li>
-                    <li class="nav-item bg-dark">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#menu2">Movies</a>
+                    <li class="nav-item ">
+                        <a class="nav-link bg-dark" data-toggle="tab" href="#hollywoodmovies">Hollywood Movies</a>
                     </li>
                     <li class="nav-item">
-
+                        <a class="nav-link bg-dark" data-toggle="tab" href="#nollywoodseries">Nollywood TvSeries</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link bg-dark" data-toggle="tab" href="#nollywoodmovies">Nollywood Movies</a>
+                    </li>
+                    <li class="nav-item">
                     </li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div id="home2" class="container tab-pane active"><br>
+                    <div id="hollywoodseries" class="container tab-pane active"><br>
                         <div class="container">
-
                             <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center">Download latest Tvseries.</p>
+                                <p class="text-center">Hollywood Tvseries by first letter of name.</p>
                             </h1>
                             <br>
-                            <div class="row text-center text-lg-left">
-
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/6cbdea04ef11c41c9d6dd8af12b2daa9.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/b22afd615d390153527756dbb1d6cd3e.jpg" alt="">
-                                    </a>
-                                    <a class="name">Jefe</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/09/ae98fac00f2a70db54bcba6a041d0db4.jpg" alt="predator">
-                                    </a>
-                                     <a class="name">Predator</a>
-                                </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="movie2/pharisee.html" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/c9dfdaaaddcd2df3f5da4f875f4572f3.jpg" alt="Pharisee">
-                                          </a>
-                                        <a class="name">Pharisee</a>
-                                    </div>
-                                   
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/13f8c7af5e87aa19bd69dff9e8623059.jpg" alt="">
-                                    </a>
-                                        <a class="name">Outlaw King</a>
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                     <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/a1df66c23dfc03408a5b08e19df2baeb.jpg" alt="">
-                                    </a>
-                                         <a class="name">Here and Now</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                     <div class="poster-item">
-                                         <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/e397bf3557e43c0c449d8e6621c7cb55.jpg" alt="">
-                                    </a>
-                                         <a class="name">pharisee</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="shadow img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/05d614b2a84837a41840b14f0b1bca35.jpg" alt="">
-                                    </a>
-                                    <a class="name">pharisee</a>
-                                </div>
-                              
-                                </div>
-                            </div>
+                            <categorylist videotype="hollywoodseries"> </categorylist>
 
                         </div>
-
                     </div>
                 
-                    <div id="menu2" class="container tab-pane fade"><br>
+                    <div id="hollywoodmovies" class="container tab-pane fade"><br>
                         <div class="container">
 
                             <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center"> Download latest Movies.</p>
+                                <p class="text-center"> Download Hollywood movies</p>
                             </h1>
                             <br>
-                            <div class="row text-center text-lg-left">
+                            <categorylist videotype="hollywoodmovies"> </categorylist>
 
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/13f8c7af5e87aa19bd69dff9e8623059.jpg" alt="Outlaw King">
-                        
-                                    </a>
-                                    <a class="name">Outlaw King</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100 img-effect">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/a1df66c23dfc03408a5b08e19df2baeb.jpg" alt="Here and Now"><   
-                                      
-                                        
-                                    </a>
-                                
-                                    <a class="name">Here and Now</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/e397bf3557e43c0c449d8e6621c7cb55.jpg" alt="">
-                                    </a>
-                                    <a class="name">In a relationship</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/05d614b2a84837a41840b14f0b1bca35.jpg" alt="">
-                                    </a>
-                                    <a class="name">Time Freak</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/c3fc9e8d528a57eb75fe2adb36f3ca0c.jpg" alt="">
-                                    </a>
-                                    <a class="name">Lez Bomb</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/559734c2ccee7fad085c7077b97000b2.jpg" alt="">
-                                    </a>
-                                    <a class="name">River Runs Red</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/cd2e2e430e3792853282da7377ca5546.jpg" alt="">
-                                    </a>
-                                    <a class="name">This is Our Christmas</a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-xs-6">
-                                    <div class="poster-item">
-                                    <a href="#" class="d-block mb-4 h-100">
-                                        <img class="img-fluid my-2" src="https://static.akacdn.ru/static/images/2018/11/19b9b273bca8b232927a419138f4c653.jpg" alt="">
-                                    </a>
-                                    <a class="name">Equalizer2</a>
-                                    </div>
-                                </div>
-
-                            </div>
-
+                        </div>
+                    </div>
+                     <div id="nollywoodseries" class="container tab-pane fade"><br>
+                        <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Nollywood Series eg Jenifa's Diary.</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="nollywoodseries"> </categorylist>
+                        </div>
+                    </div>
+                    <div id="nollywoodmovies" class="container tab-pane fade"><br>
+                         <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Nollywood movies.</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="nollywoodmovies"> </categorylist>
                         </div>
                     </div>
                    
                 </div>
             </div>
-
-            <div class="card-text">
-                <a href="movies.html">
-                    <h1 class="">See more</h1>
-                </a>
-            </div>
         </div>
-        
-  </section>
+</section>
 
-    <section class="container justify-content-center">
-
-        <div class="row justify-content-center">
-            <div class="col-sm-8">
-                <div class="card-body text-center">
-                    <p class="card-text  text-center">Oops!! didn't find what you were looking?click below to submit request</p>
-                    <a href="request.html" class="col-md-6 btn btn-success  text-center">Request a Movie</a>
-                </div>
-            </div>
-
-
-        </div>
-
-    </section>
-
-    <br>
-    <br>
-
-<!--
-    <footer class="py-5 bg-dark">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright © Your Website 2017</p>
-        </div>
-        <!-- /.container
-    </footer -->
-
-    <!-- Footer -->
+<hr class="underline">
+ <!-- Footer -->
      <footer class="page-footer  font-small ">
         <div class="col-lg-12">
             <div class="container-fluid padding">
@@ -690,22 +387,17 @@
         </div>
         <!-- Footer Links -->
     <!-- Copyright -->
-        <div class="footer-copyright text-center py-3"><a class="navbar-brand" href="#"><img src="images/udaralogo.png" alt="udaratv" height="40px"></a>© 2018 Copyright:
-            <a href="#">UdaraTv.com</a>
+         <div class="footer-copyright text-center py-3"><a class="navbar-brand" href="#"><img src="{{url('public/images/udaralogo.png')}}" alt="udaratv" height="40px"></a>© 2018 Copyright:
+            <a href='{{url("/")}}'>UdaraTv.com</a>
         </div>
         <!-- Copyright -->
 
     </footer>
 
     <!-- Footer end -->
+</div>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript" src="public/js/app.js"></script>
 
 </body>
 </html>

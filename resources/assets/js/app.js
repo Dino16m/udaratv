@@ -22,13 +22,25 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('index-carousel', require('./components/indexCarousel.vue'));
 Vue.component('tab-component', require('./components/tabComponent.vue'));
 Vue.component('categorylist', require('./components/categorylist.vue'));
+Vue.component('tab-component-text', require('./components/tabComponentText.vue'));
+Vue.component('search-bar', require('./components/SearchBar.vue'));
+Vue.component('paginator', require('./components/paginator.vue'));
+Vue.component('image-mount', require('./components/imageMount.vue'));
+Vue.component('upload', require('./components/uploadComponent.vue'));
+Vue.component('modal', require('./components/modal.vue'));
+Vue.component('new-series', require('./components/newSeriesComponent.vue'));
 
 const app = new Vue({
-    el: '#app', 
+    el: '#app',
+    created(){
+    	
+    }, 
     data(){
     	return{
     		name: 'Darlington'
     	}
-    }
-
+    },
+    methods:{
+    	
+}
 });

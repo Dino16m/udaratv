@@ -30,7 +30,16 @@ class categoryController extends Controller
         {
             abort(404);
         }
-        return view('category_home')->with($recents);
+        return view('index')->with(['recents'=>$recents]);
+    }
+    public function getMoreRecents()
+    {
+        $recents=$this::getHomeCat('more');
+        if(!$recents)
+        {
+            return back();
+        }
+        return view('more')->with(['recents'=>$recents]);
     }
 
     public function getVideosOfTag($Tag)
@@ -44,10 +53,11 @@ class categoryController extends Controller
             return back();
         }
         $returnVids =[];
+        $i=0;
         foreach ($videos as $video)
         {
           $saneModelName= preg_replace('/\s+/', '_', $video->name);
-            $returnVids[$video->name]=
+            $returnVids[$i]=
             [
                 'name'=>$video->name,
                 'link'=>url('movies/'.$type.'/'.$saneModelName),
@@ -60,6 +70,7 @@ class categoryController extends Controller
                     'path'=>url('tags/'.$tag.'?page=')
                             ]
             ];
+            $i++;
         }
         return view('video_index')->with(['videos'=>$returnVids]);
 
@@ -105,34 +116,39 @@ class categoryController extends Controller
         }
         $movOrSer = Constants::inSeries($type) ? 'series' : 'movies';
         $returnVids =[];
+        $i=0;
         foreach ($videos as $video)
         {
             $saneModelName= preg_replace('/\s+/', '_', $video->name);
-            $returnVids[$video->name]=
+            $returnVids[$i]=
             [
                 'name'=>$video->name,
                 'link'=>url($movOrSer.'/'.$type.'/'.$saneModelName),
-                'paginator'=> [
+            ];
+            $i++;
+        }
+         $Paginator= [
                     'first_page_url'=>$videos->url(1),
+                    'current_page'=>$videos->currentPage(),
                     'previous_page_url'=> $videos->previousPageUrl(), 
                     'next_page_url'=>$videos->nextPageUrl(),
                     'last_page_url'=> $videos->url($videos->lastPage()),
                     'last'=>$videos->lastPage(),
                     'path'=>url('getVideos/'.$type.'?page=')
-                            ]
-            ];
-        }
-        return view('video_index')->with(['videos'=>$returnVids]);
+                            ];
+         $paginator= json_encode($Paginator);
+        return view('video_index')->with(['videos'=>$returnVids, 'paginator'=>$paginator]);
 
     }
     public function getCatIndex($Type, $Cat)
     {
         //category e.g movies starting with a, b or c will have category abc
-        $category = $Cat;
+        $category = Validator::sanitize($Cat);
         if(!$this->validateRouteParameter($Type, 'routeParam') || !$this->validateRouteParameter($category, 'getParam')){
             return back();
         }
         $type=strtolower($Type);
+        $type = Validator::sanitize($type);
         $models = $this::getCategoryModels($type, $category);
         if(!$models)
             { 
@@ -140,25 +156,27 @@ class categoryController extends Controller
             }
         $categoryArray=[];
         $movOrSer = Constants::inSeries($type) ? 'series' : 'movies';
+        $i=0;
         foreach ($models as  $model) {
             $saneModelName= preg_replace('/\s+/', '_', $model->name);
-            $categoryArray[$model->name]=
+            $categoryArray[$i]=
             [
                 'name'=>$model->name,
                 'link'=>url($movOrSer.'/'.$type.'/'.$saneModelName),
-                'paginator'=> [
+            ];
+            $i++;
+        }
+        $Paginator = [
                     'first_page_url'=>$models->url(1),
                     'previous_page_url'=> $models->previousPageUrl(), 
+                    'current_page'=>$models->currentPage(),
                     'next_page_url'=>$models->nextPageUrl(),
                     'last_page_url'=> $models->url($models->lastPage()),
                     'last'=>$models->lastPage(),
                     'path'=>url('categories/'.$type.'/'. $category .'?page=')
-                            ]
-            ];
-
-        }
-        //return view('categories')->with($categoryArray);
-        return response()->json($categoryArray);
+                            ];
+        $paginator=json_encode($Paginator);
+        return view('categories')->with(['categories'=>$categoryArray, 'type'=>$type, 'cat'=> $category, 'paginator'=>$paginator]);
     }
 
     public function download(Request $request, $Type, $QualityId)
@@ -180,6 +198,7 @@ class categoryController extends Controller
     {
         $models=$this->getMovieModel($Type, $Name);
         $name = Validator::sanitize($Name);
+        $name = Validator::makeInsane($name);
         $Type= Validator::sanitize($Type);
         $type = strtolower($Type);
         if(!$models)
@@ -187,17 +206,20 @@ class categoryController extends Controller
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
         $qualityArray=[];
-        foreach($models as $model)
+        $qualities=$models['qualities'];
+        $movie= $models['movie'];
+        foreach($qualities as $model)
         {
             $qualityArray[$model->quality]=[
-                'name'=>$name.'-'.$model->quality,
+                'name'=>$name,
+                'quality'=>$model->quality,
                 'id'=>$model->id,
-                'link'=>url('download/'.$type.'/'.$model->id),
+                'views'=> $model->number_downloaded,
+                'link'=>url('download/'.$type.'/'.$model->id.'?file='.$model->file_path),
                 'parent_id'=>$model->allmovies_id
             ];
         }
-        return response()->json($qualityArray);
-        //return view('movie_index')->with($qualityArray);
+        return view('movie_index')->with(['qualities'=>$qualityArray, 'name'=>$name, 'desc'=>$movie->short_description,'image_link'=>$movie->image_link, 'imdb_link'=>$movie->imdb_link,  'run_time'=>$movie->run_time,  'views'=>$movie->views, 'id'=>$movie->id ]);
     }
     /**
     * any view called by this method must implemment a form of replacement
@@ -209,13 +231,35 @@ class categoryController extends Controller
     public function getSeasonsIndex($Type, $Name)
     {
         $name = Validator::makeInsane($Name);
-        $models = $this->getSeasonsList($Type, $Name);
+        $urlName = Validator::sanitize($Name);
+        $list = $this->getSeasonsList($Type, $Name);
+        $models = $list['seasons'];
+        $series = $list['series'];
+        $type = Validator::sanitize($Type);
         if(!$models)
         {
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
-        return  response()->json($models);
-        //return view('series_index')->with(['seasons'=>$models]);
+        $seasons=[];
+        $i = 0;
+        foreach ($models as $model) {
+            $seasons[$i]=[
+                'link'=>url('series/'.$model->id.'/'.$urlName.'/'.$model->season_name),
+                'number'=> $model->season_name
+            ];
+            $i++;      
+        }
+         $Paginator = [
+                    'first_page_url'=>$models->url(1),
+                    'previous_page_url'=> $models->previousPageUrl(), 
+                    'current_page'=>$models->currentPage(),
+                    'next_page_url'=>$models->nextPageUrl(),
+                    'last_page_url'=> $models->url($models->lastPage()),
+                    'last'=>$models->lastPage(),
+                    'path'=>url('series/'.$type.'/'. $urlName .'?page=')
+                            ];
+        $paginator=json_encode($Paginator);
+        return view('series_index')->with(['name'=>$urlName,'desc'=>$series->short_description, 'seasons'=>$seasons,'image_link'=>$series->image_link, 'imdb_link'=>$series->imdb_link, 'paginator'=>$paginator, 'run_time'=>$series->run_time, 'number_of_seasons'=>$series->number_of_seasons, 'views'=>$series->views, 'id'=>$series->id]);
     
     }
     public function getEpisodesIndex($seasonId, $Name, $Season)
@@ -229,16 +273,18 @@ class categoryController extends Controller
             return view('movie_not_found')->with(['movie_name'=> $name.'_'.$season]);
         } 
         $episodes = [];
+        $i = 0;
         foreach ($models as $model)
         {
-          $episodes[$model->episode_name] = 
+          $episodes[$i] = 
           [
             'episode'=>$model->episode_name,
             'link' => url('seriesepisodes/'.$name.'/'.$model->id)
-          ];  
+          ];
+          $i++;  
         }
-        return response()->json($episodes);
-        //return view('episode_index')->with(['episodes'=>$episodes]);
+        $episodes_number = $i + 1;
+        return view('episode_index')->with(['episodes'=>$episodes, 'episodes_number'=> $episodes_number,'name'=>$name ]);
     }
     /** 
     * @param Name
@@ -246,7 +292,7 @@ class categoryController extends Controller
     * expect something like url(episodes/name/id)
     * only the Id is required
     * @return view during production
-    * @return json during dev/testing
+    * @return JSON during dev/testing
     */
     public function getEpisode($Name, $Id)
     {
@@ -256,15 +302,23 @@ class categoryController extends Controller
         }
         $id = Validator::sanitize($Id);
         $name = Validator::sanitize($Name);
-        $qualities = seriesquality::where('episodes_id', $id)->get();
+        $qualities = seriesquality::where('episodes_id', $id)->get(['id', 'file_path', 'quality', 'number_downloaded', ]);
+        $ArrQuality =[];
         //any view handling this should add a type of series to the episode link
-        return count($qualities) > 1 ? response()->json($qualities) : view('movie_not_found')->with([$movie_name=>$name]);
+        foreach ($qualities as $quality) {
+            $ArrQuality[$quality->quality]=[
+                'quality'=>$quality->quality,
+                'views'=>$quality->number_downloaded,
+                'link'=>url('download/series/'.$quality->id.'?file='.$quality->file_path)
+            ];
+        }
+        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'name'=>$name]) : view('movie_not_found')->with([$movie_name=>$name]);
         //return view('episode_page')->with(['qualities'=>$qualities]);
     }
     /**
     * @param Type
     * @param $Name
-    * @return bool or model
+    * @return bool or array of model and collection
     * The Type must be one of the Constants::isSeries Array
     * Name is the name of the file(movie or series)
     */
@@ -278,19 +332,29 @@ class categoryController extends Controller
         {
            return false;
         }
-        $qualities = allmovies::where('name', $name)->where('type', $type)->first()->quality()->get();
-        return $qualities->isNotEmpty() ? $qualities : false;
+        $movies = allmovies::where('name', $name)->where('type', $type)->first();
+        if(empty($movies) || $movies==null){
+            return false;
+        }
+        $qualities= $movies->quality()->get();
+        return ($qualities->isNotEmpty() && !empty($movies)) ? ['qualities'=>$qualities, 'movie'=>$movies] : false;
     }
     private function getVideos($type)
     {
         if(Constants::inSeries($type))
         {
             $models = series::where('type', $type)->orderBy('name', 'DESC')->paginate(10);
-            $models->withPath('getVideos/' .$type);
+            if(empty($models) || $models==null){
+                return false;
+            }
+        $models->withPath('getVideos/' .$type);
         }
         else if(Constants::inMovie($type))
         {
             $models = allmovies::where('type', $type)->paginate(10);
+            if(empty($models) || $models==null){
+            return false;
+            }
             $modes->withPath('getVideos/'.$type);
         }
         else
@@ -303,7 +367,7 @@ class categoryController extends Controller
     /**
     * @param Type
     * @param $Name
-    * @return bool or mpaginator model
+    * @return bool or array with paginator model
     * The Type must be one of the Constants::isSeries Array
     * Name is the name of the file(movie or series)
     */
@@ -317,9 +381,13 @@ class categoryController extends Controller
        {
         return false;
        }
-       $Seasons = series::where('name', $name)->where('type', $type)->first()->seasons()->paginate(10);
-       $Seasons->withPath('series/'.$name);
-       return $Seasons->isNotEmpty() ? $Seasons: false;
+       $series = series::where('type', $type)->where('name', $name)->first(['imdb_link', 'image_link','views', 'run_time', 'number_of_seasons', 'short_description', 'id']);
+       if(empty($series) || $series==null){
+            return false;
+        }
+       $Seasons = $series->seasons()->orderBy('season_name', 'desc')->paginate(10);
+       $Seasons->withPath('series/'.$type.'/'. $Name);
+       return ($Seasons->isNotEmpty() && !empty($series)) ? ['seasons'=>$Seasons, 'series'=>$series]: false;
     }
     private function getSearch($Name)
     {
@@ -347,23 +415,26 @@ class categoryController extends Controller
     * @return  Array
     * contents of the recently updated model
     */
-    private function getHomeCat()
+    private function getHomeCat($more=null)
     {
-        $recents = Recents::where('should_show', 1)->orderBy('updatedAt','asc')->take('10')->get();
+        $count = $more==null? '10' : '30';
+        $recents = Recents::where('should_show', 1)->orderBy('updated_at','desc')->take($count)->get();
         if($recents->isEmpty()){ return false;}
         $recentsArray=[];
+        $i = 0;
         foreach ($recents as $recentVid)
         {
-           $recentsArray[$recentVid->video_name] = 
+           $recentsArray[$i] = 
            [
             'name'=>$recentVid->video_name,
             'link'=>$recentVid->video_link,
             'season'=>$recentVid->season,
             'episode'=>$recentVid->episode,
-            'updatedAt'=>$recentVid->updatedAt,
+            'updatedAt'=>$recentVid->updated_at->Format('H:m - d/M '),
             'image_link'=>url($recentVid->image_link)
 
            ];
+           $i++;
         }
         return empty($recentsArray)? false : $recentsArray;
     }
@@ -394,16 +465,23 @@ class categoryController extends Controller
             if($accepted1== $type && Constants::inSeries($type)){
                 $models = series::where('type', $type)->whereIn('first_letter_of_name',$subgroup)->orderBy('updated_at', 'desc')
                 ->paginate(10);
+                if(empty($models) || $models==null){
+                    return false;
+                }
+                $models->withpath('categories/'.$type.'/'.$cat);
                 break;
             }
-            if ($accepted1 == $type)
+            if ($accepted1 == $type && Constants::inMovie($type))
             {
                 $models = allmovies::where('type', $type)->whereIn('first_letter_of_name',$subgroup)
                   ->orderBy('updated_at', 'desc')->paginate(10);
+                  if(empty($models) || $models==null){
+                    return false;
+                  }
+                  $models->withpath('categories/'.$type.'/'.$cat);
                   break;
             } 
         }
-            $models->withpath('categories/'.$type.'/'.$cat);
            return $models->isNotEmpty() ? $models : false;
         
     }

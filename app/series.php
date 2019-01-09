@@ -8,7 +8,7 @@ class series extends Model
 {
     protected $table= 'series';
     protected $primaryKey = 'id';
-    protected $fillable =['name', 'series_path','type', 'number_of_seasons','short_description', 'image_link','imdb_link','first_letter_of_name'];
+    protected $fillable =['name', 'series_path','type', 'number_of_seasons','short_description','run_time','views', 'image_link','imdb_link','first_letter_of_name'];
     
     public function makeNew($details){
      
@@ -20,6 +20,20 @@ class series extends Model
         return true;
      }
      return false;
+    }
+     public function add($Tags)
+    {
+        $tags = $Tags;
+            
+            foreach($tags as $tag) {
+                $tag = strtolower($tag);
+                 $this->tags()->create(['tag'=>$tag,'series_id'=>$this->id]);
+            }
+          return $this; 
+    }
+    public function tags()
+    {
+        return $this->hasMany(tags::class);
     }
 
     public function seasons()

@@ -15,12 +15,12 @@ namespace App;
  */
 class Constants {
     
-    public const supportedVideoTypes = [ 'naija', 'hollywood', 'naijaseries', 'hollywoodseries', 'comedy', 'bollywood']; 
-    public const ismovie =  [ 'naija', 'hollywood', 'comedy', 'bollywood']; 
+    public const supportedVideoTypes = [ 'naija', 'hollywood','hollywoodmovies','nollywoodmovies','nollywood','bollywoodmovies','bollywoodseries', 'naijaseries','nollywoodseries', 'hollywoodseries', 'comedy', 'bollywood']; 
+    public const ismovie =  [ 'naija', 'hollywoodmovies','nollywoodmovies', 'comedy', 'bollywood']; 
     public const videoUploadLocation = '/videos/';
     public const imageUploadLocation = '/public/images/'; 
     public const isSeries = ['naijaseries', 'series', 'hollywoodseries', 'nollywoodseries'];
-    
+ 
     public static function inSeries($Value)
     {
         $series = self::isSeries;

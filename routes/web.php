@@ -10,13 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 | RewriteRule ^.env - [F,L,NC]
 */
-use App\series;
+use App\recently_updated as recents;
 use App\Validator;
+use App\seriesquality;
+use App\allmovies;
+use App\Events\downloadEvent;
+use App\Constants;
 
 Route::get('/me', function() {
     //echo $you.' are '. $me;
-  return view('test');
+    $name = null;
+    $type='hollywoodmovies';
 
+echo $name;
 /**$string = 'wwww.me.com/ypu/public/videos/love.mp4';
 //$bool = preg_match('~/public/videos/~', $string);
 $match = [];
@@ -39,6 +45,8 @@ Route::get('series/{Type}/{Name}', 'categoryController@getSeasonsIndex');
 Route::get('series/{season_id}/{Name}/{Season}', 'categoryController@getEpisodesIndex');
 //e.g udaratv.com/seriesepisodes/the_flash_season1_episode_1/3
 Route::get('seriesepisodes/{Name}/{Id}', 'categoryController@getEpisode');
+//e.g udaratv.com/recents/seemore
+Route::get('recents/seemore', 'categoryController@getMoreRecents');
 
 //e.g udaratv.com/tags/comedy
 Route::get('tags/{Tag}', 'categoryController@getVideosOfTag');
@@ -50,3 +58,7 @@ Route::post('uploader/newSeries', 'uploadController@addNewSeries');
 Route::post('uploader/updateSeries', 'uploadController@updateExistingSeries');
 Route::post('uploader/newMovie', 'uploadController@addNewMovie');
 Route::post('uploader/updateMovie', 'uploadController@updateExistingMovie');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -82,6 +82,8 @@ class uploadController extends Controller
         $videoDetails['episodeNumber']= $request->input('data'.$videoID.'.episodeNumber');
         $videoDetails['short_description']= $request->input('data'.$videoID.'.desc');
         $videoDetails['imdb_link']= $request->input('data'.$videoID.'.imdblink');
+        $videoDetails['run_time']= $request->input('data'.$videoID.'.run_time');
+        $videoDetails['tags']= $request->input('data'.$videoID.'.tags');
         $videoDetails['image']= $image= $request->file('data'.$videoID.'.image');
         $videoDetails['image_ext']= $image->getClientOriginalExtension();
         $videoDetails['first_letter_of_name']=substr($file_name, 0, 1);
@@ -153,6 +155,7 @@ class uploadController extends Controller
         $videoDetails['type'] = $request->input('data'.$videoID.'.type');
         $videoDetails['short_description']= $request->input('data'.$videoID.'.desc');
         $videoDetails['tags']= $request->input('data'.$videoID.'.tags');
+        $videoDetails['run_time']= $request->input('data'.$videoID.'.run_time');
         $videoDetails['imdb_link']= $request->input('data'.$videoID.'.imdblink');
         $videoDetails['image']= $request->file('files'.$videoID.'.image');
         $videoDetails['first_letter_of_name']=substr($file_name,0 ,1);
@@ -211,8 +214,8 @@ class uploadController extends Controller
       $file_path=$reqs.$file_name;
       $storage_path= $reqs;
       $details['file_path'] = $file_path;
-      $image_name = $name.'_image';
-      $image_link = url($this::imageUploadLocation().$name);
+      $image_name = Validator::sanitize(preg_replace('/\s+/', '_',  $name.'_image'));
+      $image_link = url($this::imageUploadLocation().$image_name);
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
       if(!$this::fileUpload($file_name, $storage_path, $video, true )){
@@ -285,8 +288,8 @@ class uploadController extends Controller
       $series->update(['number_of_seasons'=>$season]);
     }
     $newSeason = $series->seasons()->firstOrCreate(['season_name'=>$season]);
-    $episode= $newSeason->episodes()->firstOrCreate(['series_id'=>$series->id,'episode_name'=>$episode]);
-    $quality=$episode->quality()->firstOrCreate(['series_id'=>$series->id,'quality'=>$quality, 'file_path'=>$file_path, 
+    $episodes= $newSeason->episodes()->firstOrCreate(['series_id'=>$series->id,'episode_name'=>$episode]);
+    $quality=$episodes->quality()->firstOrCreate(['series_id'=>$series->id,'quality'=>$quality, 'file_path'=>$file_path, 
       'season_number'=>$season,'season_id'=>$newSeason->id,'number_downloaded'=>0]);
     if($quality == null){ return file_name.' not updated'; }
     event( new uploadEvent(['name'=>$name, 'type'=>$series->type, 'image_link'=>$image_path, 'episode'=>$episode, 'season'=>$season, 'should_show'=>$should_show]));
@@ -302,6 +305,8 @@ class uploadController extends Controller
       $videoDetails=$Details;
       $file_name = $videoDetails['name'].'.'.$videoDetails['ext'];
       $type = $videoDetails['type'];
+      $tags = $details['tags'];
+      $tags = is_array($tags) ? $tags: json_decode($tags);
 
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
         if(!is_dir(base_path('/storage/app'.$upload_path))){
@@ -315,12 +320,13 @@ class uploadController extends Controller
       }
       $videoDetails['series_path']=$upload_path;
       $videoDetails['file_path']= $upload_path.'/'.stripslashes($file_name);
-      $image_name =stripslashes($videoDetails['name'].'_image.'.$videoDetails['image_ext']);
+      $image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
       $image_link = url($this::imageUploadLocation().$image_name);
       // Attempt to upload the image 
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $Details['image'], false);
       $videoDetails['image_link' ] = $imageUploadStatus == true ? $image_link : $videoDetails['imdb_link'];
-      $series = series::create($videoDetails);
+      $Series = series::create($videoDetails);
+      $series = $Series->add($tags);
       if( $series->makeNew($videoDetails) != false){
        event( new uploadEvent(['name'=>$videoDetails['name'], 'type'=>$type, 'episode'=>$videoDetails['episodeNumber'], 'image_link'=>$videoDetails['image_link'], 
         'should_show'=>'1',
@@ -344,7 +350,7 @@ class uploadController extends Controller
       }
       else 
       {
-        return true;//$file->move($filePath, $filename);
+        return $file->move($filePath, $filename);
       }
     }
     /**

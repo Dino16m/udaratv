@@ -19,6 +19,8 @@ class Series extends Migration
           $table->string('series_path');
           $table->timestamps();
           $table->string('type');
+          $table->string('run_time');
+          $table->integer('views')->default('0');
           $table->integer('number_of_seasons');
           $table->string('short_description')->nullable();
           $table->string('image_link')->nullable();

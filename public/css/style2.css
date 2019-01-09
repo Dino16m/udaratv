@@ -162,7 +162,10 @@ ul, menu, dir {
 .fa-twitter {
     color: #00aced;
 }
-
+.f-upload{
+        position: absolute;
+        top: -500px;
+}
 
 
 footer {

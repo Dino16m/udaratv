@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\uploadEvent'=>[
             'App\Listeners\uploadEventListener'
+        ],
+        'App\Events\downloadEvent'=>[
+            'App\Listeners\downloadEventListener'
         ]
     ];
 
