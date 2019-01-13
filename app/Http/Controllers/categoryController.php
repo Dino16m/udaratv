@@ -46,9 +46,13 @@ class categoryController extends Controller
     {
         $tag = strtolower($Tag);
         $tag = Validator::sanitize($tag);
-        $videos = tags::where('tag', $tags)->allmovies()->orderBy('name', 'ASC')->paginate(15);
+        $tagModels = tags::where('tag', $tag)->first();
+        if($tagModels==null){
+            return view('movie_not_found')->with(['movie_name'=>$tag]);
+        }
+        $videos= $tagModels->allmovies()->orderBy('name', 'ASC')->paginate(15);
         $videos->withPath('tags/'.$tag);
-        if($videos->isEmpty)
+        if($videos->isEmpty())
         {
             return back();
         }
@@ -60,19 +64,20 @@ class categoryController extends Controller
             $returnVids[$i]=
             [
                 'name'=>$video->name,
-                'link'=>url('movies/'.$type.'/'.$saneModelName),
-                'paginator'=> [
+                'link'=>url('movies/'.$tag.'/'.$saneModelName),
+            ];
+            $i++;
+        }
+        $paginator= [
                     'first_page_url'=>$videos->url(1),
                     'previous_page_url'=> $videos->previousPageUrl(), 
                     'next_page_url'=>$videos->nextPageUrl(),
                     'last_page_url'=> $videos->url($videos->lastPage()),
                     'last'=>$videos->lastPage(),
                     'path'=>url('tags/'.$tag.'?page=')
-                            ]
-            ];
-            $i++;
-        }
-        return view('video_index')->with(['videos'=>$returnVids]);
+                            ];
+        $Paginator = json_encode($paginator);
+        return view('video_index')->with(['videos'=>$returnVids,'paginator'=>$Paginator, 'type'=>$tag]);
 
     }
     public function search(Request $request)
@@ -134,10 +139,10 @@ class categoryController extends Controller
                     'next_page_url'=>$videos->nextPageUrl(),
                     'last_page_url'=> $videos->url($videos->lastPage()),
                     'last'=>$videos->lastPage(),
-                    'path'=>url('getVideos/'.$type.'?page=')
+                    'path'=>url('types/'.$type.'?page=')
                             ];
          $paginator= json_encode($Paginator);
-        return view('video_index')->with(['videos'=>$returnVids, 'paginator'=>$paginator]);
+        return view('video_index')->with(['videos'=>$returnVids, 'paginator'=>$paginator, 'type'=>$type]);
 
     }
     public function getCatIndex($Type, $Cat)
@@ -347,7 +352,7 @@ class categoryController extends Controller
             if(empty($models) || $models==null){
                 return false;
             }
-        $models->withPath('getVideos/' .$type);
+        $models->withPath('types/' .$type);
         }
         else if(Constants::inMovie($type))
         {
@@ -355,7 +360,7 @@ class categoryController extends Controller
             if(empty($models) || $models==null){
             return false;
             }
-            $modes->withPath('getVideos/'.$type);
+            $models->withPath('types/'.$type);
         }
         else
         {

@@ -13,16 +13,17 @@
 use App\recently_updated as recents;
 use App\Validator;
 use App\seriesquality;
-use App\allmovies;
+use App\series;
+use Illuminate\Support\Facades\Storage;
 use App\Events\downloadEvent;
 use App\Constants;
+use Illuminate\Http\File;
 
 Route::get('/me', function() {
     //echo $you.' are '. $me;
-    $name = null;
-    $type='hollywoodmovies';
-
-echo $name;
+    $url= 'http://www.google.co.in/intl/en_com/images/srpr/logo1w.png';
+    $stream = file_get_contents(filename)
+   Storage::putFileAs()
 /**$string = 'wwww.me.com/ypu/public/videos/love.mp4';
 //$bool = preg_match('~/public/videos/~', $string);
 $match = [];
@@ -50,8 +51,11 @@ Route::get('recents/seemore', 'categoryController@getMoreRecents');
 
 //e.g udaratv.com/tags/comedy
 Route::get('tags/{Tag}', 'categoryController@getVideosOfTag');
-//e.g uaratv.com/types/naija
+Route::get('tag/{Tag}', 'categoryController@getVideosOfTag');
+//e.g udaratv.com/types/naija
 Route::get('types/{Type}', 'categoryController@getVideosOfType');
+Route::get('type/{Type}', 'categoryController@getVideosOfType');
+
 
 Route::get('uploader/index', 'uploadController@index');
 Route::post('uploader/newSeries', 'uploadController@addNewSeries');

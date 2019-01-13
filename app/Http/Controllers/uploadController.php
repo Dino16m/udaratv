@@ -63,28 +63,32 @@ class uploadController extends Controller
       if ($request->file('files')==null){
         return response()->json(['error'=>'there are no video files here.']);
       }
-      if($request->input('age')!='new'){
-        return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
-      }
+      //if($request->input('age')!='new'){
+        //return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
+      //}
       $status= array();
 
       foreach($request->file('files') as $video){
         $videoDetails= [];
         $RawVideoName= $video->getClientOriginalName();
         $videoDetails['video']=$video;
-        $videoDetails['name']= strtolower( substr($RawVideoName, 3) );
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
         $file_name= $videoDetails['name'];
         $videoDetails['ext']= $video->getClientOriginalExtension();
         $videoID = substr($RawVideoName, 0, 3);
-        $videoDetails['quality']= $request->input('data'.$videoID.'.quality');
-        $videoDetails['type']= $request->input('data'.$videoID.'.type');
-        $videoDetails['number_of_seasons']=$request->input('data'.$videoID.'.seasonNumber');
-        $videoDetails['episodeNumber']= $request->input('data'.$videoID.'.episodeNumber');
-        $videoDetails['short_description']= $request->input('data'.$videoID.'.desc');
-        $videoDetails['imdb_link']= $request->input('data'.$videoID.'.imdblink');
-        $videoDetails['run_time']= $request->input('data'.$videoID.'.run_time');
-        $videoDetails['tags']= $request->input('data'.$videoID.'.tags');
-        $videoDetails['image']= $image= $request->file('data'.$videoID.'.image');
+        $json = json_decode($request->input('data'.$videoID));
+        $videoDetails['quality']= $json->quality;
+        $videoDetails['type']= $json->type;;
+        $videoDetails['number_of_seasons']= $json->seasonNumber;
+        $videoDetails['episodeNumber']=  $json->episodeNumber;
+        $videoDetails['short_description']=  $json->desc;
+        $videoDetails['imdb_link']=  $json->imdbLink;
+        $videoDetails['run_time']= $json->runTime;
+        if($json->haveLink!=false && $json->extLink!='default'){
+          $videoDetailsLink['extLink'] = $json->extLink;
+        }
+        $videoDetails['tags']=$json->tags;
+        $videoDetails['image']= $image = $request->file('image'.$videoID);
         $videoDetails['image_ext']= $image->getClientOriginalExtension();
         $videoDetails['first_letter_of_name']=substr($file_name, 0, 1);
         array_push($status, $this->handleNewSeries($videoDetails));
@@ -107,22 +111,27 @@ class uploadController extends Controller
       if ($request->file('files')==null){
         return response()->json(['error'=>'there are no video files here.']);
       }
-       if($request->input('age')!='old'){
-        return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
-      }
+       //if($request->input('age')!='old'){
+        //return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
+      //}
       $status=array();
       foreach ($request->file('files') as $video) {
         $videoDetails= [];
         $RawVideoName= $video->getClientOriginalName();
-        $videoDetails['name']= strtolower( substr($RawVideoName, 3));
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
         $videoID= substr($RawVideoName, 0, 3);
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
-        $videoDetails['should_show']= $request->input('data'.$videoID.'.should_show');
-        $videoDetails['quality']= $request->input('data'.$videoID.'.quality');
-        $videoDetails['number_of_seasons']=$request->input('data'.$videoID.'.seasonNumber');
-        $videoDetails['should_touch_season']=$request->input('data'.$videoID.'.seasonChanged');
-        $videoDetails['episodeNumber']= $request->input('data'.$videoID.'.episodeNumber');
+        $json= json_decode($request->input('data'.$videoID));
+        $videoDetails['should_show']= $json->shouldShow;
+        $videoDetails['quality']= $json->quality;
+        $videoDetails['type']=$json->type;
+        if($json->haveLink!=false && $json->extLink!='default'){
+          $videoDetailsLink['extLink'] = $json->extLink;
+        }
+        $videoDetails['number_of_seasons']= $json->seasonNumber;
+        $videoDetails['should_touch_season']= $json->seasonChanged;
+        $videoDetails['episodeNumber']= $json->episodeNumber;
         array_push($status, $this::handleOldSeries($videoDetails));
       }
       return response()->json([$status]);
@@ -140,24 +149,28 @@ class uploadController extends Controller
        if ($request->file('files')==null){
         return response()->json(['error'=>'there are no video files here.']);
       }
-       if($request->input('age')!='new'){
-        return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
-      }
+     //  if($request->input('age')!='new'){
+       // return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
+      //}
       $status = array();
       foreach ($request->file('files') as $video) {
         $videoDetails=[];
         $RawVideoName= $video->getClientOriginalName();
         $videoID= substr($RawVideoName, 0, 3);
-        $videoDetails['name']=$file_name=strtolower(substr($RawVideoName, 3));
+        $videoDetails['name']=$file_name=strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
-        $videoDetails['quality'] = $request->input('data'.$videoID.'.quality');
-        $videoDetails['type'] = $request->input('data'.$videoID.'.type');
-        $videoDetails['short_description']= $request->input('data'.$videoID.'.desc');
-        $videoDetails['tags']= $request->input('data'.$videoID.'.tags');
-        $videoDetails['run_time']= $request->input('data'.$videoID.'.run_time');
-        $videoDetails['imdb_link']= $request->input('data'.$videoID.'.imdblink');
-        $videoDetails['image']= $request->file('files'.$videoID.'.image');
+        $json = json_decode($request->input('data'.$videoID));
+        $videoDetails['quality'] = $json->quality;
+        $videoDetails['type'] = $json->type;
+        $videoDetails['short_description']=$json->desc;
+        $videoDetails['tags']= $json->tags;
+        $videoDetails['run_time']= $json->runTime;
+        if($json->haveLink!=false && $json->extLink!='default'){
+          $videoDetailsLink['extLink'] = $json->extLink;
+        }
+        $videoDetails['imdb_link']= $json->imdbLink;
+        $videoDetails['image']= $request->file('image'.$videoID);
         $videoDetails['first_letter_of_name']=substr($file_name,0 ,1);
         array_push($status, $this::handleNewMovies($videoDetails));
       }
@@ -174,20 +187,24 @@ class uploadController extends Controller
        if ($request->file('files')==null){
         return response()->json(['error'=>'there are no video files here.']);
       }
-       if($request->input('age')!='old'){
-        return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
-      }
+      // if($request->input('age')!='old'){
+       // return response()->json(['error=>there is an error in the upload api, make sure you\'re at the right place']);
+      //}
       $status=array();
       foreach($request->file('files') as $video){
         $videoDetails=[];
         $RawVideoName= $video->getClientOriginalName();
         $videoID= substr($RawVideoName, 0, 3);
-        $videoDetails['name']= strtolower(substr($RawVideoName, 3));
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
-        $videoDetails['should_show']= $request->input('data'.$videoID.'.should_show');
-        $videoDetails['quality'] = $request->input('data'.$videoID.'.quality');
-        $videoDetails['type'] = $request->input('data'.$videoID.'.type');
+        $json = json_decode($request->input('data'.$videoID));
+        $videoDetails['should_show']= $json->shouldShow;
+        if($json->haveLink!=false && $json->extLink!='default'){
+          $videoDetailsLink['extLink'] = $json->extLink;
+        }
+        $videoDetails['quality'] = $json->quality;
+        $videoDetails['type'] = $json->type;
         array_push($status, $this::handleOldMovies($videoDetails));
       }
       return response()->json([$status]);
@@ -201,6 +218,7 @@ class uploadController extends Controller
     private function handleNewMovies($Details){
       $details = $Details;
       $video=$details['video'];
+      $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $name= $details['name'];
       $ext= $details['ext'];
       $type=$details['type'];
@@ -218,7 +236,8 @@ class uploadController extends Controller
       $image_link = url($this::imageUploadLocation().$image_name);
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
-      if(!$this::fileUpload($file_name, $storage_path, $video, true )){
+      
+      if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink )){
         return  $file_name.' couldn\'t be uploaded';
       }
       $model = allmovies::create($details);
@@ -239,6 +258,7 @@ class uploadController extends Controller
       $details=$Details;
       $video=$details['video'];
       $name= $details['name'];
+      $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $ext= $details['ext'];
       $type=$details['type'];
       $movie=$this::getMovieModelandPath($type, $name);
@@ -249,7 +269,7 @@ class uploadController extends Controller
       $storage_path=$movie['path'];
       $should_show=$details['should_show'];
       $file_path= $movie['path'].stripslashes($file_name);
-      if(!$this::fileUpload($file_name, $storage_path, $video, true)){
+      if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
       }
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
@@ -269,19 +289,24 @@ class uploadController extends Controller
     private function handleOldSeries($Details){
       $details = $Details;
       $video=$details['video'];
+      $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $name= $details['name'];
       $quality=$details['quality'];
       $episode= $details['episodeNumber'];
       $season=$details['number_of_seasons'];
       $should_show=$details['should_show'];
       $ext= $details['ext'];
-      $series= series::where('name',$name)->first();
+      $type = $details['type'];
+      $series= series::where('type',$type)->where('name', $name)->first();
+      if($series==null){
+        return $series; //$name.' couldn\'t be commited please check you have the right name and type for this series';
+      }
       $upload_path=$series->series_path;
       $storage_path =$upload_path;
       $file_name= $name.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $upload_path.'/'.stripslashes($file_name);
-        if(!$this::fileUpload($file_name, $upload_path, $video, true)){
+        if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
       }
      if( $details['should_touch_season'] == 1) {
@@ -303,9 +328,10 @@ class uploadController extends Controller
     **/
     private function handleNewSeries($Details){
       $videoDetails=$Details;
-      $file_name = $videoDetails['name'].'.'.$videoDetails['ext'];
+      $file_name = $videoDetails['name'].$videoDetails['ext'];
       $type = $videoDetails['type'];
-      $tags = $details['tags'];
+      $tags = $videoDetails['tags'];
+      $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $tags = is_array($tags) ? $tags: json_decode($tags);
 
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
@@ -315,7 +341,7 @@ class uploadController extends Controller
         }}
       $video = $Details['video'];
       // Attempt to upload the video
-      if(!$this::fileUpload($file_name, $upload_path, $video, true)){
+      if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
       }
       $videoDetails['series_path']=$upload_path;
@@ -325,6 +351,7 @@ class uploadController extends Controller
       // Attempt to upload the image 
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $Details['image'], false);
       $videoDetails['image_link' ] = $imageUploadStatus == true ? $image_link : $videoDetails['imdb_link'];
+      if(series::where('type', $type)->where('name', $videoDetails['name'])->get()->isNotEmpty()){ return 'There is a video with the same name and type in existense here';}
       $Series = series::create($videoDetails);
       $series = $Series->add($tags);
       if( $series->makeNew($videoDetails) != false){
@@ -342,15 +369,21 @@ class uploadController extends Controller
     * @param File
     * @return Boolean
     **/
-    private function fileUpload($filename, $filePath, $file, $bool){
-      //please for the love of God uncomment the file move functionm below before pushing to production
-      if($bool)
-      {
-       return Storage::putFileAs($filePath, $file, $filename);
+    private function fileUpload($filename, $filePath, $file, $bool, $extLink){
+      //please for the love of God uncomment the file move function below before pushing to production
+      if($extLink == null || $extLink ==false){
+        if($bool)
+        {
+        return Storage::putFileAs($filePath, $file, $filename);
+        }
+        else 
+          {
+          $base = base_path($filePath);
+          return $file->move($base, $filename);
+        }
       }
-      else 
-      {
-        return $file->move($filePath, $filename);
+      if($extLink!=null && $extLink!==false){
+        
       }
     }
     /**

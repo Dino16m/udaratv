@@ -26,7 +26,13 @@
 </head>
 <body>
 <div id='app'>
-  <upload imageurl="<?php echo url('public/images/udaralogo.png')?>"></upload>
+  <upload 
+    imageurl="<?php echo url('public/images/udaralogo.png')?>" 
+    newmovies="{{url('uploader/newMovie')}}"
+    newseries=" {{url('uploader/newSeries')}}"
+    oldmovies= "{{url('uploader/updateMovie')}}"
+    oldseries="{{url('uploader/updateSeries')}}"
+    ></upload>
   
 </div>
 <script type="text/javascript" src="<?php echo url('public/js/app.js')?>"></script>

@@ -38,19 +38,30 @@
                     <a class="nav-link" href="<?php echo url('/')?>">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('types/hollwood')?>">Movies</a>
+                    <a class="nav-link" href="<?php echo url('types/hollywoodmovies')?>">Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('type/hollywoodseries')?>">TvSeries</a>
+                    <a class="nav-link" href="<?php echo url('types/hollywoodseries')?>">TvSeries</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('types/naija')?>">Nollywood-Movies</a>
+                    <a class="nav-link" href="<?php echo url('types/nollywoodmovies')?>">Nollywood-Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('type/naijaseries')?>">Nollywood-TvSeries</a>
+                    <a class="nav-link" href="<?php echo url('types/nollywoodseries')?>">Nollywood-TvSeries</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Genres</a>
+                   <div class="dropdown">
+                        <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     Genres
+                        </a>
+                    <div class="dropdown-menu shadow bg-secondary" aria-labelledby="dropdownMenu1">
+                     <a class="dropdown-item shadow" href="{{url('tags/action')}}">Action</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/drama')}}">Drama</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/comedy')}}">Comedy</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/romance')}}">Romance</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/horror')}}">Horror</a>
+                    </div>
+                    </div>
                 </li>
 
                 <li class="nav-item">

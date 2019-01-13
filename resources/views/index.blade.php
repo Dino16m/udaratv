@@ -66,22 +66,34 @@ $lacarousel=json_encode($carousel);
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
              <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{url('/')}}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="types/hollwood">Hollywood Movies</a>
+                    <a class="nav-link" href="types/hollywoodmovies">Hollywood Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="type/hollywoodseries">Hollywood TvSeries</a>
+                    <a class="nav-link" href="types/hollywoodseries">Hollywood TvSeries</a>
                 </li>
                  <li class="nav-item">
-                    <a class="nav-link" href="types/naija">Nollywood Movies</a>
+                    <a class="nav-link" href="types/nollywoodmovies">Nollywood Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="type/naijaseries">Nollywood TvSeries</a>
+                    <a class="nav-link" href="types/nollywoodseries">Nollywood TvSeries</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Genres</a>
+                   <div class="dropdown">
+                        <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     Genres
+                        </a>
+                    <div class="dropdown-menu shadow bg-secondary" aria-labelledby="dropdownMenu1">
+                     <a class="dropdown-item shadow" href="{{url('tags/action')}}">Action</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/drama')}}">Drama</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/comedy')}}">Comedy</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/romance')}}">Romance</a>
+                     <a class="dropdown-item shadow" href="{{url('tags/horror')}}">Horror</a>
+                    </div>
+                    </div>
+
                 </li>
 
                 <li class="nav-item">
@@ -299,10 +311,10 @@ $lacarousel=json_encode($carousel);
 
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#!">Movies</a>
+                            <a href="{{url('types/nollywoodmovies')}}">Nollywood Movies</a>
                         </li>
                         <li>
-                            <a href="#!">Tvseries</a>
+                            <a href="{{url('types/nollywoodseries')}}">Nollywood Tvseries</a>
                         </li>
                         <li>
                             <a href="#!">Request!</a>
@@ -322,13 +334,13 @@ $lacarousel=json_encode($carousel);
 
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#!">Hollywood</a>
+                            <a href="{{url('types/hollywoodmovies')}}">Hollywood Movies</a>
                         </li>
                         <li>
-                            <a href="#!">Nollywood</a>
+                            <a href="{{url('types/nollywoodmovies')}}">Nollywood Movies</a>
                         </li>
                         <li>
-                            <a href="#!">Bollywood</a>
+                            <a href="{{url('types/bollywoodmovies')}}">Bollywood movies</a>
                         </li>
 
                     </ul>
@@ -350,19 +362,19 @@ $lacarousel=json_encode($carousel);
                             
                         </li>
                         <li>
-                            <a href="#!">Drama</a>
+                            <a href="{{url('tags/drama')}}">Drama</a>
                         </li>
                 
                         <li>
-                            <a href="#!">Comedy</a>
+                            <a href="{{url('tags/comedy')}}">Comedy</a>
                         </li>
                     
                         <li>
-                            <a href="#!">Romance</a>
+                            <a href="{{url('tags/romance')}}">Romance</a>
                         </li>
                 
                         <li>
-                            <a href="#!">Horror</a>
+                            <a href="{{url('tags/horror')}}">Horror</a>
                         </li>
                 
                         <li>

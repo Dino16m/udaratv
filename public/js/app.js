@@ -14076,6 +14076,9 @@ Vue.component('image-mount', __webpack_require__(61));
 Vue.component('upload', __webpack_require__(69));
 Vue.component('modal', __webpack_require__(72));
 Vue.component('new-series', __webpack_require__(76));
+Vue.component('new-movies', __webpack_require__(79));
+Vue.component('old-series', __webpack_require__(82));
+Vue.component('old-movies', __webpack_require__(85));
 
 var app = new Vue({
   el: '#app',
@@ -14086,7 +14089,21 @@ var app = new Vue({
     };
   },
 
-  methods: {}
+  methods: {
+    isEmpty: function isEmpty(obj) {
+      var count = 0;
+      var length = 0;
+      for (var key in obj) {
+        length++;
+        if (obj.key != null) {
+          count++;
+        }
+      }
+      console.log('count is' + count);
+      console.log('length is' + length);
+      return count == length ? false : true;
+    }
+  }
 });
 
 /***/ }),
@@ -48516,7 +48533,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.values.current_page == key ? "page-item active" : "page-item";
 		},
 		previous: function previous() {
-			return this.values.previous_page_url != null;
+			return this.values.previous_page_url != null ? true : false;
 		},
 		populate: function populate() {
 			var length = this.number;
@@ -48553,7 +48570,7 @@ var render = function() {
         { staticClass: "pagination pagination-lg bg-dark shadow" },
         [
           _vm.previous()
-            ? _c("li", { staticClass: "page-item disabled bg-dark" }, [
+            ? _c("li", { staticClass: "page-item bg-dark" }, [
                 _c(
                   "a",
                   {
@@ -49039,81 +49056,310 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
 		imageurl: {
-			type: String
+			type: String,
+			required: true
+		},
+		oldmovies: {
+			type: String,
+			required: true
+		},
+		oldseries: {
+			type: String,
+			required: true
+		},
+		newmovies: {
+			type: String,
+			required: true
+		},
+		newseries: {
+			type: String,
+			required: true
 		}
 	},
 	data: function data() {
 		return {
+			oldmoviesAPI: this.oldmovies,
+			oldseriesAPI: this.oldseries,
+			newmoviesAPI: this.newmovies,
+			newseriesAPI: this.newseries,
 			imgSrc: this.imageurl,
-			newSeriesData: { episodeNumber: '', seasonNumber: '', runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [] },
-			EmptynewSeriesData: { episodeNumber: '', seasonNumber: '', runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [] },
 			newSeriesfiles: [],
-			newMovies: [],
-			oldSeries: [],
-			oldMovies: [],
+			newMoviesfiles: [],
+			oldSeriesfiles: [],
+			oldMoviesfiles: [],
 			allFiles: [],
 			allImages: [],
-			modal_msg: '',
-			clickChange: ''
+			modal_msg: "you can't submit an Empty form",
+			clickChange: '',
+			isActive: 'newseries',
+			nsStatus: { width: '1%', uploadValue: 0, started: false, success: false, msg: '' },
+			nmStatus: { width: '1%', uploadValue: 0, started: false, success: false, msg: '' },
+			osStatus: { width: '1%', uploadValue: 0, started: false, success: false, msg: '' },
+			omStatus: { width: '1%', uploadValue: 0, started: false, success: false, msg: '' }
+
 		};
+	},
+	mounted: function mounted() {
+		this.isActive = 'newseries';
 	},
 
 	methods: {
-		handleFileUpload: function handleFileUpload(type) {
-			if (type == 'newseries') {
-				var upload = this.$refs.newSeriesFiles.files;
-				var length = upload.length;
-				for (var i = 0; i < length; i++) {
-					this.allFiles.push(upload[i]);
-				}
-				this.newSeriesData.file.push(upload[length - 1]);
-			}
-		},
-		handleImageUpload: function handleImageUpload(type) {
-			if (type == 'newseries') {
-				var upload = this.$refs.newSeriesImages.files;
-				var length = upload.length;
-				for (var i = 0; i < length; i++) {
-					this.allImages.push(upload[i]);
-				}
-				this.newSeriesData.image.push(upload[length - 1]);
-			}
-		},
-		addfiles: function addfiles(type, where) {
-			if (where == 'newSeries') {
-				if (type == 'image') {
-					this.$refs.newSeriesImages.click();
-				} else {
-					this.$refs.newSeriesFiles.click();
-				}
-			}
-		},
-		submit: function submit(type) {
+		submit: function submit(type, data) {
 
 			if (type == 'newseries') {
-				if (this.isEmpty(this.newSeriesData)) {
-					//this.clickModal("You can't upload an empty form");
-				}
-				this.newSeriesfiles.push(this.newSeriesData);
-				this.newSeriesData = this.EmptynewSeriesData;
+				this.newSeriesfiles.push(data);
+			} else if (type == 'newmovies') {
+				this.newMoviesfiles.push(data);
+			} else if (type == 'oldseries') {
+				this.oldSeriesfiles.push(data);
+			} else if (type == 'oldmovies') {
+				this.oldMoviesfiles.push(data);
+			} else {}
+		},
+		clear: function clear(type) {
+			var empty = { width: '1%', uploadValue: 0, started: false, success: false, msg: '' };
+			switch (type) {
+				case 'ns':
+					this.nsStatus = empty;
+					break;
+				case 'os':
+					this.osStatus = empty;;
+					break;
+				case 'nm':
+					this.nmStatus = empty;
+					break;
+				case 'om':
+					this.omStatus = empty;
+					break;
+				default:
+
 			}
 		},
-		isEmpty: function isEmpty(obj) {
+		upload: function upload() {
+			if (this.emptyPayload()) {
+				this.clickModal();
+			}
+			this.uploadNew();
+		},
+		emptyPayload: function emptyPayload() {
 			var count = 0;
-			for (var key in obj) {
-				if (obj.hasOwnProperty(key)) {
-					count++;
-				}
+			if (this.newMoviesfiles.length == 0) {
+				count++;
 			}
-			return count == obj.length ? false : true;
+			if (this.oldMoviesfiles.length == 0) {
+				count++;
+			}
+			if (this.newSeriesfiles.length == 0) {
+				count++;
+			}
+			if (this.oldSeriesfiles.length == 0) {
+				count++;
+			}
+			console.log('count is ' + count);
+			return count == 4 ? true : false;
 		},
-		clickModal: function clickModal(msg) {
-			this.modal_msg = msg;
+		clickModal: function clickModal() {
+			var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+			if (msg) {
+				this.modal_msg = msg;
+			} else {
+				this.modal_msg = "you can't submit an Empty form";
+			}
 			this.$refs.child.clicked();
+		},
+		active: function active(type) {
+			this.isActive = type;
+		},
+		isFocus: function isFocus(type) {
+			return this.isActive == type ? true : false;
+		},
+		remove: function remove(key, where) {
+			switch (where) {
+				case 'newseries':
+					this.newSeriesfiles.splice(key, 1);
+					break;
+				case 'oldseries':
+					this.oldSeriesfiles.splice(key, 1);
+					break;
+				case 'newmovies':
+					this.newMoviesfiles.splice(key, 1);
+					break;
+				case 'oldmovies':
+					this.oldMoviesfiles.splice(key, 1);
+					break;
+				default:
+
+			}
+		},
+		uploaded: function uploaded(type) {
+			switch (type) {
+				case 'newseries':
+					this.newSeriesfiles = [];
+					break;
+				case 'oldseries':
+					this.oldSeriesfiles = [];
+					break;
+				case 'newmovies':
+					this.newMoviesfiles = [];
+					break;
+				case 'oldmovies':
+					this.oldMoviesfiles = [];
+					break;
+				default:
+
+			}
+		},
+		uploadNew: function uploadNew() {
+			if (this.newSeriesfiles.length != 0) {
+				var payload = this.newSeriesfiles;
+				var hook = this.nsStatus;
+				var api = this.newseriesAPI;
+				this.prepUpload(payload, 'newseries', hook, api);
+			}
+			if (this.newMoviesfiles.length != 0) {
+				var _payload = this.newMoviesfiles;
+				var _hook = this.nmStatus;
+				var _api = this.newmoviesAPI;
+				this.prepUpload(_payload, 'newmovies', _hook, _api);
+			}
+			if (this.oldSeriesfiles.length != 0) {
+				var _payload2 = this.oldSeriesfiles;
+				var _hook2 = this.osStatus;
+				var _api2 = this.oldseriesAPI;
+				this.prepUpload(_payload2, 'oldseries', _hook2, _api2);
+			}
+			if (this.oldMoviesfiles.length != 0) {
+				var _payload3 = this.oldMoviesfiles;
+				var _hook3 = this.omStatus;
+				var _api3 = this.oldmoviesAPI;
+				this.prepUpload(_payload3, 'oldseries', _hook3, _api3);
+			}
+		},
+		prepUpload: function prepUpload(payload, type, hook, api) {
+			var formData = new FormData();
+			for (var i = 0; i < payload.length; i++) {
+				var it = payload[i];
+				var name = this.pad(i) + payload[i].name;
+				var file = this.createFile(payload[i].file[0], name);
+				if (!file) {
+					this.clickModal('there is a problem parsing your file ' + name);break;
+				}
+				var json = this.getJson(type, it);
+				formData.append('files[' + i + ']', file);
+				if (type == 'newseries' || type == 'newmovies') {
+					formData.append('image' + this.pad(i), it.image[0]);
+				}
+				formData.append('data' + this.pad(i), JSON.stringify(json));
+				this.apiCall(formData, hook, api, type);
+			}
+		},
+		getJson: function getJson(type, it) {
+			switch (type) {
+				case 'newseries':
+					return { quality: it.quality, type: it.type, runTime: it.runTime, seasonNumber: it.seasonNumber, episodeNumber: it.episodeNumber, desc: it.desc, imdbLink: it.imdbLink, haveLink: it.haveLink, extLink: it.extLink, tags: JSON.stringify(it.tags.split(',')) };
+					break;
+				case 'oldseries':
+					return { episodeNumber: it.episodeNumber, seasonNumber: it.seasonNumber, haveLink: it.haveLink, extLink: it.extLink, quality: it.quality, type: it.type, shouldShow: it.should_show, seasonChanged: it.season_change };
+					break;
+				case 'newmovies':
+					return { runTime: it.runTime, quality: it.quality, haveLink: it.haveLink, extLink: it.extLink, tags: JSON.stringify(it.tags.split(',')), type: it.type, imdbLink: it.imdbLink, desc: it.desc };
+					break;
+				case 'oldmovies':
+					return { quality: it.quality, type: it.type, haveLink: it.haveLink, extLink: it.extLink, shouldShow: it.should_show, seasonChange: it.season_change };
+					break;
+				default:
+			}
+		},
+		apiCall: function apiCall(formData, hook, api, type) {
+			hook.started = true;
+			axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' },
+				onUploadProgress: function (progressEvent) {
+					hook.uploadValue = parseInt(Math.round(progressEvent.loaded * 100 / progressEvent.total));
+					var value = hook.uploadValue;
+					console.log(value + 'me');
+					hook.width = value.toString() + '%';
+				}.bind(this) }).then(function (response) {
+				console.log(response);
+				hook.success = true;
+				hook.msg = response.data;
+				this.uploaded(type);
+			}.bind(this)).catch(function () {
+				hook.msg = 'unfortunately not uploaded';
+			}.bind(this));
+		},
+		pad: function pad(number) {
+			var final = number.toString();
+			if (final.length == 3) {
+				return final;
+			}
+			var zerolen = 3 - final.length;
+			for (var i = 0; i < zerolen; i++) {
+				final = '0' + final;
+			}
+			return final;
+		},
+		createFile: function createFile(file, name) {
+			var ext = file.name.split('.').pop();
+			var blob = file.slice(0, file.size, file.type);
+			var newFile = new File([blob], name + '.' + ext, { type: file.type });
+			return newFile == null ? false : newFile;
 		}
 	}
 });
@@ -49148,7 +49394,91 @@ var render = function() {
             staticClass: "collapse navbar-collapse",
             attrs: { id: "navbarSupportedContent" }
           },
-          [_vm._m(1), _vm._v(" "), _c("search-bar")],
+          [
+            _c("ul", { staticClass: "navbar-nav mr-auto" }, [
+              _c("li", { staticClass: "nav-item active" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    on: {
+                      click: function($event) {
+                        _vm.active("newseries")
+                      }
+                    }
+                  },
+                  [
+                    _vm._v("Add New Series "),
+                    _c("span", { staticClass: "sr-only" }, [
+                      _vm._v("(current)")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    on: {
+                      click: function($event) {
+                        _vm.active("oldseries")
+                      }
+                    }
+                  },
+                  [_vm._v("Update Existing Series")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    on: {
+                      click: function($event) {
+                        _vm.active("newmovies")
+                      }
+                    }
+                  },
+                  [_vm._v("Add new Movie")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    on: {
+                      click: function($event) {
+                        _vm.active("oldmovies")
+                      }
+                    }
+                  },
+                  [_vm._v("Update Existing Movie")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "nav-link btn btn-success",
+                    on: {
+                      click: function($event) {
+                        _vm.upload()
+                      }
+                    }
+                  },
+                  [_vm._v("Submit to server")]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("search-bar")
+          ],
           1
         )
       ]
@@ -49165,9 +49495,391 @@ var render = function() {
               "div",
               { staticClass: "d-flex flex-row mx-auto mb-3 h-100 w-75" },
               [
-                _c("div", {
-                  staticClass: "col-md-8 border border-primary w-100 flex-fill"
-                }),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "col-md-8 border border-primary w-100 flex-fill"
+                  },
+                  [
+                    _c("h3", [_vm._v("New Series")]),
+                    _vm._v(" "),
+                    _vm.nsStatus.started
+                      ? _c("div", { staticClass: "progress bg-success" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "progress-bar progress-bar-striped text-center",
+                              style: { width: _vm.nsStatus.width },
+                              attrs: {
+                                role: "progressbar",
+                                "aria-valuenow": _vm.nsStatus.uploadValue,
+                                "aria-valuemin": "0",
+                                "aria-valuemax": "100"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.nsStatus.width) +
+                                  "\n           \t\t"
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.nsStatus.success
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-success mt-sm-2 d-inline-block bg-info w-100",
+                            attrs: { role: "alert" }
+                          },
+                          [
+                            _vm._v(" " + _vm._s(_vm.nsStatus.msg) + " "),
+                            _c("button", {
+                              staticClass: "btn btn-secondary",
+                              on: {
+                                click: function($event) {
+                                  _vm.clear("ns")
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.newSeriesfiles, function(value, key) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "alert alert-success mt-sm-2 d-inline-block bg-primary w-100",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(value.name) +
+                                "-season" +
+                                _vm._s(value.seasonNumber) +
+                                "-episode" +
+                                _vm._s(value.episodeNumber) +
+                                "- " +
+                                _vm._s(value.quality) +
+                                " quality"
+                            )
+                          ]),
+                          _vm._v(
+                            "  type: " +
+                              _vm._s(value.type) +
+                              " actual filename: " +
+                              _vm._s(value.file[0].name) +
+                              "\n\t\t    \t "
+                          ),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.remove("key", "newseries")
+                                }
+                              }
+                            },
+                            [_vm._v("remove")]
+                          )
+                        ]
+                      )
+                    }),
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("h3", [_vm._v("Old Series")]),
+                    _vm._v(" "),
+                    _vm.osStatus.started
+                      ? _c("div", { staticClass: "progress bg-success" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "progress-bar progress-bar-striped text-center",
+                              style: { width: _vm.osStatus.width },
+                              attrs: {
+                                role: "progressbar",
+                                "aria-valuenow": _vm.osStatus.uploadValue,
+                                "aria-valuemin": "0",
+                                "aria-valuemax": "100"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.osStatus.width) +
+                                  "\n           \t\t"
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.osStatus.success
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-success mt-sm-2 d-inline-block bg-info w-100",
+                            attrs: { role: "alert" }
+                          },
+                          [
+                            _vm._v(" " + _vm._s(_vm.osStatus.msg) + " "),
+                            _c("button", {
+                              staticClass: "btn btn-secondary",
+                              on: {
+                                click: function($event) {
+                                  _vm.clear("os")
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.oldSeriesfiles, function(value, key) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "alert alert-success mt-sm-2 d-inline-block bg-primary w-100",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(value.name) +
+                                "-season" +
+                                _vm._s(value.seasonNumber) +
+                                "-episode" +
+                                _vm._s(value.episodeNumber) +
+                                "- " +
+                                _vm._s(value.quality) +
+                                " quality"
+                            )
+                          ]),
+                          _vm._v(
+                            " type: " +
+                              _vm._s(value.type) +
+                              "  actual filename: " +
+                              _vm._s(value.file[0].name) +
+                              "\n\t\t    \t "
+                          ),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.remove("key", "oldseries")
+                                }
+                              }
+                            },
+                            [_vm._v("remove")]
+                          )
+                        ]
+                      )
+                    }),
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("h3", [_vm._v("New movies")]),
+                    _vm._v(" "),
+                    _vm.nmStatus.started
+                      ? _c("div", { staticClass: "progress bg-success" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "progress-bar progress-bar-striped text-center",
+                              style: { width: _vm.nmStatus.width },
+                              attrs: {
+                                role: "progressbar",
+                                "aria-valuenow": _vm.nmStatus.uploadValue,
+                                "aria-valuemin": "0",
+                                "aria-valuemax": "100"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.nmStatus.width) +
+                                  "\n           \t\t"
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.nmStatus.success
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-success mt-sm-2 d-inline-block bg-info w-100",
+                            attrs: { role: "alert" }
+                          },
+                          [
+                            _vm._v(" " + _vm._s(_vm.nmStatus.msg) + " "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-secondary",
+                                on: {
+                                  click: function($event) {
+                                    _vm.clear("nm")
+                                  }
+                                }
+                              },
+                              [_vm._v("OK")]
+                            )
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.newMoviesfiles, function(value, key) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "alert alert-success mt-sm-2 d-inline-block bg-primary w-100",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(value.name) +
+                                "-" +
+                                _vm._s(value.quality) +
+                                " quality"
+                            )
+                          ]),
+                          _vm._v(
+                            " type: " +
+                              _vm._s(value.type) +
+                              " actual filename: " +
+                              _vm._s(value.file[0].name) +
+                              "\n\t\t    \t "
+                          ),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.remove("key", "newmovies")
+                                }
+                              }
+                            },
+                            [_vm._v("remove")]
+                          )
+                        ]
+                      )
+                    }),
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("h3", [_vm._v("Old Movies")]),
+                    _vm._v(" "),
+                    _vm.omStatus.started
+                      ? _c("div", { staticClass: "progress bg-success" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "progress-bar progress-bar-striped text-center",
+                              style: { width: _vm.omStatus.width },
+                              attrs: {
+                                role: "progressbar",
+                                "aria-valuenow": _vm.omStatus.uploadValue,
+                                "aria-valuemin": "0",
+                                "aria-valuemax": "100"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.omStatus.width) +
+                                  "\n           \t\t"
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.omStatus.success
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "alert alert-success mt-sm-2 d-inline-block bg-info w-100",
+                            attrs: { role: "alert" }
+                          },
+                          [
+                            _vm._v(" " + _vm._s(_vm.omStatus.msg) + " "),
+                            _c("button", {
+                              staticClass: "btn btn-secondary",
+                              on: {
+                                click: function($event) {
+                                  _vm.clear("om")
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.oldMoviesfiles, function(value, key) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "alert alert-success mt-sm-2 d-inline-block bg-primary w-100",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(value.name) +
+                                "- " +
+                                _vm._s(value.quality) +
+                                " quality"
+                            )
+                          ]),
+                          _vm._v(
+                            " type: " +
+                              _vm._s(value.type) +
+                              " actual filename: " +
+                              _vm._s(value.file[0].name) +
+                              "\n\t\t    \t "
+                          ),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.remove("key", "oldmovies")
+                                }
+                              }
+                            },
+                            [_vm._v("remove")]
+                          )
+                        ]
+                      )
+                    }),
+                    _c("hr")
+                  ],
+                  2
+                ),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -49175,7 +49887,69 @@ var render = function() {
                     staticClass:
                       "col-md-8 border border-secondary w-100 flex-fill"
                   },
-                  [_c("new-series")],
+                  [
+                    _vm.isFocus("newseries")
+                      ? _c("new-series", {
+                          on: {
+                            emptyForm: _vm.clickModal,
+                            unsupportedPic: function($event) {
+                              _vm.clickModal("unsupported picture format")
+                            },
+                            unsupportedVid: function($event) {
+                              _vm.clickModal("unsupported video format")
+                            },
+                            submitAttempt: function($event) {
+                              _vm.submit("newseries", $event)
+                            }
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isFocus("newmovies")
+                      ? _c("new-movies", {
+                          on: {
+                            emptyForm: _vm.clickModal,
+                            unsupportedPic: function($event) {
+                              _vm.clickModal("unsupported picture format")
+                            },
+                            unsupportedVid: function($event) {
+                              _vm.clickModal("unsupported video format")
+                            },
+                            submitAttempt: function($event) {
+                              _vm.submit("newmovies", $event)
+                            }
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isFocus("oldseries")
+                      ? _c("old-series", {
+                          on: {
+                            emptyForm: _vm.clickModal,
+                            unsupportedVid: function($event) {
+                              _vm.clickModal("unsupported video format")
+                            },
+                            submitAttempt: function($event) {
+                              _vm.submit("oldseries", $event)
+                            }
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isFocus("oldmovies")
+                      ? _c("old-movies", {
+                          on: {
+                            emptyForm: _vm.clickModal,
+                            unsupportedVid: function($event) {
+                              _vm.clickModal("unsupported video format")
+                            },
+                            submitAttempt: function($event) {
+                              _vm.submit("oldmovies", $event)
+                            }
+                          }
+                        })
+                      : _vm._e()
+                  ],
                   1
                 )
               ]
@@ -49207,37 +49981,6 @@ var staticRenderFns = [
       },
       [_c("span", { staticClass: "navbar-toggler-icon" })]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "navbar-nav mr-auto" }, [
-      _c("li", { staticClass: "nav-item active" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "" } }, [
-          _vm._v("Add New Series "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("(current)")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "nav-item" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "" } }, [
-          _vm._v("Update Existing Series")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "nav-item" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "" } }, [
-          _vm._v("Add new Movie")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "nav-item" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "" } }, [
-          _vm._v("Update Existing Movie")
-        ])
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -49564,12 +50307,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			newSeriesData: { episodeNumber: '', seasonNumber: '', runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [] },
-			EmptynewSeriesData: { episodeNumber: '', seasonNumber: '', runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [] },
 			newSeriesfiles: [],
 			allFiles: [],
 			allImages: []
@@ -49577,53 +50324,79 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 
 	methods: {
-		handleFileUpload: function handleFileUpload(type) {
-			if (type == 'newseries') {
-				var upload = this.$refs.newSeriesFiles.files;
-				var length = upload.length;
-				for (var i = 0; i < length; i++) {
-					this.allFiles.push(upload[i]);
-				}
-				this.newSeriesData.file.push(upload[length - 1]);
+		handleFileUpload: function handleFileUpload() {
+			var upload = this.$refs.newSeriesFiles.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allFiles.push(upload[i]);
 			}
-		},
-		handleImageUpload: function handleImageUpload(type) {
-			if (type == 'newseries') {
-				var upload = this.$refs.newSeriesImages.files;
-				var length = upload.length;
-				for (var i = 0; i < length; i++) {
-					this.allImages.push(upload[i]);
-				}
-				this.newSeriesData.image.push(upload[length - 1]);
-			}
-		},
-		addfiles: function addfiles(type, where) {
-			if (where == 'newSeries') {
-				if (type == 'image') {
-					this.$refs.newSeriesImages.click();
-				} else {
-					this.$refs.newSeriesFiles.click();
-				}
-			}
-		},
-		submit: function submit(type) {
 
-			if (type == 'newseries') {
-				if (this.isEmpty(this.newSeriesData)) {
-					//this.clickModal("You can't upload an empty form");
-				}
-				this.newSeriesfiles.push(this.newSeriesData);
-				this.newSeriesData = this.EmptynewSeriesData;
+			if (this.acceptedType('vids', upload[length - 1].type)) {
+				this.newSeriesData.file[0] = upload[length - 1];
+			} else {
+				this.$emit('unsupportedVid');
+			}
+		},
+		handleImageUpload: function handleImageUpload() {
+
+			var upload = this.$refs.newSeriesImages.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allImages.push(upload[i]);
+			}
+			if (this.acceptedType('pics', upload[length - 1].type)) {
+				this.newSeriesData.image.push(upload[length - 1]);
+			} else {
+				this.$emit('unsupportedPic');
+			}
+		},
+		acceptedType: function acceptedType(cat, type) {
+			var acceptedVids = ['mp4', '3gp', 'avi'];
+			var acceptedpics = ['jpeg', 'gif', 'png', 'jpg', 'bmp'];
+			if (cat == 'vids') {
+				for (var i = 0; i < acceptedVids.length; i++) {
+					if (type.split('/').pop() == acceptedVids[i]) {
+						return true;
+					}
+				}return false;
+			}
+			if (cat == 'pics') {
+				for (var i = 0; i < acceptedpics.length; i++) {
+					if (type.split('/').pop() == acceptedpics[i]) {
+						return true;
+					}
+				}return false;
+			}
+		},
+		addfiles: function addfiles(type) {
+
+			if (type == 'image') {
+				this.$refs.newSeriesImages.click();
+			} else {
+				this.$refs.newSeriesFiles.click();
+			}
+		},
+		submit: function submit() {
+			var Empty = { episodeNumber: '', seasonNumber: '', runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [] };
+			if (this.isEmpty(this.newSeriesData)) {
+				this.$emit('emptyForm');
+			} else {
+				this.$emit('submitAttempt', this.newSeriesData);
+				this.newSeriesData = Empty;
 			}
 		},
 		isEmpty: function isEmpty(obj) {
 			var count = 0;
+			var length = 0;
 			for (var key in obj) {
-				if (obj.hasOwnProperty(key)) {
+				length++;
+				if (obj[key] != null && obj[key] != '') {
 					count++;
 				}
 			}
-			return count == obj.length ? false : true;
+			console.log('count is' + count);
+			console.log('length is' + length);
+			return count == length ? false : true;
 		}
 	}
 });
@@ -49643,7 +50416,7 @@ var render = function() {
       attrs: { type: "file", id: "Files", name: "Files", multiple: "" },
       on: {
         change: function($event) {
-          _vm.handleFileUpload("newseries")
+          _vm.handleFileUpload()
         }
       }
     }),
@@ -49654,7 +50427,7 @@ var render = function() {
       attrs: { type: "file", id: "Images", name: "Images", multiple: "" },
       on: {
         change: function($event) {
-          _vm.handleImageUpload("newseries")
+          _vm.handleImageUpload()
         }
       }
     }),
@@ -49840,31 +50613,47 @@ var render = function() {
     _c("div", { staticClass: "form-group" }, [
       _c("label", { attrs: { for: "newSeriesQuality" } }, [_vm._v("Quality")]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.newSeriesData.quality,
-            expression: "newSeriesData.quality"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          id: "newSeriesQuality",
-          placeholder: "This Should be correct and non-duplicate"
-        },
-        domProps: { value: _vm.newSeriesData.quality },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newSeriesData.quality,
+              expression: "newSeriesData.quality"
             }
-            _vm.$set(_vm.newSeriesData, "quality", $event.target.value)
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "newSeriesQuality" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.newSeriesData,
+                "quality",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
           }
-        }
-      })
+        },
+        [
+          _c("option", { attrs: { value: "HD" } }, [_vm._v(" HD")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "MP4" } }, [_vm._v(" MP4")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "3gp" } }, [_vm._v(" 3gp")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "Avi" } }, [_vm._v(" Avi")])
+        ]
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
@@ -49969,7 +50758,7 @@ var render = function() {
             staticClass: "nav-item flex-md-column  md-3 btn btn-danger",
             on: {
               click: function($event) {
-                _vm.submit("newseries")
+                _vm.submit()
               }
             }
           },
@@ -49984,7 +50773,7 @@ var render = function() {
             staticClass: "nav-item flex-md-column  md-3 btn btn-primary",
             on: {
               click: function($event) {
-                _vm.addfiles("video", "newSeries")
+                _vm.addfiles("video")
               }
             }
           },
@@ -49999,7 +50788,7 @@ var render = function() {
             staticClass: "nav-item flex-md-column  md-3 btn btn-secondary",
             on: {
               click: function($event) {
-                _vm.addfiles("image", "newSeries")
+                _vm.addfiles("image")
               }
             }
           },
@@ -50016,6 +50805,1568 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-7e1dcddd", module.exports)
+  }
+}
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(80)
+/* template */
+var __vue_template__ = __webpack_require__(81)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/newMoviesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c70c5ede", Component.options)
+  } else {
+    hotAPI.reload("data-v-c70c5ede", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			newMoviesData: { runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', file: [], image: [], haveLink: false, extLink: 'default' },
+			allFiles: [],
+			allImages: []
+		};
+	},
+
+	methods: {
+		handleFileUpload: function handleFileUpload() {
+			var upload = this.$refs.newMoviesFiles.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allFiles.push(upload[i]);
+			}
+			if (this.acceptedType('vids', upload[length - 1].type)) {
+				this.newMoviesData.file[0] = upload[length - 1];
+			} else {
+				this.$emit('unsupportedVid');
+			}
+		},
+		handleImageUpload: function handleImageUpload() {
+
+			var upload = this.$refs.newMoviesImages.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allImages.push(upload[i]);
+			}
+			if (this.acceptedType('pics', upload[length - 1].type)) {
+				this.newMoviesData.image.push(upload[length - 1]);
+			} else {
+				this.$emit('unsupportedPic');
+			}
+		},
+		acceptedType: function acceptedType(cat, type) {
+			var acceptedVids = ['mp4', '3gp', 'avi'];
+			var acceptedpics = ['jpeg', 'gif', 'png', 'jpg', 'bmp'];
+			if (cat == 'vids') {
+				for (var i = 0; i < acceptedVids.length; i++) {
+					if (type.split('/').pop() == acceptedVids[i]) {
+						return true;
+					}
+				}return false;
+			}
+			if (cat == 'pics') {
+				for (var i = 0; i < acceptedpics.length; i++) {
+					if (type.split('/').pop() == acceptedpics[i]) {
+						return true;
+					}
+				}return false;
+			}
+		},
+		addfiles: function addfiles(type) {
+
+			if (type == 'image') {
+				this.$refs.newMoviesImages.click();
+			} else {
+				this.$refs.newMoviesFiles.click();
+			}
+		},
+		submit: function submit() {
+			var Empty = { runTime: '', quality: '', tags: '', type: '', imdbLink: '', desc: '', name: '', haveLink: false, extLink: 'default', file: [], image: [] };
+			if (this.isEmpty(this.newMoviesData)) {
+				this.$emit('emptyForm');
+			} else {
+				this.$emit('submitAttempt', this.newMoviesData);
+				this.newMoviesData = Empty;
+			}
+		},
+		isEmpty: function isEmpty(obj) {
+			var count = 0;
+			var length = 0;
+			for (var key in obj) {
+				length++;
+				if (obj[key] != null && obj[key] != '' || obj[key] == false) {
+					count++;
+				}
+			}
+			console.log('count is ' + count);
+			console.log('length is ' + length);
+			return count == length ? false : true;
+		}
+	}
+});
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("form", { staticClass: "w-100 h-100" }, [
+    _c("input", {
+      ref: "newMoviesFiles",
+      staticStyle: { position: "absolute", top: "-500px" },
+      attrs: { type: "file", id: "Files", name: "Files", multiple: "" },
+      on: {
+        change: function($event) {
+          _vm.handleFileUpload()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("input", {
+      ref: "newMoviesImages",
+      staticStyle: { position: "absolute", top: "-500px" },
+      attrs: { type: "file", id: "Images", name: "Images", multiple: "" },
+      on: {
+        change: function($event) {
+          _vm.handleImageUpload()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesName" } }, [
+        _vm._v("Correct Name of Movie")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newMoviesData.name,
+            expression: "newMoviesData.name"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "newMoviesName",
+          placeholder: "please this has to be correct"
+        },
+        domProps: { value: _vm.newMoviesData.name },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.newMoviesData, "name", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesdesc" } }, [
+        _vm._v("Short Description of Movie")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newMoviesData.desc,
+            expression: "newMoviesData.desc"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "newMoviesdesc",
+          placeholder: "short and concise yet entertaiming"
+        },
+        domProps: { value: _vm.newMoviesData.desc },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.newMoviesData, "desc", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesImdbLink" } }, [
+        _vm._v("Imdb Link")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newMoviesData.imdbLink,
+            expression: "newMoviesData.imdbLink"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "newMoviesImdbLink",
+          placeholder: "you can find this link by going to Imdb.com"
+        },
+        domProps: { value: _vm.newMoviesData.imdbLink },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.newMoviesData, "imdbLink", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesType" } }, [
+        _vm._v("Select the type of movie this is")
+      ]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newMoviesData.type,
+              expression: "newMoviesData.type"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "newMoviesType" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.newMoviesData,
+                "type",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "nollywoodmovies" } }, [
+            _vm._v(" NollyWood Movie")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "hollywoodmovies" } }, [
+            _vm._v(" HollyWood Movie")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "bollywoodmovies" } }, [
+            _vm._v(" BollyWood Movie")
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesImdbLink" } }, [_vm._v("Tags")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newMoviesData.tags,
+            expression: "newMoviesData.tags"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "newMoviesTags",
+          placeholder: "Comedy, Action, Romance, Horror, Drama"
+        },
+        domProps: { value: _vm.newMoviesData.tags },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.newMoviesData, "tags", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesQuality" } }, [_vm._v("Quality")]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newMoviesData.quality,
+              expression: "newMoviesData.quality"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "newMoviesQuality" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.newMoviesData,
+                "quality",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "HD" } }, [_vm._v(" HD")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "MP4" } }, [_vm._v(" MP4")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "3gp" } }, [_vm._v(" 3gp")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "Avi" } }, [_vm._v(" Avi")])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "newMoviesRunTime" } }, [_vm._v("Run Time")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newMoviesData.runTime,
+            expression: "newMoviesData.runTime"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "newMoviesRunTime",
+          placeholder: "how long  is this movie? specify the unit of time"
+        },
+        domProps: { value: _vm.newMoviesData.runTime },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.newMoviesData, "runTime", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "custom-control custom-switch" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newMoviesData.haveLink,
+              expression: "newMoviesData.haveLink"
+            }
+          ],
+          staticClass: "custom-control-input",
+          attrs: { type: "checkbox", id: "customSwitch1" },
+          domProps: {
+            checked: Array.isArray(_vm.newMoviesData.haveLink)
+              ? _vm._i(_vm.newMoviesData.haveLink, null) > -1
+              : _vm.newMoviesData.haveLink
+          },
+          on: {
+            change: function($event) {
+              var $$a = _vm.newMoviesData.haveLink,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false
+              if (Array.isArray($$a)) {
+                var $$v = null,
+                  $$i = _vm._i($$a, $$v)
+                if ($$el.checked) {
+                  $$i < 0 &&
+                    _vm.$set(_vm.newMoviesData, "haveLink", $$a.concat([$$v]))
+                } else {
+                  $$i > -1 &&
+                    _vm.$set(
+                      _vm.newMoviesData,
+                      "haveLink",
+                      $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                    )
+                }
+              } else {
+                _vm.$set(_vm.newMoviesData, "haveLink", $$c)
+              }
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          {
+            staticClass: "custom-control-label",
+            attrs: { for: "customSwitch1" }
+          },
+          [_vm._v("Do you have external link for this video")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm.newMoviesData.haveLink
+        ? _c("label", { attrs: { for: "newMoviesextLink" } }, [
+            _vm._v("Run Time")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.newMoviesData.haveLink
+        ? _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.newMoviesData.extLink,
+                expression: "newMoviesData.extLink"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "newMoviesextLink",
+              placeholder: "default link"
+            },
+            domProps: { value: _vm.newMoviesData.extLink },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.newMoviesData, "extLink", $event.target.value)
+              }
+            }
+          })
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("ul", { staticClass: "nav d-flex justify-content-center" }, [
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-danger",
+            on: {
+              click: function($event) {
+                _vm.submit()
+              }
+            }
+          },
+          [_vm._v(" upload ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-primary",
+            on: {
+              click: function($event) {
+                _vm.addfiles("video")
+              }
+            }
+          },
+          [_vm._v("addVideo")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-secondary",
+            on: {
+              click: function($event) {
+                _vm.addfiles("image")
+              }
+            }
+          },
+          [_vm._v("addImage")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c70c5ede", module.exports)
+  }
+}
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(83)
+/* template */
+var __vue_template__ = __webpack_require__(84)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/updateSeriesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4bf76836", Component.options)
+  } else {
+    hotAPI.reload("data-v-4bf76836", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			oldSeriesData: { episodeNumber: '', seasonNumber: '', quality: '', type: '', should_show: false, season_change: false, name: '', file: [] },
+			allFiles: []
+		};
+	},
+
+	methods: {
+		handleFileUpload: function handleFileUpload() {
+			var upload = this.$refs.oldSeriesFiles.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allFiles.push(upload[i]);
+			}
+			if (this.acceptedType('vids', upload[length - 1].type)) {
+				this.oldSeriesData.file[0] = upload[length - 1];
+			} else {
+				this.$emit('unsupportedVid');
+			}
+		},
+		acceptedType: function acceptedType(cat, type) {
+			var acceptedVids = ['mp4', '3gp', 'avi'];
+			var acceptedpics = ['jpeg', 'gif', 'png', 'jpg', 'bmp'];
+			if (cat == 'vids') {
+				for (var i = 0; i < acceptedVids.length; i++) {
+					if (type.split('/').pop() == acceptedVids[i]) {
+						return true;
+					}
+				}return false;
+			}
+			if (cat == 'pics') {
+				for (var i = 0; i < acceptedpics.length; i++) {
+					if (type.split('/').pop() == acceptedpics[i]) {
+						return true;
+					}
+				}return false;
+			}
+		},
+		addfiles: function addfiles() {
+			this.$refs.oldSeriesFiles.click();
+		},
+		submit: function submit() {
+			var Empty = { episodeNumber: '', seasonNumber: '', quality: '', type: '', should_show: false, season_change: false, name: '', file: [] };
+			if (this.isEmpty(this.oldSeriesData)) {
+				this.$emit('emptyForm');
+			} else {
+				this.$emit('submitAttempt', this.oldSeriesData);
+				this.oldSeriesData = Empty;
+			}
+		},
+		isEmpty: function isEmpty(obj) {
+			var count = 0;
+			var length = 0;
+			for (var key in obj) {
+				length++;
+				if (obj[key] != null && obj[key] != '' || obj[key] == false) {
+					count++;console.log(key);
+				}
+			}
+			console.log('count is ' + count);
+			console.log('length is ' + length);
+			return count == length ? false : true;
+		}
+	}
+});
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("form", { staticClass: "w-100 h-100" }, [
+    _c("input", {
+      ref: "oldSeriesFiles",
+      staticStyle: { position: "absolute", top: "-500px" },
+      attrs: { type: "file", id: "Files", name: "Files", multiple: "" },
+      on: {
+        change: function($event) {
+          _vm.handleFileUpload()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldSeriesName" } }, [
+        _vm._v("Correct Name of Series")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldSeriesData.name,
+            expression: "oldSeriesData.name"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "oldSeriesName",
+          placeholder: "please this has to be correct"
+        },
+        domProps: { value: _vm.oldSeriesData.name },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.oldSeriesData, "name", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldSeriesType" } }, [
+        _vm._v("Select the type of series this is")
+      ]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.oldSeriesData.type,
+              expression: "oldSeriesData.type"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "oldSeriesType" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.oldSeriesData,
+                "type",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "nollywoodseries" } }, [
+            _vm._v(" NollyWood Series")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "hollywoodseries" } }, [
+            _vm._v(" HollyWood Series")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "bollywoodseries" } }, [
+            _vm._v(" BollyWood Series")
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldSeriesQuality" } }, [_vm._v("Quality")]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.oldSeriesData.quality,
+              expression: "oldSeriesData.quality"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "oldSeriesQuality" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.oldSeriesData,
+                "quality",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "HD" } }, [_vm._v(" HD")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "MP4" } }, [_vm._v(" MP4")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "3gp" } }, [_vm._v(" 3gp")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "Avi" } }, [_vm._v(" Avi")])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "custom-control custom-checkbox" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldSeriesData.should_show,
+            expression: "oldSeriesData.should_show"
+          }
+        ],
+        staticClass: "custom-control-input",
+        attrs: { type: "checkbox", id: "customCheck1" },
+        domProps: {
+          checked: Array.isArray(_vm.oldSeriesData.should_show)
+            ? _vm._i(_vm.oldSeriesData.should_show, null) > -1
+            : _vm.oldSeriesData.should_show
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.oldSeriesData.should_show,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 &&
+                  _vm.$set(_vm.oldSeriesData, "should_show", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.oldSeriesData,
+                    "should_show",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.oldSeriesData, "should_show", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "custom-control-label", attrs: { for: "customCheck1" } },
+        [_vm._v("Should this update be triggered as new Update in HomePage?")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "custom-control custom-checkbox" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldSeriesData.season_change,
+            expression: "oldSeriesData.season_change"
+          }
+        ],
+        staticClass: "custom-control-input",
+        attrs: { type: "checkbox", id: "customCheck2" },
+        domProps: {
+          checked: Array.isArray(_vm.oldSeriesData.season_change)
+            ? _vm._i(_vm.oldSeriesData.season_change, null) > -1
+            : _vm.oldSeriesData.season_change
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.oldSeriesData.season_change,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 &&
+                  _vm.$set(
+                    _vm.oldSeriesData,
+                    "season_change",
+                    $$a.concat([$$v])
+                  )
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.oldSeriesData,
+                    "season_change",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.oldSeriesData, "season_change", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "custom-control-label", attrs: { for: "customCheck2" } },
+        [_vm._v("is this the first episode of a new season?")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldSeriesSeasonNumber" } }, [
+        _vm._v("Season Number")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldSeriesData.seasonNumber,
+            expression: "oldSeriesData.seasonNumber"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "oldSeriesSeasonNumber",
+          placeholder: "what season is this?"
+        },
+        domProps: { value: _vm.oldSeriesData.seasonNumber },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.oldSeriesData, "seasonNumber", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldSeriesEpisodeNumber" } }, [
+        _vm._v("Episode Number")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldSeriesData.episodeNumber,
+            expression: "oldSeriesData.episodeNumber"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "oldSeriesEpisodeNumber",
+          placeholder: "Episode Number"
+        },
+        domProps: { value: _vm.oldSeriesData.episodeNumber },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.oldSeriesData, "episodeNumber", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("ul", { staticClass: "nav d-flex justify-content-center" }, [
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-danger",
+            on: {
+              click: function($event) {
+                _vm.submit()
+              }
+            }
+          },
+          [_vm._v(" upload ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-primary",
+            on: {
+              click: function($event) {
+                _vm.addfiles()
+              }
+            }
+          },
+          [_vm._v("addVideo")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4bf76836", module.exports)
+  }
+}
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(86)
+/* template */
+var __vue_template__ = __webpack_require__(87)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/updateMoviesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6a536aea", Component.options)
+  } else {
+    hotAPI.reload("data-v-6a536aea", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			oldMoviesData: { quality: '', type: '', should_show: false, season_change: false, name: '', file: [] },
+			allFiles: []
+		};
+	},
+
+	methods: {
+		handleFileUpload: function handleFileUpload() {
+			var upload = this.$refs.oldMoviesFiles.files;
+			var length = upload.length;
+			for (var i = 0; i < length; i++) {
+				this.allFiles.push(upload[i]);
+			}
+			if (this.acceptedType('vids', upload[length - 1].type)) {
+				this.oldMoviesData.file[0] = upload[length - 1];
+			} else {
+				this.$emit('unsupportedVid');
+			}
+		},
+		acceptedType: function acceptedType(cat, type) {
+			var acceptedVids = ['mp4', '3gp', 'avi'];
+			var acceptedpics = ['jpeg', 'gif', 'png', 'jpg', 'bmp'];
+			if (cat == 'vids') {
+				for (var i = 0; i < acceptedVids.length; i++) {
+					if (type.split('/').pop() == acceptedVids[i]) {
+						return true;
+					}
+				}return false;
+			}
+			if (cat == 'pics') {
+				for (var i = 0; i < acceptedpics.length; i++) {
+					if (type.split('/').pop() == acceptedpics[i]) {
+						return true;
+					}
+				}return false;
+			}
+		},
+		addfiles: function addfiles() {
+			this.$refs.oldMoviesFiles.click();
+		},
+		submit: function submit() {
+			var Empty = { quality: '', type: '', should_show: false, season_change: false, name: '', file: [] };
+			if (this.isEmpty(this.oldMoviesData)) {
+				this.$emit('emptyForm');
+			} else {
+				this.$emit('submitAttempt', this.oldMoviesData);
+				this.oldMoviesData = Empty;
+			}
+		},
+		isEmpty: function isEmpty(obj) {
+			var count = 0;
+			var length = 0;
+			for (var key in obj) {
+				length++;
+				if (obj[key] != null && obj[key] != '' || obj[key] == false) {
+					count++;
+				}
+			}
+			console.log('count is ' + count);
+			console.log('length is ' + length);
+			return count == length ? false : true;
+		}
+	}
+});
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("form", { staticClass: "w-100 h-100" }, [
+    _c("input", {
+      ref: "oldMoviesFiles",
+      staticStyle: { position: "absolute", top: "-500px" },
+      attrs: { type: "file", id: "Files", name: "Files", multiple: "" },
+      on: {
+        change: function($event) {
+          _vm.handleFileUpload()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldMoviesName" } }, [
+        _vm._v("Correct Name of Movie")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldMoviesData.name,
+            expression: "oldMoviesData.name"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          id: "oldMoviesName",
+          placeholder:
+            "please this has to be correct and mus match already existing name in db"
+        },
+        domProps: { value: _vm.oldMoviesData.name },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.oldMoviesData, "name", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldMoviesType" } }, [
+        _vm._v("Select the type of Movie this is")
+      ]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.oldMoviesData.type,
+              expression: "oldMoviesData.type"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "oldMoviesType" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.oldMoviesData,
+                "type",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "nollywoodmovies" } }, [
+            _vm._v(" NollyWood Movies")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "hollywoodmovies" } }, [
+            _vm._v(" HollyWood Movies")
+          ]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "bollywoodmovies" } }, [
+            _vm._v(" BollyWood Movies")
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "oldMoviesQuality" } }, [_vm._v("Quality")]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.oldMoviesData.quality,
+              expression: "oldMoviesData.quality"
+            }
+          ],
+          staticClass: "custom-select",
+          attrs: { id: "oldMoviesQuality" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.oldMoviesData,
+                "quality",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "HD" } }, [_vm._v(" HD")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "MP4" } }, [_vm._v(" MP4")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "3gp" } }, [_vm._v(" 3gp")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "Avi" } }, [_vm._v(" Avi")])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "custom-control custom-checkbox" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.oldMoviesData.should_show,
+            expression: "oldMoviesData.should_show"
+          }
+        ],
+        staticClass: "custom-control-input",
+        attrs: { type: "checkbox", id: "customCheck1" },
+        domProps: {
+          checked: Array.isArray(_vm.oldMoviesData.should_show)
+            ? _vm._i(_vm.oldMoviesData.should_show, null) > -1
+            : _vm.oldMoviesData.should_show
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.oldMoviesData.should_show,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 &&
+                  _vm.$set(_vm.oldMoviesData, "should_show", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.oldMoviesData,
+                    "should_show",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.oldMoviesData, "should_show", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "custom-control-label", attrs: { for: "customCheck1" } },
+        [_vm._v("Should this update be triggered as new Update in HomePage?")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("ul", { staticClass: "nav d-flex justify-content-center" }, [
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-danger",
+            on: {
+              click: function($event) {
+                _vm.submit()
+              }
+            }
+          },
+          [_vm._v(" upload ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c(
+          "a",
+          {
+            staticClass: "nav-item flex-md-column  md-3 btn btn-primary",
+            on: {
+              click: function($event) {
+                _vm.addfiles()
+              }
+            }
+          },
+          [_vm._v("addVideo")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6a536aea", module.exports)
   }
 }
 

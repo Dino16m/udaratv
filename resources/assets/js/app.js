@@ -29,6 +29,10 @@ Vue.component('image-mount', require('./components/imageMount.vue'));
 Vue.component('upload', require('./components/uploadComponent.vue'));
 Vue.component('modal', require('./components/modal.vue'));
 Vue.component('new-series', require('./components/newSeriesComponent.vue'));
+Vue.component('new-movies', require('./components/newMoviesComponent.vue'));
+Vue.component('old-series', require('./components/updateSeriesComponent.vue'));
+Vue.component('old-movies', require('./components/updateMoviesComponent.vue'));
+
 
 const app = new Vue({
     el: '#app',
@@ -41,6 +45,16 @@ const app = new Vue({
     	}
     },
     methods:{
-    	
+    	isEmpty(obj){
+            let count = 0;
+            let length = 0;
+            for(var key in obj){
+                length++;
+                if(obj.key!=null){count++}
+            }
+            console.log('count is'+count);
+            console.log('length is'+ length);
+            return count==length? false : true;
+            }
 }
 });
