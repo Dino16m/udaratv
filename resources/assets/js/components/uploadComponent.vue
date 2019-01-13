@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <button class="nav-link btn btn-success" v-on:click='upload()'>Submit to server</button>
                 </li> 
+                <li class="nav-item">
+                    <a class="nav-link" :href="regUrl">Add another user</a>
+                </li>
                 
             </ul>
            <search-bar></search-bar>
@@ -106,6 +109,9 @@
 				type: String,
 				required: true
 			},
+			register:{
+				type: String
+			},
 			oldmovies:{
 				type:String,
 				required:true
@@ -125,6 +131,7 @@
 		},
 		data(){
 			return{
+				regUrl: this.register,
 				oldmoviesAPI: this.oldmovies,
 				oldseriesAPI: this.oldseries,
 				newmoviesAPI: this.newmovies,

@@ -22,6 +22,14 @@
     				<option value="Avi"> Avi</option>
     			</select>
   			  </div>
+  			  <div class="form-group">
+  			 	<div class="custom-control custom-switch">
+  					<input type="checkbox" v-model="oldMoviesData.haveLink" class="custom-control-input" id="customSwitch1">
+ 					 <label class="custom-control-label" for="customSwitch1">Do you have external link for this video</label>
+				</div>
+    			<label for="oldMoviesextLink" v-if='oldMoviesData.haveLink'>External Link</label>
+    			<input type="text" class="form-control" id="oldMoviesextLink" v-if='oldMoviesData.haveLink' v-model='oldMoviesData.extLink' placeholder="default link">
+  			 </div>
   			  <div class="custom-control custom-checkbox">
  				 <input type="checkbox" class="custom-control-input" v-model='oldMoviesData.should_show' id="customCheck1">
   				 <label class="custom-control-label" for="customCheck1">Should this update be triggered as new Update in HomePage?</label>
@@ -38,7 +46,7 @@
 	export default{
 		data(){
 			return{
-				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[] },
+				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[],  haveLink: false, extLink:'default'},
 				allFiles:[],
 			}
 		},
@@ -59,7 +67,7 @@
 			 
 			},
 			acceptedType(cat, type){
-				let acceptedVids = ['mp4', '3gp', 'avi'];
+				let acceptedVids = ['mp4', '3gp', 'avi', 'mkv', '3gpp'];
 				let acceptedpics =['jpeg', 'gif', 'png', 'jpg', 'bmp'];
 				if(cat == 'vids'){
 					for (var i = 0; i < acceptedVids.length; i++) {
@@ -81,7 +89,7 @@
 				 this.$refs.oldMoviesFiles.click() 
 			},
 			submit(){
-				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'', file:[]};
+				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'', haveLink: false, extLink:'default',file:[]};
 				if(this.isEmpty(this.oldMoviesData)){
 					this.$emit('emptyForm');
 				}

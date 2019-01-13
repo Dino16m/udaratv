@@ -38,6 +38,14 @@
     			<label for="oldSeriesEpisodeNumber">Episode Number</label>
     			<input type="text" class="form-control" id="oldSeriesEpisodeNumber" v-model="oldSeriesData.episodeNumber" placeholder="Episode Number">
   			  </div>
+  			   <div class="form-group">
+  			 	<div class="custom-control custom-switch">
+  					<input type="checkbox" v-model="oldSeriesData.haveLink" class="custom-control-input" id="customSwitch1">
+ 					 <label class="custom-control-label" for="customSwitch1">Do you have external link for this video</label>
+				</div>
+    			<label for="oldSeriesextLink" v-if='oldSeriesData.haveLink'>External Link</label>
+    			<input type="text" class="form-control" id="oldSeriesextLink" v-if='oldSeriesData.haveLink' v-model='oldSeriesData.extLink' placeholder="default link">
+  			 </div>
   			  <ul class="nav d-flex justify-content-center">
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
     		    <li><a class="nav-item flex-md-column  md-3 btn btn-primary" v-on:click="addfiles()">addVideo</a></li>
@@ -50,7 +58,7 @@
 	export default{
 		data(){
 			return{
-				oldSeriesData: {episodeNumber:'', seasonNumber: '',  quality:'', type:'', should_show:false, season_change:false, name:'', file:[] },
+				oldSeriesData: {episodeNumber:'', seasonNumber: '',  quality:'', type:'', should_show:false, season_change:false, haveLink: false, extLink:'default', name:'', file:[] },
 				allFiles:[],
 			}
 		},
@@ -71,7 +79,7 @@
 			 
 			},
 			acceptedType(cat, type){
-				let acceptedVids = ['mp4', '3gp', 'avi'];
+				let acceptedVids = ['mp4', '3gp', 'avi', 'mkv', '3gp'];
 				let acceptedpics =['jpeg', 'gif', 'png', 'jpg', 'bmp'];
 				if(cat == 'vids'){
 					for (var i = 0; i < acceptedVids.length; i++) {
@@ -93,7 +101,7 @@
 				 this.$refs.oldSeriesFiles.click() 
 			},
 			submit(){
-				let Empty = {episodeNumber:'', seasonNumber: '',  quality:'', type:'', should_show:false, season_change:false, name:'', file:[]};
+				let Empty = {episodeNumber:'', seasonNumber: '',  quality:'', type:'', should_show:false,haveLink: false, extLink:'default', season_change:false, name:'', file:[]};
 				if(this.isEmpty(this.oldSeriesData)){
 					this.$emit('emptyForm');
 				}

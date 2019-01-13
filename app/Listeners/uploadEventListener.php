@@ -41,7 +41,9 @@ class uploadEventListener
                
                                                                  }
         } 
-        $update['should_show']= $model['should_show'] ==null ? 1 : $model['should_show'];  
+
+        $should_show = $model['should_show'] == null ? true : $model['should_show']; 
+        $update['should_show']  = (int) $should_show;
         $update['image_link']= $model['image_link'];
         $update['video_link']=$video_link;  
         $recent = Recents::create($update);

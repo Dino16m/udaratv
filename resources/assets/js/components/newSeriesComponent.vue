@@ -47,6 +47,14 @@
     			<label for="newSeriesEpisodeNumber">Episode Number</label>
     			<input type="text" class="form-control" id="newSeriesEpisodeNumber" v-model="newSeriesData.episodeNumber" placeholder="Episode Number">
   			  </div>
+  			  <div class="form-group">
+  			 	<div class="custom-control custom-switch">
+  					<input type="checkbox" v-model="newSeriesData.haveLink" class="custom-control-input" id="customSwitch1">
+ 					 <label class="custom-control-label" for="customSwitch1">Do you have external link for this video</label>
+				</div>
+    			<label for="newSeriesextLink" v-if='newSeriesData.haveLink'>External Link</label>
+    			<input type="text" class="form-control" id="newSeriesextLink" v-if='newSeriesData.haveLink' v-model='newSeriesData.extLink' placeholder="default link">
+  			 </div>
   			  <ul class="nav d-flex justify-content-center">
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
     		    <li><a class="nav-item flex-md-column  md-3 btn btn-primary" v-on:click="addfiles( 'video')">addVideo</a></li>
@@ -60,7 +68,7 @@
 export default{
 	data(){
 		return{
-		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'', type:'', imdbLink:'', desc:'', name:'', file:[] ,image:[] },
+		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'', type:'', imdbLink:'', desc:'', name:'', haveLink: false, extLink:'default', file:[] ,image:[] },
 		newSeriesfiles:[ ],
 		allFiles: [],
 		allImages:[],
@@ -99,7 +107,7 @@ export default{
 			 
 			},
 			acceptedType(cat, type){
-				let acceptedVids = ['mp4', '3gp', 'avi'];
+				let acceptedVids = ['mp4', '3gp', 'avi', 'mkv', '3gpp'];
 				let acceptedpics =['jpeg', 'gif', 'png', 'jpg', 'bmp'];
 				if(cat == 'vids'){
 					for (var i = 0; i < acceptedVids.length; i++) {
@@ -124,7 +132,7 @@ export default{
 				
 			},
 			submit(){
-				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'', type:'',imdbLink:'', desc:'', name:'', file:[],image:[] };
+				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'', type:'',imdbLink:'',haveLink: false, extLink:'default', desc:'', name:'', file:[],image:[] };
 					if(this.isEmpty(this.newSeriesData)){
 						this.$emit('emptyForm');
 
@@ -139,7 +147,7 @@ export default{
 				let length = 0;
 				for(var key in obj){
 					length++;
-					if(obj[key]!=null && obj[key]!='' ){count++}
+					if((obj[key]!=null && obj[key]!='') || obj[key]==false ) {count++; console.log(key)}
 				}
 			console.log('count is'+count);
 			console.log('length is'+ length);

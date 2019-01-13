@@ -18,12 +18,19 @@ use Illuminate\Support\Facades\Storage;
 use App\Events\downloadEvent;
 use App\Constants;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Hash;
 
 Route::get('/me', function() {
     //echo $you.' are '. $me;
-    $url= 'http://www.google.co.in/intl/en_com/images/srpr/logo1w.png';
-    $stream = file_get_contents(filename)
-   Storage::putFileAs()
+    $RawVideoName= '000flash.mp4';
+return Hash::make($RawVideoName);
+   //return strtolower( substr($RawVideoName, 3, (strpos($RawVideoName, '.')-3) ));
+    /**$val = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+    $stream = file_get_contents($url);
+    $filepath = base_path('public/images/fila.png');
+    $file = file_put_contents($filepath, $stream);
+    $File = new File($filepath);
+   return Storage::putFileAs('/public/', $File, 'fila.png' );
 /**$string = 'wwww.me.com/ypu/public/videos/love.mp4';
 //$bool = preg_match('~/public/videos/~', $string);
 $match = [];
@@ -57,11 +64,7 @@ Route::get('types/{Type}', 'categoryController@getVideosOfType');
 Route::get('type/{Type}', 'categoryController@getVideosOfType');
 
 
-Route::get('uploader/index', 'uploadController@index');
-Route::post('uploader/newSeries', 'uploadController@addNewSeries');
-Route::post('uploader/updateSeries', 'uploadController@updateExistingSeries');
-Route::post('uploader/newMovie', 'uploadController@addNewMovie');
-Route::post('uploader/updateMovie', 'uploadController@updateExistingMovie');
+Route::get('uploader/index' ,['as'=>'uploader/index','middleware'=>'auth','uses'=> 'uploadController@index']);
 
 Auth::routes();
 

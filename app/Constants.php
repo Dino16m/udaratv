@@ -20,6 +20,10 @@ class Constants {
     public const videoUploadLocation = '/videos/';
     public const imageUploadLocation = '/public/images/'; 
     public const isSeries = ['naijaseries', 'series', 'hollywoodseries', 'nollywoodseries'];
+
+    public static function getTmp(){
+        return base_path('/public/');
+    }
  
     public static function inSeries($Value)
     {

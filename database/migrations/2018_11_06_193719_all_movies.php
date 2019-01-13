@@ -19,6 +19,7 @@ class AllMovies extends Migration
           $table->string('file_path');
           $table->string('type');
           $table->integer('views')->default('0');
+          $table->integer('run_time')->nullable();
           $table->string('short_description')->nullable();
           $table->string('image_link')->nullable();
           $table->string('imdb_link')->nullable();

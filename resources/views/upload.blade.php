@@ -28,11 +28,13 @@
 <div id='app'>
   <upload 
     imageurl="<?php echo url('public/images/udaralogo.png')?>" 
-    newmovies="{{url('uploader/newMovie')}}"
-    newseries=" {{url('uploader/newSeries')}}"
-    oldmovies= "{{url('uploader/updateMovie')}}"
-    oldseries="{{url('uploader/updateSeries')}}"
+    newmovies="{{url('api/uploader/newMovie')}}"
+    newseries=" {{url('api/uploader/newSeries')}}"
+    oldmovies= "{{url('api/uploader/updateMovie')}}"
+    oldseries="{{url('api/uploader/updateSeries')}}"
+    register="{{ route('register') }}"
     ></upload>
+    
   
 </div>
 <script type="text/javascript" src="<?php echo url('public/js/app.js')?>"></script>

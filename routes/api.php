@@ -20,3 +20,7 @@ Route::get('mali', function(){
 $mali =['i'=>'k'];
 return response()->json($mali);
 });
+Route::post('uploader/newSeries', 'uploadController@addNewSeries');
+Route::post('uploader/updateSeries', 'uploadController@updateExistingSeries');
+Route::post('uploader/newMovie', 'uploadController@addNewMovie');
+Route::post('uploader/updateMovie', 'uploadController@updateExistingMovie');

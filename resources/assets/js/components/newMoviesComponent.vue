@@ -39,12 +39,13 @@
     			<label for="newMoviesRunTime">Run Time</label>
     			<input type="text" class="form-control" id="newMoviesRunTime" v-model='newMoviesData.runTime' placeholder="how long  is this movie? specify the unit of time">
   			 </div>
+  			 
   			 <div class="form-group">
   			 	<div class="custom-control custom-switch">
   					<input type="checkbox" v-model="newMoviesData.haveLink" class="custom-control-input" id="customSwitch1">
  					 <label class="custom-control-label" for="customSwitch1">Do you have external link for this video</label>
 				</div>
-    			<label for="newMoviesextLink" v-if='newMoviesData.haveLink'>Run Time</label>
+    			<label for="newMoviesextLink" v-if='newMoviesData.haveLink'>External Link</label>
     			<input type="text" class="form-control" id="newMoviesextLink" v-if='newMoviesData.haveLink' v-model='newMoviesData.extLink' placeholder="default link">
   			 </div>
 
@@ -98,7 +99,7 @@ export default{
 			 
 			},
 			acceptedType(cat, type){
-				let acceptedVids = ['mp4', '3gp', 'avi'];
+				let acceptedVids = ['mp4', '3gp', 'avi', 'mkv', '3gpp'];
 				let acceptedpics =['jpeg', 'gif', 'png', 'jpg', 'bmp'];
 				if(cat == 'vids'){
 					for (var i = 0; i < acceptedVids.length; i++) {

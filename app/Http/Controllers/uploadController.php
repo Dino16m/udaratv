@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Storage;
 use \App\Http\Requests\videoRequests;
 use \App\series;
 use \App\Events\uploadEvent;
+use \App\Validator;
 use \App\allmovies;
 use \App\seasons;
 use App\Constants;
+use Illuminate\Http\File;
 
 
 class uploadController extends Controller
@@ -72,7 +74,7 @@ class uploadController extends Controller
         $videoDetails= [];
         $RawVideoName= $video->getClientOriginalName();
         $videoDetails['video']=$video;
-        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, (strpos($RawVideoName, '.')-3) ));
         $file_name= $videoDetails['name'];
         $videoDetails['ext']= $video->getClientOriginalExtension();
         $videoID = substr($RawVideoName, 0, 3);
@@ -84,8 +86,9 @@ class uploadController extends Controller
         $videoDetails['short_description']=  $json->desc;
         $videoDetails['imdb_link']=  $json->imdbLink;
         $videoDetails['run_time']= $json->runTime;
+        $videoDetails['extLink'] = null;
         if($json->haveLink!=false && $json->extLink!='default'){
-          $videoDetailsLink['extLink'] = $json->extLink;
+          $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['tags']=$json->tags;
         $videoDetails['image']= $image = $request->file('image'.$videoID);
@@ -118,7 +121,7 @@ class uploadController extends Controller
       foreach ($request->file('files') as $video) {
         $videoDetails= [];
         $RawVideoName= $video->getClientOriginalName();
-        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, (strpos($RawVideoName, '.')-3) ));
         $videoID= substr($RawVideoName, 0, 3);
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
@@ -126,8 +129,9 @@ class uploadController extends Controller
         $videoDetails['should_show']= $json->shouldShow;
         $videoDetails['quality']= $json->quality;
         $videoDetails['type']=$json->type;
+        $videoDetails['extLink'] = null;
         if($json->haveLink!=false && $json->extLink!='default'){
-          $videoDetailsLink['extLink'] = $json->extLink;
+          $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['number_of_seasons']= $json->seasonNumber;
         $videoDetails['should_touch_season']= $json->seasonChanged;
@@ -157,7 +161,7 @@ class uploadController extends Controller
         $videoDetails=[];
         $RawVideoName= $video->getClientOriginalName();
         $videoID= substr($RawVideoName, 0, 3);
-        $videoDetails['name']=$file_name=strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
+        $videoDetails['name']=$file_name=strtolower( substr($RawVideoName, 3, (strpos($RawVideoName, '.')-3) ));
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
         $json = json_decode($request->input('data'.$videoID));
@@ -166,8 +170,9 @@ class uploadController extends Controller
         $videoDetails['short_description']=$json->desc;
         $videoDetails['tags']= $json->tags;
         $videoDetails['run_time']= $json->runTime;
+        $videoDetails['extLink']=null;
         if($json->haveLink!=false && $json->extLink!='default'){
-          $videoDetailsLink['extLink'] = $json->extLink;
+          $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['imdb_link']= $json->imdbLink;
         $videoDetails['image']= $request->file('image'.$videoID);
@@ -195,13 +200,14 @@ class uploadController extends Controller
         $videoDetails=[];
         $RawVideoName= $video->getClientOriginalName();
         $videoID= substr($RawVideoName, 0, 3);
-        $videoDetails['name']= strtolower( substr($RawVideoName, 3, srtpos($RawVideoName, '.')));
+        $videoDetails['name']= strtolower( substr($RawVideoName, 3, (strpos($RawVideoName, '.')-3) ));
         $videoDetails['video']=$video;
         $videoDetails['ext']= $video->getClientOriginalExtension();
         $json = json_decode($request->input('data'.$videoID));
         $videoDetails['should_show']= $json->shouldShow;
+        $videoDetails['extLink'] = null;
         if($json->haveLink!=false && $json->extLink!='default'){
-          $videoDetailsLink['extLink'] = $json->extLink;
+          $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['quality'] = $json->quality;
         $videoDetails['type'] = $json->type;
@@ -220,7 +226,7 @@ class uploadController extends Controller
       $video=$details['video'];
       $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $name= $details['name'];
-      $ext= $details['ext'];
+      $ext= $extLink == false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $type=$details['type'];
       $tags = $details['tags'];
       $tags = is_array($tags) ? $tags: json_decode($tags);
@@ -257,15 +263,16 @@ class uploadController extends Controller
     private function handleOldMovies($Details){
       $details=$Details;
       $video=$details['video'];
+      $quality = $details['quality'];
       $name= $details['name'];
       $extLink= $details['extLink'] ==null? false : $details['extLink'];
-      $ext= $details['ext'];
+      $ext= $extLink ==false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $type=$details['type'];
       $movie=$this::getMovieModelandPath($type, $name);
       if(!$movie){return $name.' has an error in the type designated for it, we have no record of the name and type';}
       $model= $movie['model'];
       $image_path = $model->image_link;
-      $file_name=$name.'.'.$ext;
+      $file_name=$name.'-'.$quality.'.$ext';
       $storage_path=$movie['path'];
       $should_show=$details['should_show'];
       $file_path= $movie['path'].stripslashes($file_name);
@@ -295,15 +302,15 @@ class uploadController extends Controller
       $episode= $details['episodeNumber'];
       $season=$details['number_of_seasons'];
       $should_show=$details['should_show'];
-      $ext= $details['ext'];
+      $ext= $extLink == false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $type = $details['type'];
       $series= series::where('type',$type)->where('name', $name)->first();
       if($series==null){
-        return $series; //$name.' couldn\'t be commited please check you have the right name and type for this series';
+        return $name.' couldn\'t be commited please check you have the right name and type for this series';
       }
       $upload_path=$series->series_path;
       $storage_path =$upload_path;
-      $file_name= $name.'.'.$ext;
+      $file_name= $name.'-'.$quality.'-'.$season.'-'.$episode.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $upload_path.'/'.stripslashes($file_name);
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
@@ -328,12 +335,12 @@ class uploadController extends Controller
     **/
     private function handleNewSeries($Details){
       $videoDetails=$Details;
-      $file_name = $videoDetails['name'].$videoDetails['ext'];
       $type = $videoDetails['type'];
       $tags = $videoDetails['tags'];
-      $extLink= $details['extLink'] ==null? false : $details['extLink'];
+      $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
+      $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $tags = is_array($tags) ? $tags: json_decode($tags);
-
+      $file_name = $videoDetails['name'].'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
         if(!is_dir(base_path('/storage/app'.$upload_path))){
         if (!mkdir(base_path('/storage/app'.$upload_path), 0763)){
@@ -369,7 +376,7 @@ class uploadController extends Controller
     * @param File
     * @return Boolean
     **/
-    private function fileUpload($filename, $filePath, $file, $bool, $extLink){
+    private function fileUpload($filename, $filePath, $file, $bool, $extLink=null){
       //please for the love of God uncomment the file move function below before pushing to production
       if($extLink == null || $extLink ==false){
         if($bool)
@@ -382,8 +389,12 @@ class uploadController extends Controller
           return $file->move($base, $filename);
         }
       }
-      if($extLink!=null && $extLink!==false){
-        
+      if($extLink!=null && $extLink!=false){
+        $stream = file_get_contents($extLink);
+        $tmpPath = Constants::getTmp().$filename;
+        $newFile = file_put_contents($tmpPath, $stream);
+        $File = new File($tmpPath);
+        return Storage::putFileAs($filePath, $File, $filename );
       }
     }
     /**
