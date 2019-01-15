@@ -317,7 +317,7 @@ class categoryController extends Controller
                 'link'=>url('download/series/'.$quality->id.'?file='.$quality->file_path)
             ];
         }
-        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'name'=>$name]) : view('movie_not_found')->with([$movie_name=>$name]);
+        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'name'=>$name]) : view('movie_not_found')->with(['movie_name'=>$name]);
         //return view('episode_page')->with(['qualities'=>$qualities]);
     }
     /**

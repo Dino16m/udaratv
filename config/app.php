@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'udara tv'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/UdaraTV'),
+    'url' => env('APP_URL', 'http://udaratv.com'),
 
     /*
     |--------------------------------------------------------------------------

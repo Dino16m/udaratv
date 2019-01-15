@@ -37,6 +37,9 @@ class uploadController extends Controller
     private function videoUploadLocation(){
       return $this::videoUploadLocation;
     }
+    private function esc(){
+      return " \"";
+    }
     /**
     * this method returns the basepath of the imageUploadLocation constant
     * @return file_path
@@ -83,7 +86,7 @@ class uploadController extends Controller
         $videoDetails['type']= $json->type;;
         $videoDetails['number_of_seasons']= $json->seasonNumber;
         $videoDetails['episodeNumber']=  $json->episodeNumber;
-        $videoDetails['short_description']=  $json->desc;
+        $videoDetails['short_description']= $this::esc(). $json->desc .$this::esc();
         $videoDetails['imdb_link']=  $json->imdbLink;
         $videoDetails['run_time']= $json->runTime;
         $videoDetails['extLink'] = null;
@@ -167,7 +170,7 @@ class uploadController extends Controller
         $json = json_decode($request->input('data'.$videoID));
         $videoDetails['quality'] = $json->quality;
         $videoDetails['type'] = $json->type;
-        $videoDetails['short_description']=$json->desc;
+        $videoDetails['short_description']= $this::esc() .$json->desc . $this::esc();
         $videoDetails['tags']= $json->tags;
         $videoDetails['run_time']= $json->runTime;
         $videoDetails['extLink']=null;
@@ -238,7 +241,9 @@ class uploadController extends Controller
       $file_path=$reqs.$file_name;
       $storage_path= $reqs;
       $details['file_path'] = $file_path;
-      $image_name = Validator::sanitize(preg_replace('/\s+/', '_',  $name.'_image'));
+      $image = $details['image'];
+      $image_ext = $image->getClientOriginalExtension();
+      $image_name = Validator::sanitize(preg_replace('/\s+/', '_',  $name.'_image.'.$image_ext));
       $image_link = url($this::imageUploadLocation().$image_name);
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
@@ -377,7 +382,8 @@ class uploadController extends Controller
     * @return Boolean
     **/
     private function fileUpload($filename, $filePath, $file, $bool, $extLink=null){
-      //please for the love of God uncomment the file move function below before pushing to production
+     
+ //please for the love of God uncomment the file move function below before pushing to production
       if($extLink == null || $extLink ==false){
         if($bool)
         {
@@ -390,7 +396,14 @@ class uploadController extends Controller
         }
       }
       if($extLink!=null && $extLink!=false){
-        $stream = file_get_contents($extLink);
+        
+	 $curl = curl_init(); 
+        curl_setopt($curl, CURLOPT_URL, $extLink);
+	 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	 curl_setopt($curl, CURLOPT_HEADER, false);
+	 $stream = curl_exec($curl);
+ 	curl_close($curl);
+
         $tmpPath = Constants::getTmp().$filename;
         $newFile = file_put_contents($tmpPath, $stream);
         $File = new File($tmpPath);
