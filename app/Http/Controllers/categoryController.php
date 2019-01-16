@@ -413,7 +413,7 @@ class categoryController extends Controller
     {
        $SeasonId = Validator::sanitize($SeasonId);
        $seasonId = strtolower($SeasonId);
-       $episodes = episodes::where('season_id', $seasonId)->get();
+       $episodes = episodes::where('season_id', $seasonId)->orderBy('episode_name', 'desc')->get();
        return count($episodes) < 1 ? false : $episodes;
     }
     /**

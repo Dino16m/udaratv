@@ -27,7 +27,7 @@
     <div id='app'>
       <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
-        <a class="navbar-brand" href="#"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
+        <a class="navbar-brand" href="{{url('/')}}"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -76,7 +76,7 @@
 
     <div class="jumbotron jumbotron-fluid text-white bg-dark w-100">
         <div class="container text-center">
-            <h2 class="text-center font-weight-lighter">OOPS there seems to be a mix up somewhere as we don't have any record of any video with the name <strong class="text-danger">{{$movie_name}}</strong></h2>
+            <h2 class="text-center font-weight-lighter">OOPS there seems to be a mix up somewhere as we don't have any record of any video with the name or genre <strong class="text-danger">{{$movie_name}}</strong></h2>
         </div>
 
     </div>

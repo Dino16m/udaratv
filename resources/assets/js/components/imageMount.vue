@@ -26,7 +26,7 @@
                         </div>
 
                         <div class=" col-sm-6">
-                            <p class="field">Genres:<a href="../genre/crime">Crime</a>,<a href="../genre/thriller">Thriller</a></p>
+                            <p class="field">Genres:<a href="makeUrl('/genre/crime')">Crime</a>,<a href="makeUrl('/genre/thriller')">Thriller</a></p>
                             <p class="field"> <strong class="text-danger">IMDB:</strong><a :href="v_imdb_link">{{v_imdb_link}}</a> </p>
                             <p class="field">Casts: <p> </p></p>
                             <p class="field">Run Time: {{v_run_time}}</p>
@@ -78,6 +78,9 @@
 			},
 			isseries:{
 				type: Boolean
+			},
+			base_url:{
+				type: String
 			}
 		},
 		data(){
@@ -93,7 +96,8 @@
 				v_desc: this.desc,
 				v_run_time: this.run_time,
 				v_number_of_episodes: this.number_of_episodes,
-				v_is_series: this.isseries
+				v_is_series: this.isseries,
+				url: this.base_url
 			}
 		},
 		methods:{
@@ -102,6 +106,9 @@
 				let storageKey = this.name;
 				let json = JSON.stringify(ArrToStore);
 				localStorage.setItem(storageKey, json);
+			},
+			makeUrl(url){
+				return this.url + url;
 			},
 			episodes(){
 				return this.v_number_of_episodes != null;

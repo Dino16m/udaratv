@@ -27,7 +27,7 @@
 <div id="app">
       <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
-        <a class="navbar-brand" href="#"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
+        <a class="navbar-brand" href="{{url('/')}}"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -75,7 +75,7 @@
     <main role="main" class="container ">
         <div class="card">
 
-           <image-mount :reuse=true name="{{$name}}"  number_of_episodes={{$episodes_number}}></image-mount>
+           <image-mount :reuse=true name="{{$name}}" base_url="{{url('/')}}" number_of_episodes={{$episodes_number}}></image-mount>
             <div class="pt-4">
                 @foreach($episodes as $episode)
                  <p class="text-center shadow"><a href="{{$episode['link']}}">Episode {{$episode['episode']}}</a></p>

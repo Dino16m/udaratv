@@ -22,10 +22,7 @@ class uploadController extends Controller
    *Short description of video if new, the imdb link for the video if new
    *
    *
-   **/
-    /**
-    *
-    **/
+   */
     private const videoUploadLocation = Constants::videoUploadLocation;
     private const imageUploadLocation = Constants::imageUploadLocation; 
     private const  supportedVideoTypes = Constants::supportedVideoTypes;

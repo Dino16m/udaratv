@@ -27,7 +27,7 @@
 <div id="app">
     <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
-        <a class="navbar-brand" href="#"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
+        <a class="navbar-brand" href="{{url('/')}}"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -75,7 +75,7 @@
  <main role="main" class="container ">
         <div class="card">
 
-           <image-mount :reuse=false name="{{$name}}" image_link="{{$image_link}}" views="{{$views}}" id="{{$id}}" number_of_seasons="{{$number_of_seasons}}" imdb_link={{$imdb_link}} desc="{{$desc}}" run_time={{$run_time}}></image-mount>
+           <image-mount :reuse=false name="{{$name}}" image_link="{{$image_link}}" views="{{$views}}" id="{{$id}}" base_url="{{url('/')}}" number_of_seasons="{{$number_of_seasons}}" imdb_link={{$imdb_link}} desc="{{$desc}}" run_time={{$run_time}}></image-mount>
             <div class="pt-4">
                 @foreach($seasons as $season)
                  <p class="text-center shadow"><a href="{{$season['link']}}">Season {{$season['number']}}</a></p>
