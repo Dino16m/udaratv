@@ -288,7 +288,7 @@ class categoryController extends Controller
           ];
           $i++;  
         }
-        $episodes_number = $i + 1;
+        $episodes_number = $i;
         return view('episode_index')->with(['episodes'=>$episodes, 'episodes_number'=> $episodes_number,'name'=>$name ]);
     }
     /** 
