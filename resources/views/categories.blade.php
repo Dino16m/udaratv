@@ -35,7 +35,7 @@ for($i = 0; $i<$catlength; $i++)
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="{{strtoupper($type)}} starting with {{$catStr}}">
     <meta name="author" content="">
      <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
 </head>

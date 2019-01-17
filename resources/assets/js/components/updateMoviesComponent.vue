@@ -103,7 +103,7 @@
 				let length = 0;
 				for(var key in obj){
 					length++;
-					if((obj[key]!=null && obj[key]!='') || obj[key]==false ){count++}
+					if((obj[key]!=null && obj[key]!='') || obj[key]===false ){count++}
 				}
 			console.log('count is ' + count);
 			console.log('length is ' + length);
