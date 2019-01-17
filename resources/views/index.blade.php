@@ -46,7 +46,7 @@ $lacarousel=json_encode($carousel);
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$carousel[0]['name']}}, {{$carousel[1]['name']}}, {{$carousel[2]['name']}}, {{$carousel[3]['name']}}">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
@@ -123,15 +123,15 @@ $lacarousel=json_encode($carousel);
 
                 <br>
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
+                <ul class="nav nav-tabs d-flex w-100" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active bg-dark" data-toggle="tab" href="#home">TvSeries</a>
+                        <a class="nav-link flex-item bg-dark" data-toggle="tab" href="#home">TvSeries</a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#menu1">Movies</a>
+                        <a class="nav-link flex-item bg-dark" data-toggle="tab" href="#menu1">Movies</a>
                     </li>
                      <li class="nav-item ">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#seeall">See all</a>
+                        <a class="nav-link flex-item active bg-dark" data-toggle="tab" href="#seeall">See all</a>
                     </li>
                     <li class="nav-item">
 
@@ -199,7 +199,7 @@ $lacarousel=json_encode($carousel);
     <hr class="underline">
 
 <section>
-    <main role="main" class="container">
+    <main role="main" class="container w-100">
 
 
 
@@ -209,30 +209,30 @@ $lacarousel=json_encode($carousel);
 
             <br>
 
-            <div class="container-fluid">
+            <div class="container-fluid w-100">
 
                 <br>
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active bg-dark" data-toggle="tab" href="#hollywoodseries">Hollywood TvSeries</a>
+                <ul class="nav nav-tabs w-100" role="tablist">
+                    <li class="nav-item d-flex">
+                        <a class="nav-link active  bg-dark" data-toggle="tab" href="#hollywoodseries">Hollywood TvSeries</a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#hollywoodmovies">Hollywood Movies</a>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#hollywoodmovies">Hollywood Movies</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#nollywoodseries">Nollywood TvSeries</a>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#nollywoodseries">Nollywood TvSeries</a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link bg-dark" data-toggle="tab" href="#nollywoodmovies">Nollywood Movies</a>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#nollywoodmovies">Nollywood Movies</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item flex-item">
                     </li>
                 </ul>
 
                 <!-- Tab panes -->
-                <div class="tab-content">
-                    <div id="hollywoodseries" class="container tab-pane active"><br>
+                <div class="tab-content w-100">
+                    <div id="hollywoodseries" class="container w-100 tab-pane active"><br>
                         <div class="container">
                             <h1 class="my-4 text-center text-lg-left">
                                 <p class="text-center">Hollywood Tvseries by first letter of name.</p>
@@ -243,7 +243,7 @@ $lacarousel=json_encode($carousel);
                         </div>
                     </div>
                 
-                    <div id="hollywoodmovies" class="container tab-pane fade"><br>
+                    <div id="hollywoodmovies" class="container w-100 tab-pane fade"><br>
                         <div class="container">
 
                             <h1 class="my-4 text-center text-lg-left">
@@ -254,7 +254,7 @@ $lacarousel=json_encode($carousel);
 
                         </div>
                     </div>
-                     <div id="nollywoodseries" class="container tab-pane fade"><br>
+                     <div id="nollywoodseries" class="container w-100 tab-pane fade"><br>
                         <div class="container">
                             <h1 class="my-4 text-center text-lg-left">
                                 <p class="text-center"> Download Nollywood Series eg Jenifa's Diary.</p>
@@ -263,7 +263,7 @@ $lacarousel=json_encode($carousel);
                             <categorylist videotype="nollywoodseries"> </categorylist>
                         </div>
                     </div>
-                    <div id="nollywoodmovies" class="container tab-pane fade"><br>
+                    <div id="nollywoodmovies" class="container w-100 tab-pane fade"><br>
                          <div class="container">
                             <h1 class="my-4 text-center text-lg-left">
                                 <p class="text-center"> Download Nollywood movies.</p>

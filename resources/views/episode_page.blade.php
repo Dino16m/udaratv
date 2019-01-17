@@ -72,7 +72,7 @@
         </div>
     </nav>
     <!--nav-bar-end-->
-     <image-mount :reuse=false  name="{{$name}}" base_url="{{url('/')}}"></image-mount>
+     <image-mount :reuse=true  name="{{$name}}" base_url="{{url('/')}}"></image-mount>
      @foreach($qualities as $quality)
      <ul class="card list-group d-flex bg-dark shadow rounded-top">
          <li class="list-group-item justify-content-between align-items-center  p-3 bg-dark text-center"> Download {{$quality['quality']}}</li>

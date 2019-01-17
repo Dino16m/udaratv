@@ -234,7 +234,7 @@ class uploadController extends Controller
       if(!$reqs){
         return $name.' is of a file type that is not featured here yet, please contact Admin';
       }
-      $file_name=$name.'.'.$ext;
+      $file_name=$name.'-(UdaraTv.com)'.'.'.$ext;
       $file_path=$reqs.$file_name;
       $storage_path= $reqs;
       $details['file_path'] = $file_path;
@@ -274,7 +274,7 @@ class uploadController extends Controller
       if(!$movie){return $name.' has an error in the type designated for it, we have no record of the name and type';}
       $model= $movie['model'];
       $image_path = $model->image_link;
-      $file_name=$name.'-'.$quality.'.$ext';
+      $file_name=$name.'-'.$quality.'-(UdaraTv.com)'.'.$ext';
       $storage_path=$movie['path'];
       $should_show=$details['should_show'];
       $file_path= $movie['path'].stripslashes($file_name);
@@ -312,7 +312,7 @@ class uploadController extends Controller
       }
       $upload_path=$series->series_path;
       $storage_path =$upload_path;
-      $file_name= $name.'-'.$quality.'-'.$season.'-'.$episode.'.'.$ext;
+      $file_name= $name.'-'.$quality.'-'.$season.'-'.$episode.'-(UdaraTv.com)'.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $upload_path.'/'.stripslashes($file_name);
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
@@ -342,7 +342,7 @@ class uploadController extends Controller
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
       $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $tags = is_array($tags) ? $tags: json_decode($tags);
-      $file_name = $videoDetails['name'].'.'.$ext;
+      $file_name = $videoDetails['name'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
         if(!is_dir(base_path('/storage/app'.$upload_path))){
         if (!mkdir(base_path('/storage/app'.$upload_path), 0763)){
@@ -394,12 +394,12 @@ class uploadController extends Controller
       }
       if($extLink!=null && $extLink!=false){
         
-	 $curl = curl_init(); 
+	      $curl = curl_init(); 
         curl_setopt($curl, CURLOPT_URL, $extLink);
-	 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	 curl_setopt($curl, CURLOPT_HEADER, false);
-	 $stream = curl_exec($curl);
- 	curl_close($curl);
+	      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	      curl_setopt($curl, CURLOPT_HEADER, false);
+	      $stream = curl_exec($curl);
+ 	      curl_close($curl);
 
         $tmpPath = Constants::getTmp().$filename;
         $newFile = file_put_contents($tmpPath, $stream);

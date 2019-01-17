@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Udara Tv</title>
-    <meta name="csrf-token" content="{{csrf_token()}}" >
+     <meta name="csrf-token" content="{{csrf_token()}}" >
     <link rel="stylesheet" type="text/css" href="{{ url('public/css/app.css')}}">
     <link rel="stylesheet" href="<?php echo url('public/css/style.css')?>" type="text/css">
     <link rel="stylesheet" href="<?php echo url('public/css/style2.css')?>" type="text/css">
@@ -25,7 +25,7 @@
 </head>
 <body>
 <div id="app">
-    <!--nav-bar-start-->
+       <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
         <a class="navbar-brand" href="{{url('/')}}"><img src="<?php echo url('public/images/udaralogo.png')?>" alt="udaratv" height="40px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,16 +38,16 @@
                     <a class="nav-link" href="<?php echo url('/')?>">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('types/hollwood')?>">Movies</a>
+                    <a class="nav-link" href="<?php echo url('types/hollywoodmovies')?>">Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('type/hollywoodseries')?>">TvSeries</a>
+                    <a class="nav-link" href="<?php echo url('types/hollywoodseries')?>">TvSeries</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('types/naija')?>">Nollywood-Movies</a>
+                    <a class="nav-link" href="<?php echo url('types/nollywoodmovies')?>">Nollywood-Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('type/naijaseries')?>">Nollywood-TvSeries</a>
+                    <a class="nav-link" href="<?php echo url('types/nollywoodseries')?>">Nollywood-TvSeries</a>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
@@ -71,22 +71,17 @@
            <search-bar></search-bar>
         </div>
     </nav>
-<!--nav-bar-end-->
- <main role="main" class="container ">
-        <div class="card">
+    <!--nav-bar-end-->
+    
+     <image-mount :reuse=true  name="{{$name}}" base_url="{{url('/')}}"></image-mount>
+     @foreach($qualities as $quality)
+     <ul class="card list-group d-flex bg-dark shadow rounded-top">
+         <li class="list-group-item justify-content-between align-items-center  p-3 bg-dark text-center"> Download {{$quality['quality']}}</li>
+         <li class="list-group-item justify-content-between align-items-center  p-3 bg-secondary text-center"> <a href="{{$quality['link']}}" class=" font-weight-bolder text-capitalize text-dark"> {{$name}} - {{$quality['quality']}}  [has been downloaded {{$quality['views']}} time(s)]</a></li>
+     </ul>
+     @endforeach
 
-           <image-mount :reuse=false name="{{$name}}" image_link="{{$image_link}}" views="{{$views}}" id="{{$id}}" base_url="{{url('/')}}" number_of_seasons="{{$number_of_seasons}}" imdb_link={{$imdb_link}} desc="{{$desc}}" run_time={{$run_time}}></image-mount>
-            <div class="pt-4">
-                @foreach($seasons as $season)
-                 <p class="text-center shadow"><a href="{{$season['link']}}">Season {{$season['number']}}</a></p>
-                 @endforeach
-            </div>
-        </div>
-        <br>
-        <paginator v-bind:passed="{{$paginator}}"></paginator>
-    </main><!-- /.container -->
-
-    <section class="container justify-content-center">
+ <section class="container justify-content-center">
 
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>
     </section>
@@ -126,16 +121,16 @@
 
                     <ul class="list-unstyled">
                         <li>
-                            <a href="{{url('type/hollywoodmovies')}}">HollyWood Movies</a>
+                            <a href="{{url('types/hollywoodmovies')}}">HollyWood Movies</a>
                         </li>
                         <li>
-                            <a href="{{url('type/hollywoodmovies')}}">Hollywood Tvseries</a>
+                            <a href="{{url('types/hollywoodmovies')}}">Hollywood Tvseries</a>
                         </li>
                         <li>
-                            <a href="{{url('type/nollywoodmovies')}}">NollyWood Movies</a>
+                            <a href="{{url('types/nollywoodmovies')}}">NollyWood Movies</a>
                         </li>
                         <li>
-                            <a href="{{url('type/nollywoodseries')}}">Nollywood Tvseries</a>
+                            <a href="{{url('types/nollywoodseries')}}">Nollywood Tvseries</a>
                         </li>
                         <li>
                             <a href="#!">Request!</a>
@@ -155,13 +150,13 @@
 
                     <ul class="list-unstyled">
                        <li>
-                            <a href="{{url('type/hollywoodmovies')}}">HollyWood Movies</a>
+                            <a href="{{url('types/hollywoodmovies')}}">HollyWood Movies</a>
                         </li>
                         <li>
-                            <a href="{{url('type/nollywoodmovies')}}">NollyWood Movies</a>
+                            <a href="{{url('types/nollywoodmovies')}}">NollyWood Movies</a>
                         </li>
                         <li>
-                            <a href="{{url('type/bollywoodmovies')}}">BollyWood Movies</a>
+                            <a href="{{url('types/bollywoodmovies')}}">BollyWood Movies</a>
                         </li>
 
                     </ul>
