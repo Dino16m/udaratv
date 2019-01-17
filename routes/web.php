@@ -68,7 +68,7 @@ Route::get('recents/seemore', 'categoryController@getMoreRecents');
 //e.g udaratv.com/tags/comedy
 Route::get('tags/{Tag}', 'categoryController@getVideosOfTag');
 Route::get('genre/{Tag}', 'categoryController@getVideosOfTag');
-Route::get('tag/{Tag}', 'categoryController@getVideosOfTag'/);
+Route::get('tag/{Tag}', 'categoryController@getVideosOfTag');
 //e.g udaratv.com/types/naija
 Route::get('types/{Type}', 'categoryController@getVideosOfType');
 Route::get('type/{Type}', 'categoryController@getVideosOfType');

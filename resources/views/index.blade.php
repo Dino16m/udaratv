@@ -47,6 +47,7 @@ $lacarousel=json_encode($carousel);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
+    <meta name="google-site-verification" content="Th8HNdr7cKYDKfi21HsdFYYUa5mryCK_ahacx-i6BxE" />
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
