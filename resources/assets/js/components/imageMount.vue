@@ -114,7 +114,7 @@
 				return this.v_number_of_episodes != null;
 			},
 			getSavedData(){
-				let workingName = this.name;
+				let workingName = this.name.trim().replace(/\s+/g, "_");
 				if (localStorage.getItem(workingName)) {
 					try{
 						let storedData = JSON.parse(localStorage.getItem(workingName));
