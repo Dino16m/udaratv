@@ -2,7 +2,7 @@
 	<div>
 		 <div class=" img pt-4 mt-4">
            <div class=" img pt-4 mt-4">
-            <img :src="image_url"  class="img-fluid w-25 h-25 border rounded border-light" :alt="alt">
+            <img :src="image_url"  class="img-fluid w-50 h-50 border rounded border-light" :alt="alt">
          </div>
          <br>
          <h3 class="text-center">{{Name}}</h3>
@@ -152,14 +152,14 @@
 			}
 		},
 		created(){
-			if(this.needed || this.Episode!==null){
+			if(this.needed || this.seasonAndEps()){
 				this.getSavedData();
 			}
 			
 		},
 		mounted(){
 			
-			if(!this.needed && (this.Episode===null && this.Season===null)){
+			if(!this.needed && !this.seasonAndEps()){
 				this.saveData();
 			}
 		}

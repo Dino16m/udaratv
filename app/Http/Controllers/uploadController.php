@@ -342,7 +342,7 @@ class uploadController extends Controller
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
       $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $tags = is_array($tags) ? $tags: json_decode($tags);
-      $file_name = $videoDetails['name'].'-(UdaraTv.com)'.'.'.$ext;
+      $file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.$videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
         if(!is_dir(base_path('/storage/app'.$upload_path))){
         if (!mkdir(base_path('/storage/app'.$upload_path), 0763)){
