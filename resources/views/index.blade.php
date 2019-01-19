@@ -15,6 +15,7 @@ $all = array_merge($series, $movies);
 $carousel = [];
 $i = 0;
 $previous = '';
+$pageMeta = '';
 foreach ($all as $all1)
 { 
     if($previous==$all1['name']){continue;}
@@ -23,6 +24,7 @@ foreach ($all as $all1)
         'url'=>$all1['link'],
         'imageurl'=>url($all1['image_link'])
     ];
+    $pageMeta .=$all1['name'] .', ';
     $previous=$all1['name'];
     $i++;
 }
@@ -47,7 +49,7 @@ $lacarousel=json_encode($carousel);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="google-site-verification" content="Th8HNdr7cKYDKfi21HsdFYYUa5mryCK_ahacx-i6BxE">
-    <meta name="description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$carousel[0]['name']}}, {{$carousel[1]['name']}}">
+    <meta name="description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$pageMeta}}">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">

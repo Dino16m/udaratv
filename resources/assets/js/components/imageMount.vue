@@ -19,7 +19,7 @@
          	<p class="field">Number of Views: {{v_views}} </p>
 	   </div>
 
-            <div class="container" v-if="notEpisodePage()">
+            <div class="container" v-if='isHome'>
                 <div class="row h-100 w-100">
                     <div class="d-flex flex-row mx-auto mb-3">
                         <div class="col-sm-6  description">
@@ -61,6 +61,9 @@
 				type: String
 			},
 			reuse:{
+				type: Boolean
+			},
+			ishome:{
 				type: Boolean
 			},
 			id:{
@@ -110,7 +113,8 @@
 				v_is_series: this.isseries,
 				url: this.base_url,
 				Season: this.season,
-				Episode: this.episode
+				Episode: this.episode,
+				isHome: this.ishome
 			}
 		},
 		methods:{
@@ -121,7 +125,7 @@
 				localStorage.setItem(storageKey, json);
 			},
 			notEpisodePage(){
-				return (this.Episode === null && this.Season === null) ? true : false;
+				return (this.Episode == null && this.Season == null) ? true : false;
 			},
 			makeUrl(url){
 				return this.url + url;
