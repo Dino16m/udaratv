@@ -51,7 +51,7 @@ class categoryController extends Controller
             return view('movie_not_found')->with(['movie_name'=>$tag]);
         }
         $videos= $tagModels->allmovies()->orderBy('name', 'ASC')->paginate(15);
-        $videos->withPath('tags/'.$tag);
+        //$videos->withPath('tags/'.$tag);
         if($videos->isEmpty())
         {
             return back();
@@ -196,8 +196,14 @@ class categoryController extends Controller
             return back();
         }
         $name= basename($path);
+        $base_path = base_path('storage/app'.$path);
+        $mime_type = mime_content_type($base_path);
+        $mime = $mime_type === false ? 'video/mp4' : $mime_type;
+        $file_size = file_exists($base_path) ? filesize($base_path) : 0; 
+        $headers = array('Content-Type:'.$mime,
+                           'Content-Length:'.$file_size);
         event( new downloadEvent(['type'=>$type, 'id'=>$id]));
-        return ($name && Storage::exists($path)) ? Storage::download($path, $name) : back();
+        return ($name && Storage::exists($path)) ? Storage::download($path, $name, $headers) : back();
     }
     public function getMovieIndex($Type, $Name)
     {
@@ -284,7 +290,7 @@ class categoryController extends Controller
           $episodes[$i] = 
           [
             'episode'=>$model->episode_name,
-            'link' => url('seriesepisodes/'.$name.'/'.$model->id)
+            'link' => url('seriesepisodes/'.$name.'/'.$model->id.'?S='.$season.'&E='.$model->episode_name)
           ];
           $i++;  
         }
@@ -299,12 +305,14 @@ class categoryController extends Controller
     * @return view during production
     * @return JSON during dev/testing
     */
-    public function getEpisode($Name, $Id)
+    public function getEpisode($Name, $Id, Request $request)
     {
         if (!Validator::isInt($Id))
         {
             abort(404);
         }
+        $Season = ( Validator::isInt($request->get('S')) && $request->get('S') !==null) ? Validator::sanitize($request->get('S')) : 'none';
+        $Episode = ( Validator::isInt($request->get('E')) && $request->get('E') !==null) ? Validator::sanitize($request->get('E')) : 'none';
         $id = Validator::sanitize($Id);
         $name = Validator::sanitize($Name);
         $qualities = seriesquality::where('episodes_id', $id)->get(['id', 'file_path', 'quality', 'number_downloaded', ]);
@@ -317,7 +325,7 @@ class categoryController extends Controller
                 'link'=>url('download/series/'.$quality->id.'?file='.$quality->file_path)
             ];
         }
-        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'name'=>$name]) : view('movie_not_found')->with(['movie_name'=>$name]);
+        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'season'=>$Season,'episode'=>$Episode,'name'=>$name]) : view('movie_not_found')->with(['movie_name'=>$name]);
         //return view('episode_page')->with(['qualities'=>$qualities]);
     }
     /**
@@ -352,7 +360,7 @@ class categoryController extends Controller
             if(empty($models) || $models==null){
                 return false;
             }
-        $models->withPath('types/' .$type);
+        //$models->withPath('types/' .$type);
         }
         else if(Constants::inMovie($type))
         {
@@ -360,7 +368,7 @@ class categoryController extends Controller
             if(empty($models) || $models==null){
             return false;
             }
-            $models->withPath('types/'.$type);
+           // $models->withPath('types/'.$type);
         }
         else
         {
@@ -391,7 +399,7 @@ class categoryController extends Controller
             return false;
         }
        $Seasons = $series->seasons()->orderBy('season_name', 'desc')->paginate(10);
-       $Seasons->withPath('series/'.$type.'/'. $Name);
+       //$Seasons->withPath('series/'.$type.'/'. $Name);
        return ($Seasons->isNotEmpty() && !empty($series)) ? ['seasons'=>$Seasons, 'series'=>$series]: false;
     }
     private function getSearch($Name)
@@ -473,7 +481,7 @@ class categoryController extends Controller
                 if(empty($models) || $models==null){
                     return false;
                 }
-                $models->withpath('categories/'.$type.'/'.$cat);
+                //$models->withpath('categories/'.$type.'/'.$cat);
                 break;
             }
             if ($accepted1 == $type && Constants::inMovie($type))
@@ -483,7 +491,7 @@ class categoryController extends Controller
                   if(empty($models) || $models==null){
                     return false;
                   }
-                  $models->withpath('categories/'.$type.'/'.$cat);
+                  //$models->withpath('categories/'.$type.'/'.$cat);
                   break;
             } 
         }
