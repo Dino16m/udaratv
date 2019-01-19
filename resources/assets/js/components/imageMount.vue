@@ -2,11 +2,16 @@
 	<div>
 		 <div class=" img pt-4 mt-4">
            <div class=" img pt-4 mt-4">
-            <img :src="image_url"  class="img-fluid" :alt="alt">
+            <img :src="image_url"  class="img-fluid w-25 h-25 border rounded border-light" :alt="alt">
          </div>
          <br>
          <h3 class="text-center">{{Name}}</h3>
          <br>
+
+         <div class="card" v-if="seasonAndEps()">
+         	<p class="field"> Season: {{Season}} </p>
+         	<p class="field">Episode: {{Episode}} </p>
+	   </div>
 
         <div class="card" v-if="needed">
          	<p class="field">Number of Seasons: {{v_number_of_seasons}} </p>
@@ -14,7 +19,7 @@
          	<p class="field">Number of Views: {{v_views}} </p>
 	   </div>
 
-            <div class="container" v-else>
+            <div class="container" v-if="notEpisodePage()">
                 <div class="row h-100 w-100">
                     <div class="d-flex flex-row mx-auto mb-3">
                         <div class="col-sm-6  description">
@@ -68,7 +73,7 @@
 				type: String
 			},
 			desc:{
-
+				type: String
 			},
 			run_time:{
 				type: String
@@ -81,6 +86,12 @@
 			},
 			base_url:{
 				type: String
+			},
+			episode:{
+				type:String
+			},
+			season:{
+				type:String
 			}
 		},
 		data(){
@@ -97,7 +108,9 @@
 				v_run_time: this.run_time,
 				v_number_of_episodes: this.number_of_episodes,
 				v_is_series: this.isseries,
-				url: this.base_url
+				url: this.base_url,
+				Season: this.season,
+				Episode: this.episode
 			}
 		},
 		methods:{
@@ -107,11 +120,17 @@
 				let json = JSON.stringify(ArrToStore);
 				localStorage.setItem(storageKey, json);
 			},
+			notEpisodePage(){
+				return (this.Episode === null && this.Season === null) ? true : false;
+			},
 			makeUrl(url){
 				return this.url + url;
 			},
 			episodes(){
-				return this.v_number_of_episodes != null;
+				return this.v_number_of_episodes !== null? true:false;
+			},
+			seasonAndEps(){
+				return (this.Episode == null && this.Season ==null) ? false : true; 
 			},
 			getSavedData(){
 				let workingName = this.name.trim().replace(/\s+/g, "_");
@@ -133,14 +152,14 @@
 			}
 		},
 		created(){
-			if(this.needed){
+			if(this.needed || this.Episode!==null){
 				this.getSavedData();
 			}
 			
 		},
 		mounted(){
 			
-			if(!this.needed){
+			if(!this.needed && (this.Episode===null && this.Season===null)){
 				this.saveData();
 			}
 		}

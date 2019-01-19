@@ -75,7 +75,7 @@
  <main role="main" class="container ">
         <div class="card">
 
-           <image-mount :reuse=false name="{{$name}}" image_link="{{$image_link}}" views="{{$views}}" id="{{$id}}" base_url="{{url('/')}}" number_of_seasons="{{$number_of_seasons}}" imdb_link={{$imdb_link}} desc="{{$desc}}" run_time={{$run_time}}></image-mount>
+           <image-mount :reuse=false name="{{$name}}" image_link="{{$image_link}}" views="{{$views}}" id="{{$id}}" base_url="{{url('/')}}" number_of_seasons="{{$number_of_seasons}}" imdb_link='{{$imdb_link}}' desc="{{$desc}}" run_time='{{$run_time}}'></image-mount>
             <div class="pt-4">
                 @foreach($seasons as $season)
                  <p class="text-center shadow"><a href="{{$season['link']}}">Season {{$season['number']}}</a></p>

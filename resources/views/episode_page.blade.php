@@ -72,11 +72,11 @@
         </div>
     </nav>
     <!--nav-bar-end-->
-     <image-mount :reuse=true  name="{{$name}}" base_url="{{url('/')}}"></image-mount>
+     <image-mount :reuse=false  name="{{$name}}" base_url="{{url('/')}}" episode='{{$episode}}' season='{{$season}}'></image-mount>
      @foreach($qualities as $quality)
      <ul class="card list-group d-flex bg-dark shadow rounded-top">
          <li class="list-group-item justify-content-between align-items-center  p-3 bg-dark text-center"> Download {{$quality['quality']}}</li>
-         <li class="list-group-item justify-content-between align-items-center  p-3 bg-secondary text-center"> <a href="{{$quality['link']}}" class=" font-weight-bolder text-capitalize text-dark"> {{$name}} - {{$quality['quality']}}  [has been downloaded {{$quality['views']}} time(s)]</a></li>
+         <li class="list-group-item justify-content-between align-items-center  p-3 bg-primary text-center"> <a href="{{$quality['link']}}" class=" font-weight-bolder text-capitalize text-dark"> {{$name}} - {{$quality['quality']}} -Season-{{$season}}-Episode-{{$episode}} [has been downloaded {{$quality['views']}} time(s)]</a></li>
      </ul>
      @endforeach
 
