@@ -226,7 +226,8 @@ class uploadController extends Controller
       $video=$details['video'];
       $extLink= $details['extLink'] ==null? false : $details['extLink'];
       $name= $details['name'];
-      $ext= $extLink == false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $tmpExt = $ext= ($extLink == false)? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $ext = $tmpExt ? $ext : $details['ext'];
       $type=$details['type'];
       $tags = $details['tags'];
       $tags = is_array($tags) ? $tags: json_decode($tags);
@@ -268,7 +269,8 @@ class uploadController extends Controller
       $quality = $details['quality'];
       $name= $details['name'];
       $extLink= $details['extLink'] ==null? false : $details['extLink'];
-      $ext= $extLink ==false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $tmpExt=$ext= ($extLink ==false)? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $ext = $tmpExt ? $ext : $details['ext'];
       $type=$details['type'];
       $movie=$this::getMovieModelandPath($type, $name);
       if(!$movie){return $name.' has an error in the type designated for it, we have no record of the name and type';}
@@ -304,7 +306,8 @@ class uploadController extends Controller
       $episode= $details['episodeNumber'];
       $season=$details['number_of_seasons'];
       $should_show=$details['should_show'];
-      $ext= $extLink == false? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $tmpExt= $ext= ($extLink == false)? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $ext= $tmpExt ? $ext : $details['ext'];
       $type = $details['type'];
       $series= series::where('type',$type)->where('name', $name)->first();
       if($series==null){
@@ -340,7 +343,8 @@ class uploadController extends Controller
       $type = $videoDetails['type'];
       $tags = $videoDetails['tags'];
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
-      $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $tmpExt= $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+      $ext = $tmpExt ? $ext  : $Details['ext'];
       $tags = is_array($tags) ? $tags: json_decode($tags);
       $file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.$videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);

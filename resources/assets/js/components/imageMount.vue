@@ -156,14 +156,14 @@
 			}
 		},
 		created(){
-			if(this.needed || this.seasonAndEps()){
+			if(this.needed || !this.isHome){
 				this.getSavedData();
 			}
 			
 		},
 		mounted(){
 			
-			if(!this.needed && !this.seasonAndEps()){
+			if(!this.needed && this.isHome){
 				this.saveData();
 			}
 		}
