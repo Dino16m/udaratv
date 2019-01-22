@@ -1,11 +1,12 @@
 <?php 
-$scat = 'jkl';
+$scat = $cat;
 $catArr= str_split($scat);
 $catStr='';
 $catlength=sizeof($catArr);
 for($i = 0; $i<$catlength; $i++)
 {
-    if($catlength == 1){ break;}
+    if($catlength == 1){$catStr = $scat;
+	 break;}
     $cat1=$catArr[$i];
     if ($i == ($catlength-1)){
         $catStr = strtoupper($catStr).' or '.strtoupper($cat1);
