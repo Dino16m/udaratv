@@ -13,4 +13,8 @@ class tags extends Model
     {
         return $this->belongsTo(allmovies::class);
     }
+    public function series()
+    {
+        return $this->belongsTo(series::class);
+    }
 }

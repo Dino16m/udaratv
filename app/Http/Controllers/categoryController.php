@@ -46,13 +46,8 @@ class categoryController extends Controller
     {
         $tag = strtolower($Tag);
         $tag = Validator::sanitize($tag);
-        $tagModels = tags::where('tag', $tag)->first();
-        if($tagModels==null){
-            return view('movie_not_found')->with(['movie_name'=>$tag]);
-        }
-        $videos= $tagModels->allmovies()->orderBy('name', 'ASC')->paginate(15);
-        //$videos->withPath('tags/'.$tag);
-        if($videos->isEmpty())
+        $videos = $this->getTags($tag);
+        if($videos==false)
         {
             return back();
         }
@@ -68,16 +63,8 @@ class categoryController extends Controller
             ];
             $i++;
         }
-        $paginator= [
-                    'first_page_url'=>$videos->url(1),
-                    'previous_page_url'=> $videos->previousPageUrl(), 
-                    'next_page_url'=>$videos->nextPageUrl(),
-                    'last_page_url'=> $videos->url($videos->lastPage()),
-                    'last'=>$videos->lastPage(),
-                    'path'=>url('tags/'.$tag.'?page=')
-                            ];
-        $Paginator = json_encode($paginator);
-        return view('video_index')->with(['videos'=>$returnVids,'paginator'=>$Paginator, 'type'=>$tag]);
+        
+        return view('video_index')->with(['videos'=>$returnVids,'paginator'=>'empty', 'type'=>$tag]);
 
     }
     public function search(Request $request)
@@ -88,7 +75,7 @@ class categoryController extends Controller
             return response()->json(['error'=>'empty search']);
         }
         $name = Validator::sanitize($name);
-        $queryVids = getSearch($name);
+        $queryVids = $this::getSearch($name);
         if(!$queryVids){ return response()->json(['error'=>$name.'not found']);}
         $returnable = [];
         foreach ($queryVids as $queryVid) {
@@ -106,10 +93,11 @@ class categoryController extends Controller
                 'name'=>$thisname,
                 'link'=>$link
             ];
-            return response()->json($returnable);
+            
         }
-
+        return response()->json($returnable);
     }
+
     public function getVideosOfType($Type)
     {
         $type = strtolower($Type);
@@ -495,8 +483,27 @@ class categoryController extends Controller
                   break;
             } 
         }
-           return $models->isNotEmpty() ? $models : false;
-        
+           return $models->isNotEmpty() ? $models : false;    
+    }
+
+    private function getTags($tag)
+    {
+        $tagModels = tags::where('tag', $tag)->get();
+        if(empty($tagModels)){
+            return view('movie_not_found')->with(['movie_name'=>$tag]);
+        }
+        $counter = 0;
+        $videos = collect([]);
+        foreach ($tagModels as $tagModel) {
+            $movies= $tagModel->allmovies()->orderBy('name', 'ASC')->get();
+            $series = $tagModel->series()->orderBy('name', 'ASC')->get();
+            if($series->isNotEmpty() || $movies->isNotEmpty()){
+               $videos=  $counter === 0 ? $movies->merge($series) :  $videos->merge($movies->merge($series)); 
+            }
+            $counter++;
+        }
+
+        return $videos->isNotEmpty() ? $videos : false;
     }
     /**
     * @param cat

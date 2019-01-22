@@ -94,7 +94,9 @@
     </li>
 @endforeach
 </ul>
+@if($paginator !== 'empty')
 <paginator :passed={{$paginator}}></paginator>
+@endif
 
  <hr class="light">
         <!-- Footer Links -->

@@ -23,8 +23,11 @@ use App\User;
 
 Route::get('/me', function() {
     
-    $ret = false;
-    return $ret;
+   $path = '/videos/movies/hollywoodmovies/mogbe.mp4';
+        $base_path = base_path('storage/app'.$path);
+        $mime_type = mime_content_type($base_path);
+        $mime = $mime_type === false ? 'video/mp4' : $mime_type;
+        return $mime;
 
 /**$string = 'wwww.me.com/ypu/public/videos/love.mp4?';
 //$bool = preg_match('~/public/videos/~', $string);
@@ -59,6 +62,7 @@ Route::get('tag/{Tag}', 'categoryController@getVideosOfTag');
 Route::get('types/{Type}', 'categoryController@getVideosOfType');
 Route::get('type/{Type}', 'categoryController@getVideosOfType');
 
+Route::get('search', 'categoryController@search');
 
 Route::get('uploader/index' ,['as'=>'uploader/index','middleware'=>'auth','uses'=> 'uploadController@index']);
 
