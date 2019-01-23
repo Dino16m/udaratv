@@ -198,6 +198,7 @@ class categoryController extends Controller
         $mime_type = mime_content_type($base_path);
         $mime = $mime_type === false ? 'video/mp4' : $mime_type;
         $file_size = file_exists($base_path) ? filesize($base_path) : 0; 
+        ob_end_clean();
         $headers = array('Content-Type:'.$mime,
                            'Content-Length:'.$file_size);
         event( new downloadEvent(['type'=>$type, 'id'=>$id]));

@@ -2,7 +2,7 @@
 $movies=[];
 $series=[];
 foreach ($recents as $recent) {
-    if($recent['season']==null && $recent['season']==null)
+    if($recent['season']==null)
     {
         array_push($movies, $recent);
     }
@@ -64,6 +64,12 @@ $lacarousel=json_encode($carousel);
         gtag('config', 'UA-132811731-1');
     </script>
     <!--End of google analytics-->
+    <!--ad network-->
+        <script data-cfasync="false">
+            (function(E,n,G,A,g,Y,a){E['EngageyaObject']=g;E[g]=E[g]||function(){ (E[g].q=E[g].q||[]).push(arguments)},E[g].l=1*new Date();Y=n.createElement(G), a=n.getElementsByTagName(G)[0];Y.async=1;Y.src=A;a.parentNode.insertBefore(Y,a)})(window,document,'script','//widget.engageya.com/engageya_loader.js','__engWidget');
+            __engWidget('createWidget',{wwei:'ENGAGEYA_WIDGET_125611',pubid:191419,webid:195234,wid:125611});
+        </script>
+    <!--end of ad-->
 </head>
 <body>
 <div id="app"> 
@@ -151,7 +157,7 @@ $lacarousel=json_encode($carousel);
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div id="home" class="container tab-pane active"><br>
+                    <div id="home" class="container tab-pane fade"><br>
                         <div class="container">
                             <!--here-->
                             <h1 class="my-4 text-center text-lg-left">
@@ -182,7 +188,7 @@ $lacarousel=json_encode($carousel);
 
                         </div>
                     </div>
-                     <div id="seeall" class="container tab-pane fade"><br>
+                     <div id="seeall" class="container tab-pane  active"><br>
                       <h1>  <p class="text-center"> Download latest Movies and series.</p> </h1>
                        <br>
                         <ul class="list-group bg-dark" >
@@ -422,11 +428,6 @@ $lacarousel=json_encode($carousel);
 </div>
 
 <script type="text/javascript" src="public/js/app.js"></script>
-<!--ad network-->
-        <script data-cfasync="false">
-            (function(E,n,G,A,g,Y,a){E['EngageyaObject']=g;E[g]=E[g]||function(){ (E[g].q=E[g].q||[]).push(arguments)},E[g].l=1*new Date();Y=n.createElement(G), a=n.getElementsByTagName(G)[0];Y.async=1;Y.src=A;a.parentNode.insertBefore(Y,a)})(window,document,'script','//widget.engageya.com/engageya_loader.js','__engWidget');
-            __engWidget('createWidget',{wwei:'ENGAGEYA_WIDGET_125611',pubid:191419,webid:195234,wid:125611});
-        </script>
-    <!--end of ad-->
+
 </body>
 </html>
