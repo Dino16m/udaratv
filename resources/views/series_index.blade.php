@@ -21,7 +21,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
+    <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
+     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-132811731-1');
+    </script>
+    <!--End of google analytics-->
 </head>
 <body>
 <div id="app">
@@ -96,6 +105,7 @@
 
     <!-- Footer -->
     <footer class="page-footer  font-small  pt-4">
+        <div id="ENGAGEYA_WIDGET_125611"></div>
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">
@@ -222,5 +232,11 @@
     </footer> 
 </div>
 <script type="text/javascript" src="<?php echo url('public/js/app.js')?>"></script>
+<!--ad network-->
+        <script data-cfasync="false">
+            (function(E,n,G,A,g,Y,a){E['EngageyaObject']=g;E[g]=E[g]||function(){ (E[g].q=E[g].q||[]).push(arguments)},E[g].l=1*new Date();Y=n.createElement(G), a=n.getElementsByTagName(G)[0];Y.async=1;Y.src=A;a.parentNode.insertBefore(Y,a)})(window,document,'script','//widget.engageya.com/engageya_loader.js','__engWidget');
+            __engWidget('createWidget',{wwei:'ENGAGEYA_WIDGET_125611',pubid:191419,webid:195234,wid:125611});
+        </script>
+    <!--end of ad-->
 </body>
 </html>
