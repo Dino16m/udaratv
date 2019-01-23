@@ -429,7 +429,11 @@ class categoryController extends Controller
     private function getHomeCat($more=null)
     {
         $count = $more==null? '10' : '30';
-        $recents = Recents::where('should_show', 1)->orderBy('updated_at','desc')->take($count)->get();
+        $movies = collect([]);
+        $series = collect([]);
+        $movies = Recents::where('should_show', 1)->where('season', null)->orderBy('updated_at','desc')->take($count)->get();
+        $series = Recents::where('should_show', 1)->where('season', '!=', null)->orderBy('updated_at','desc')->take($count)->get();
+        $recents = $movies->merge($series);
         if($recents->isEmpty()){ return false;}
         $recentsArray=[];
         $i = 0;
