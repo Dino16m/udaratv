@@ -315,7 +315,7 @@ class uploadController extends Controller
       }
       $upload_path=$series->series_path;
       $storage_path =$upload_path;
-      $file_name= $name.'-'.$quality.'-'.$season.'-'.$episode.'-(UdaraTv.com)'.'.'.$ext;
+      $file_name= $name.'-'.$quality.'-S'.$season.'-E'.$episode.'-(UdaraTv.com)'.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $upload_path.'/'.stripslashes($file_name);
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
