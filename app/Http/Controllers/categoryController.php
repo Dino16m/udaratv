@@ -55,11 +55,21 @@ class categoryController extends Controller
         $i=0;
         foreach ($videos as $video)
         {
-          $saneModelName= preg_replace('/\s+/', '_', $video->name);
+            $type = $video->type;
+            $thisname = preg_replace('/\s+/', '_', $video->name);
+            if(Constants::inSeries($type)){
+                $link = url('series/'.$type.'/'.$thisname);
+            }
+            elseif (Constants::inMovie($type)) {
+                $link = url('movies/'.$type.'/'.$thisname);
+            }
+            else{ 
+                return view('movie_not_found')->with(['movie_name'=>$tag]);
+            }
             $returnVids[$i]=
             [
                 'name'=>$video->name,
-                'link'=>url('movies/'.$tag.'/'.$saneModelName),
+                'link'=>$link,
             ];
             $i++;
         }
@@ -179,12 +189,12 @@ class categoryController extends Controller
         $type = strtolower($Type);
         $path = Validator::sanitize($Path);
         $id = Validator::sanitize($QualityId);
-        if(!Validator::isInt($id) && preg_match('~/videos/~', $path)==0)
+        $base_path = base_path('storage/app'.$path);
+        if(!Validator::isInt($id) || (preg_match('~/videos/~', $path)==0 || !file_exists($base_path) ) )
         {
             return back();
         }
         $name= basename($path);
-        $base_path = base_path('storage/app'.$path);
         $mime_type = mime_content_type($base_path);
         $mime = $mime_type === false ? 'video/mp4' : $mime_type;
         $file_size = file_exists($base_path) ? filesize($base_path) : 0; 
