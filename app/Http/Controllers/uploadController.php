@@ -283,6 +283,7 @@ class uploadController extends Controller
       if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
       }
+      $model->touch();
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
       if($moviequality == false)
       {
@@ -324,6 +325,7 @@ class uploadController extends Controller
      if( $details['should_touch_season'] == 1) {
       $series->update(['number_of_seasons'=>$season]);
     }
+    $series->touch();
     $newSeason = $series->seasons()->firstOrCreate(['season_name'=>$season]);
     $episodes= $newSeason->episodes()->firstOrCreate(['series_id'=>$series->id,'episode_name'=>$episode]);
     $quality=$episodes->quality()->firstOrCreate(['series_id'=>$series->id,'quality'=>$quality, 'file_path'=>$file_path, 
@@ -417,7 +419,7 @@ class uploadController extends Controller
     * @param String $Name
     * @return Array ['model', 'path'] | false if the name or type doesn't exist
     **/
-    private function getMovieModelandPath($Type,$Name){
+    private function getMovieModelandPath($Type, $Name){
       $type=strtolower($Type);
       $name=strtolower($Name);
       $movie_path=$this::videoUploadLocation().'movies/';
