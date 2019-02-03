@@ -6,9 +6,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Events\downloadEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use App\Constants;
-use App\moviequality;
-use App\seriesquality;
+use \App\Constants;
+use \App\moviequality;
+use \App\seriesquality;
+use \Illuminate\Database\QueryException;
 
 
 class downloadEventListener implements ShouldQueue
@@ -34,21 +35,28 @@ class downloadEventListener implements ShouldQueue
 
         $type = $event->type;
         $id = $event->id;
+        $quality=null;
+        $video=null;
         if(Constants::inSeries($type))
         {
-            $quality = seriesquality::find($id)->first();
+            
+            $quality = seriesquality::find($id);
             $video = $quality->series()->first();
+           
+           
         }
         elseif(Constants::inMovie($type))
         {
+            
             $quality = moviequality::find($id);
             $video = $quality->allmovies()->first();
+           
         }
         else
         {
             Log::debug('an attempt has been  made to tamper with the url, the Type is '. $type .' the QualityId is '. $id);
         }
-        if($quality!=null && $video!=null ){
+         if($quality && $video){
          $no_of_downloads = (int) $quality->number_downloaded;
          $no_of_downloads = $no_of_downloads + 1;
          $quality->update(['number_downloaded'=>$no_of_downloads]);
@@ -56,6 +64,8 @@ class downloadEventListener implements ShouldQueue
          $views= $views + 1;
          $video->update(['views'=> $views]);
          
-    }
+        }
+         
+   
 }
 }
