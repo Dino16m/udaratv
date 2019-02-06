@@ -23,7 +23,9 @@ use \App\tags;
 use \Illuminate\Database\QueryException;
 
 Route::get('/me', function() {
-    return str_random($length = 3).time().str_random($length = 2);
+    $path = "videos/movies/bollywoodmovies/maggi-(UdaraTv.com).mp4";
+    
+    return Storage::disk('ext0')->mimeType($path);
          
    
 
