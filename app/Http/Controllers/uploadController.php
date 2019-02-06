@@ -410,7 +410,7 @@ class uploadController extends Controller
         $tmpPath = Constants::getTmp().$filename;
         $newFile = file_put_contents($tmpPath, $stream);
         $File = new File($tmpPath);
-        return Storage::disk('ext0')->putFileAs($filePath, $File, $filename );
+        return Storage::disk('ext0')->putFileAs($filePath, $File, $filename, 'public');
       }
     }
     /**
