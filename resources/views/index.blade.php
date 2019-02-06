@@ -71,8 +71,8 @@ $lacarousel=json_encode($carousel);
         </script>
     <!--end of ad-->
 </head>
-<body>
-<div id="app"> 
+<body style="max-width: 100%">
+<div id="app" class="w-100"> 
 <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
         <a class="navbar-brand" href="{{url('/')}}"><img src="public/images/udaralogo.png" alt="udaratv" height="40px"></a>
@@ -117,7 +117,7 @@ $lacarousel=json_encode($carousel);
                     <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
             </ul>
-           <search-bar></search-bar>
+           <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
 

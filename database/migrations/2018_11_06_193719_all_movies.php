@@ -20,7 +20,7 @@ class AllMovies extends Migration
           $table->string('type');
           $table->integer('views')->default('0');
           $table->integer('run_time')->nullable();
-          $table->string('short_description')->nullable();
+          $table->text('short_description')->nullable();
           $table->string('image_link')->nullable();
           $table->string('imdb_link')->nullable();
           $table->string('first_letter_of_name');

@@ -10,7 +10,9 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "pbmedia/laravel-ffmpeg": "^3.0"
+        "pbmedia/laravel-ffmpeg": "^3.0",
+        "symfony/symfony": "^4.2"
+
     },
     "require-dev": {
         "filp/whoops": "^2.0",

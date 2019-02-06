@@ -13,7 +13,7 @@ class SeriesQuality extends Migration
      */
     public function up()
     {
-        Schema::create('seriesQuality', function(Blueprint $table){
+        Schema::create('series_quality', function(Blueprint $table){
           $table->increments('id');
           $table->integer('series_id');
           $table->integer('episodes_id');
@@ -33,6 +33,6 @@ class SeriesQuality extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seriesQuality');
+        Schema::dropIfExists('series_quality');
     }
 }

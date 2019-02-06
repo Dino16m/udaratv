@@ -20,8 +20,12 @@ class allmovies extends Model
             
             foreach($tags as $tag) {
                 $tag = strtolower($tag);
+                try{
                  $this->tags()->create(['tag'=>$tag,'allmovies_id'=>$this->id]);
-            }
+                } catch (Exception $e) {
+                     \Log::debug($e->getMessage());
+                 }
+                }
           return $this; 
     }
     public function tags()

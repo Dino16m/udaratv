@@ -18,7 +18,7 @@ class downloadController extends Controller
         $path = Validator::sanitize($Path);
         $id = Validator::sanitize($QualityId);
         $base_path = base_path('storage/app'.$path);
-        if(!Validator::isInt($id) || (preg_match('~/videos/~', $path)==0 || !file_exists($base_path) ) )
+        if(!Validator::isInt($id) || preg_match('~/videos/~', $path)==0  )
         {
             return back();
         }

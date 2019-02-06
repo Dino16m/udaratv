@@ -16,7 +16,7 @@ namespace App;
 class Constants {
     
     public const supportedVideoTypes = [ 'naija', 'hollywood','hollywoodmovies','nollywoodmovies','nollywood','bollywoodmovies','bollywoodseries', 'naijaseries','nollywoodseries', 'hollywoodseries', 'comedy', 'bollywood']; 
-    public const ismovie =  [ 'naija', 'hollywoodmovies','nollywoodmovies', 'comedy', 'bollywood']; 
+    public const ismovie =  [ 'naija', 'hollywoodmovies','nollywoodmovies', 'comedy', 'bollywoodmovies']; 
     public const videoUploadLocation = '/videos/';
     public const imageUploadLocation = '/public/images/'; 
     public const isSeries = ['naijaseries','bollywoodseries', 'series', 'hollywoodseries', 'nollywoodseries'];
