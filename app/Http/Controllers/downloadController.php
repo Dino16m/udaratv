@@ -22,7 +22,6 @@ class downloadController extends Controller
         {
             return back();
         }
-        return 'me  '.Storage::disk('ext0')->url($path);
         $name= basename($path);
         $UA = strtolower($request->header('User-Agent'));
         if(file_exists($base_path)){
