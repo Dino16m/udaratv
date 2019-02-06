@@ -22,6 +22,7 @@ class downloadController extends Controller
         {
             return back();
         }
+        return 'me  '.Storage::disk('ext0')->url($path);
         $name= basename($path);
         $UA = strtolower($request->header('User-Agent'));
         if(file_exists($base_path)){
@@ -37,6 +38,7 @@ class downloadController extends Controller
 
     private function downloadCloudFile($name, $path, $UA, $type, $id)
     {
+        $path = substr($path, 1);
         $mime_type=Storage::disk('ext0')->mimeType($path);
         $mime = $mime_type == false ? 'video/mp4' : $mime_type;
         $file_size = Storage::disk('ext0')->size($path);
