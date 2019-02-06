@@ -19,15 +19,13 @@ use App\Events\downloadEvent;
 use App\Constants;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Hash;
-use App\User;
+use \App\tags;
+use \Illuminate\Database\QueryException;
 
 Route::get('/me', function() {
-    
-   $path = '/videos/movies/hollywoodmovies/mogbe.mp4';
-        $base_path = base_path('storage/app'.$path);
-        $mime_type = mime_content_type($base_path);
-        $mime = $mime_type === false ? 'video/mp4' : $mime_type;
-        return $mime;
+    return str_random($length = 3).time().str_random($length = 2);
+         
+   
 
 /**$string = 'wwww.me.com/ypu/public/videos/love.mp4?';
 //$bool = preg_match('~/public/videos/~', $string);
@@ -42,7 +40,7 @@ Route::get('/', 'categoryController@index');
 //categories eg udaratv.com/movies/abc
 Route::get('/categories/{Type}/{Cat}', 'categoryController@getCatIndex');
 //e.g udaratv.com/download/series/1
-Route::get('/download/{Type}/{QualityId}', 'categoryController@download');
+Route::get('/download/{Type}/{QualityId}', 'downloadController@download');
 //e.g udaratv.com/movies/naija/the_wedding_party 2
 Route::get('movies/{Type}/{Name}', 'categoryController@getMovieIndex');
 //e.g udaratv.com/naijaseries/jenifa's_diary
@@ -69,3 +67,6 @@ Route::get('uploader/index' ,['as'=>'uploader/index','middleware'=>'auth','uses'
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('filetest', 'fileController@index');
+Route::post('filetest', 'fileController@upload');
