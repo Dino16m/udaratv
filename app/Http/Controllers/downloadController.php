@@ -45,7 +45,7 @@ class downloadController extends Controller
                            'Content-Length'=>$file_size);
         event( new downloadEvent(['type'=>$type, 'id'=>$id]));
         if(strpos($UA, 'ucbrowser') !==false && strpos($UA, 'mobile')!==false){
-            $to = Storage::disk('ext0')->url();
+            $to = Storage::disk('ext0')->url($path);
             return redirect()->away($to);
         }
         return ($name && Storage::disk('ext0')->exists($path)) ? Storage::disk('ext0')->download($path, $name, $headers) : back();
