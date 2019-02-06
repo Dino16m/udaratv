@@ -197,21 +197,20 @@ class categoryController extends Controller
             return back();
         }
         $name= basename($path);
-        $mime_type = mime_content_type($base_path);
-        $mime = $mime_type === false ? 'video/mp4' : $mime_type;
-        $file_size = file_exists($base_path) ? filesize($base_path) : 0; 
-        ob_end_clean();
-        $headers = array('Content-Type'=>$mime,
-                           'Content-Length'=>$file_size);
-        event( new downloadEvent(['type'=>$type, 'id'=>$id]));
         $UA = strtolower($request->header('User-Agent'));
-        if(strpos($UA, 'ucbrowser') !==false && strpos($UA, 'mobile')!==false){
-            $to = url('storage/app'.$path);
-            return redirect()->away($to);
-        }
+            $mime_type = mime_content_type($base_path);
+            $mime = $mime_type === false ? 'video/mp4' : $mime_type;
+            $file_size = file_exists($base_path) ? filesize($base_path) : 0; 
+            ob_end_clean();
+            $headers = array('Content-Type'=>$mime,
+                           'Content-Length'=>$file_size);
+            event( new downloadEvent(['type'=>$type, 'id'=>$id]));
+            if(strpos($UA, 'ucbrowser') !==false && strpos($UA, 'mobile')!==false){
+                $to = url('storage/app'.$path);
+                return redirect()->away($to);
+            }
         return ($name && Storage::exists($path)) ? Storage::download($path, $name, $headers) : back();
-        //$to = url('storage/app'.$path);
-        //return redirect()->away($to);
+        
     }
     public function getMovieIndex($Type, $Name)
     {

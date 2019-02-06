@@ -55,7 +55,7 @@ return [
             'visibility' => 'public',
         ],
 
-        's3' => [
+        'ext0' => [
             'driver' => 's3',
             'key' => env('DO_SPACES_KEY'),
             'secret' => env('DO_SPACES_SECRET'),

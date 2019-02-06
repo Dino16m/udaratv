@@ -347,9 +347,10 @@ class uploadController extends Controller
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
       $tmpExt= $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $ext = $tmpExt ? $ext  : $Details['ext'];
-      $tags = is_array($tags) ? $tags: json_decode($tags);
-      $file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.$videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
+      $videoDetails['tags'] = is_array($tags) ? $tags: json_decode($tags);
+      $videoDetails['fileName']=$file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.                                                        $videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
+      $videoDetails['series_path']=$upload_path;
         if(!is_dir(base_path('/storage/app'.$upload_path))){
         if (!mkdir(base_path('/storage/app'.$upload_path), 0763)){
         return 'there was an error creating a folder for the new series '.$videoDetails['name'];
@@ -359,9 +360,8 @@ class uploadController extends Controller
       if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
       }
-      $videoDetails['series_path']=$upload_path;
       $videoDetails['file_path']= $upload_path.'/'.stripslashes($file_name);
-      $image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
+      $videoDetails['image_name']=$image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
       $image_link = url($this::imageUploadLocation().$image_name);
       // Attempt to upload the image 
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $Details['image'], false);
@@ -390,7 +390,7 @@ class uploadController extends Controller
       if($extLink == null || $extLink ==false){
         if($bool)
         {
-        return Storage::putFileAs($filePath, $file, $filename);
+        return Storage::disk('ext0')->putFileAs($filePath, $file, $filename, 'public');
         }
         else 
           {
@@ -410,7 +410,7 @@ class uploadController extends Controller
         $tmpPath = Constants::getTmp().$filename;
         $newFile = file_put_contents($tmpPath, $stream);
         $File = new File($tmpPath);
-        return Storage::putFileAs($filePath, $File, $filename );
+        return Storage::disk('ext0')->putFileAs($filePath, $File, $filename );
       }
     }
     /**
