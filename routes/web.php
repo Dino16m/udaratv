@@ -23,11 +23,13 @@ use \App\tags;
 use \Illuminate\Database\QueryException;
 
 Route::get('/me', function() {
-    return str_random($length = 3).time().str_random($length = 2);
+    $path = '/videos/series/the%20flash/the%20flash-HD-S5-E13-(UdaraTv.com).mp4';
+	  return Storage::disk('ext0')->exists('/videos/series/the flash/the flash-HD-S5-E13-(UdaraTv.com).mp4')? 'me' : 'you';
+	//return str_random($length = 3).time().str_random($length = 2);
          
    
 
-/**$string = 'wwww.me.com/ypu/public/videos/love.mp4?';
+/**$string = 'wwww.me.com/ypu/public/v/ideos/love.mp4?';
 //$bool = preg_match('~/public/videos/~', $string);
 $match = [];
 //preg_match('[^/]+$' , $string, $match);
