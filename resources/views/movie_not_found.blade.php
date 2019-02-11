@@ -77,10 +77,11 @@
                     <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
             </ul>
-           <search-bar></search-bar>
+           <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
     <!--nav-bar-end-->
+    <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
 <!--jumbotron-->
 
     <div class="jumbotron jumbotron-fluid text-white bg-dark w-100">

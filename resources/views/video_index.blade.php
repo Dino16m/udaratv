@@ -18,9 +18,13 @@
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="index of all udaratv videos of {{$type}}">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
+    <meta name="og:type" property="og:type" content="website">
+    <meta name="og:title" property="og:title" content="Udara Tv - index of videos of $type">
+    <meta name="og:description" property="og:description" content="download movie {{$name}} ">
+    <meta name="og:image" property="og:image" content="{{url('public/images/udaralogo.png')}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
      <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
@@ -84,12 +88,12 @@
                 </li>
 
             </ul>
-           <search-bar></search-bar>
+           <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
 
 <!--nav-bar-end-->
-
+ <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
 <!--jumbotron-->
 
     <div class="jumbotron jumbotron-fluid text-white bg-dark w-100">

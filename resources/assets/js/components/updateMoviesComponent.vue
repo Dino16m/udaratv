@@ -29,6 +29,10 @@
 				</div>
     			<label for="oldMoviesextLink" v-if='oldMoviesData.haveLink'>External Link</label>
     			<input type="text" class="form-control" id="oldMoviesextLink" v-if='oldMoviesData.haveLink' v-model='oldMoviesData.extLink' placeholder="default link">
+    			<div class="custom-control custom-switch">
+    			<input type="checkbox" v-model="oldMoviesData.shouldpull" v-if='oldMoviesData.haveLink' class="custom-control-input" id="customSwitch2">
+ 				<label class="custom-control-label" v-if='oldMoviesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
+ 				</div>
   			 </div>
   			  <div class="custom-control custom-checkbox">
  				 <input type="checkbox" class="custom-control-input" v-model='oldMoviesData.should_show' id="customCheck1">
@@ -46,7 +50,7 @@
 	export default{
 		data(){
 			return{
-				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[],  haveLink: false, extLink:'default'},
+				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[], shouldpull: false, haveLink: false, extLink:'default'},
 				allFiles:[],
 			}
 		},
@@ -89,7 +93,7 @@
 				 this.$refs.oldMoviesFiles.click() 
 			},
 			submit(){
-				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'', haveLink: false, extLink:'default',file:[]};
+				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'', shouldpull : false, haveLink: false, extLink:'default',file:[]};
 				if(this.isEmpty(this.oldMoviesData)){
 					this.$emit('emptyForm');
 				}

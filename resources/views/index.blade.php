@@ -31,10 +31,12 @@ foreach ($all as $all1)
 $lacarousel=json_encode($carousel);
 ?>
 <html> 
-<head>
+<head prefix= " my_namespace: {{url('/')}}">
     <link rel="stylesheet" type="text/css" href="public/css/app.css">
     <link rel="stylesheet" href="public/css/style.css" type="text/css">
     <link rel="stylesheet" href="public/css/style2.css" type="text/css">
+    <link rel="stylesheet" href="public/css/owl.carousel.css" type="text/css">
+    <link rel="stylesheet" href="public/css/owl.theme.default.css" type="text/css">
     <style type="text/css">
         body {
             padding-top: 2rem;
@@ -52,9 +54,13 @@ $lacarousel=json_encode($carousel);
     <meta name="description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$pageMeta}}">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
+    <meta name="og:type" property="og:type" content="website">
+    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series">
+    <meta name="og:description" property="og:description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$pageMeta}}">
+    <meta name="og:image" property="og:image" content="{{url('public/images/udaralogo.png')}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
 
-    <title>Udara Tv</title>
+    <title>Udara Tv - download nollywood Movies and series, download hollywood movies and series</title>
      <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
     <script>
@@ -120,10 +126,13 @@ $lacarousel=json_encode($carousel);
            <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
-
+    <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
 <!--nav-bar-end--> 
-
-<index-carousel v-bind:videodetails="{{$lacarousel}}" > </index-carousel>
+<div class="container mt-4">
+        <div class="row">
+                 <index-carousel v-bind:videodetails="{{$lacarousel}}" > </index-carousel>
+         </div>
+     </div>
 
 <section>
     <main role="main" class="container">
@@ -428,6 +437,31 @@ $lacarousel=json_encode($carousel);
 </div>
 
 <script type="text/javascript" src="public/js/app.js"></script>
+<script type="text/javascript" src="public/js/owl.carousel.js"></script>
+<script>
+   $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:false,
+        dots:true,
+        autoplay:true,
+        autoHeight:true,
+    
+    responsive:{
+        0:{
+            items:2
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:5
+        }
+    }
+    })  
+   
+    
+</script>
 
 </body>
 </html>

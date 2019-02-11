@@ -21,6 +21,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="og:type" property="og:type" content="website">
+    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series">
+    <meta name="og:description" property="og:description" content="download episodes of {{$name}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
       <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
@@ -83,10 +86,11 @@
                     <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
             </ul>
-           <search-bar></search-bar>
+           <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
     <!--nav-bar-end-->
+    <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
     <main role="main" class="container ">
         <div class="card">
 

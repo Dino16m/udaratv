@@ -1,17 +1,25 @@
 <template>
-<div>
-  <form class="form-inline my-2 my-lg-0 dropdown" id="search" v-on:submit.prevent="search()">
-        <input class="form-control mr-sm-2" type="search" :placeholder="placeholder" v-model='searchQuery' v-on:keyup.enter='onEnter' aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0"  type="button" id="dropdownMenu1" :data-toggle="drop"
+<div v-click-outside='dismissed' >
+  <form class="form-inline my-2 my-lg-0 w-100 d-flex justify-content-center" id="search" v-on:submit.prevent="search()">
+  	<div class="input-group clearfix">
+        <input class="form-control" type="search" :placeholder="placeholder" v-model='searchQuery' v-on:keyup.enter='onEnter' aria-label="Search">
+        <div class="input-group-prepend">
+        <button class="btn btn-outline-success"  type="button" id="dropdownMenu1" 
           aria-haspopup="true" aria-expanded="false" v-on:click="search">Search</button>
-          <button></button>
-         <div class="dropdown-menu w-100 bg-dark" style="white-space: normal; " aria-labelledby="dropdownMenu1">
-		   <div v-if='hasresult'>	
-			<a class="dropdown-item  bg-secondary text-white shadow" :href="results[key].link" v-for="(result, key) in results"> {{result.name}} </a>
-		   </div>
-		    <span class="dropdown-item-text text-danger " v-else-if='haserror'>{{error}}</span>
-			<span class="dropdown-item-text text-primary  d-inline-block" style="word-wrap: break-word; max-width=100% " v-else> {{loadmessage}} </span>
-         </div>
+      </div>
+     </div>
+
+          <div class="w-100 bg-light justify-content-center shadow border border-dark bg-dark"  :class="{'d-none': nodisplay, 'd-flex': clicked }">
+           		<div class="shadow z-ind align-bottom shadow border border-dark matte " style="z-index: 1">
+           			<ul v-if='hasresult' class="list-group no-pad search-parent w-searchresult">
+           				<li class="list-group-item shadow border border-secondary dropdown-item no-pad search-item" v-for="(result, key) in results">
+							<a class="matte dropdown-item-text text-white  shadow w-searchresult" :href="results[key].link" > {{result.name}} </a>
+						</li>
+		   			</ul>
+		    		<span class="dropdown-item-text text-danger " v-else-if='haserror'>{{error}}</span>
+					<span class="dropdown-item-text text-primary  d-inline-block" style="word-wrap: break-word; max-width=100% " v-else> {{loadmessage}} </span>
+           		</div> 
+          </div>
     
    </form>
 
@@ -36,7 +44,14 @@
 				haserror: false,
 				loadmessage: 'Loading videos please wait...',
 				searching: false,
-				drop: ''
+				nodisplay: true,
+				clicked: false
+
+			}
+		},
+		watch:{
+			clicked: function(val){
+				return this.nodisplay = clicked ? false : true;
 			}
 		},
 		methods:{
@@ -72,16 +87,17 @@
     			}.bind(this));
     		
     		}, 
+    		dismissed(){
+    			let clickval = this.clicked;
+    			this.clicked = clickval ? false : clickval;
+    		},
     		onEnter(){
-    			this.drop = 'dropdown';
-    			if(!this.searching){
-    				this.dropdown = 'dropdown';
-    			}
-    			//this.search();
+    			this.clicked = true;
+    			this.search();
     		},
     		search(){
-    			this.drop = 'dropdown';
     			this.searching = true;
+    			this.clicked = true;
     			this.loadmessage = 'Loading video please wait...';
     			if(this.haserror || this.hasresult){
     				this.hasresult = false;

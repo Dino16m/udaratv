@@ -12,3 +12,41 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+.z-ind{
+	position: absolute;
+	z-index : -1;
+	whitespace: normal;
+	wordwrap: break-word;
+	display: block;
+}
+.pad{
+	padding-right: 20px;
+	padding-left: 20px;
+}
+.matte{
+	background-color: #050403;
+}
+.searchbar{
+	display: block;
+}
+.no-pad{
+	padding: 0;
+}
+.w-searchresult{
+	width: 175px;
+}
+.search-parent{
+	display: block;
+	overflow-x: auto;
+	height: 200px;
+	width: 100%;
+}
+
+
+
+
+@media only screen and (min-width: 768px){
+	.searchbar{
+		display: none;
+	}
+}

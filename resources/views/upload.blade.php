@@ -27,6 +27,7 @@
 <body>
 <div id='app'>
   <upload 
+    searchapi ="{{url('api/search')}}"
     imageurl="<?php echo url('public/images/udaralogo.png')?>" 
     newmovies="{{url('api/uploader/newMovie')}}"
     newseries=" {{url('api/uploader/newSeries')}}"

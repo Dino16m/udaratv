@@ -29,7 +29,7 @@
                 </li>
                 
             </ul>
-           <search-bar></search-bar>
+           <search-bar :searchapi="searchApi"></search-bar>
         </div>
     </nav>
 <!--nav-bar-end-->
@@ -127,11 +127,15 @@
 			newseries:{
 				type:String,
 				required: true
+			},
+			searchapi:{
+				type: String
 			}
 		},
 		data(){
 			return{
 				regUrl: this.register,
+				searchApi: this.searchapi,
 				oldmoviesAPI: this.oldmovies,
 				oldseriesAPI: this.oldseries,
 				newmoviesAPI: this.newmovies,
@@ -306,16 +310,16 @@
 			getJson(type, it){
 				switch(type){
 					case 'newseries':
-						return {quality:it.quality, type: it.type, runTime: it.runTime, seasonNumber: it.seasonNumber, episodeNumber: it.episodeNumber, desc: it.desc, imdbLink: it.imdbLink, haveLink:it.haveLink, extLink:it.extLink, tags:JSON.stringify(it.tags.split(',')) };
+						return {quality:it.quality, type: it.type, runTime: it.runTime, seasonNumber: it.seasonNumber, episodeNumber: it.episodeNumber, desc: it.desc, imdbLink: it.imdbLink, shouldpull:it.shouldpull, haveLink:it.haveLink, extLink:it.extLink, tags:JSON.stringify(it.tags.split(',')) };
 						break;
 					case 'oldseries':
-						return {episodeNumber:it.episodeNumber, seasonNumber: it.seasonNumber,haveLink:it.haveLink, extLink:it.extLink,  quality:it.quality, type:it.type, shouldShow:it.should_show, seasonChanged:it.season_change};
+						return {episodeNumber:it.episodeNumber, seasonNumber: it.seasonNumber,haveLink:it.haveLink, extLink:it.extLink,  quality:it.quality, type:it.type, shouldShow:it.should_show,  shouldpull:it.shouldpull, seasonChanged:it.season_change};
 						break;
 					case 'newmovies':
-						return {runTime:it.runTime, quality:it.quality, haveLink:it.haveLink, extLink:it.extLink, tags:JSON.stringify(it.tags.split(',')), type:it.type, imdbLink:it.imdbLink, desc:it.desc};
+						return {runTime:it.runTime, quality:it.quality, haveLink:it.haveLink,  shouldpull:it.shouldpull, extLink:it.extLink, tags:JSON.stringify(it.tags.split(',')), type:it.type, imdbLink:it.imdbLink, desc:it.desc};
 						break;
 					case 'oldmovies':
-						return {quality:it.quality, type:it.type, haveLink:it.haveLink, extLink:it.extLink, shouldShow:it.should_show, seasonChange:it.season_change };
+						return {quality:it.quality, type:it.type, haveLink:it.haveLink,  shouldpull:it.shouldpull, extLink:it.extLink, shouldShow:it.should_show, seasonChange:it.season_change };
 						break;
 					default:
 				}

@@ -18,7 +18,7 @@ class downloadController extends Controller
         $path = Validator::sanitize($Path);
         $id = Validator::sanitize($QualityId);
         $base_path = base_path('storage/app'.$path);
-        if(!Validator::isInt($id) || preg_match('~/videos/~', $path)==0  )
+        if(!Validator::isInt($id) /**|| preg_match('~/videos/~', $path)==0 **/ )
         {
             return back();
         }
@@ -29,6 +29,10 @@ class downloadController extends Controller
         }
         elseif(Storage::disk('ext0')->exists($path)){
            return $this->downloadCloudFile($name, $path, $UA, $type, $id);
+        }
+        elseif (preg_match('~/videos/~', $path)==0) {
+            $to = $path;
+            return redirect()->away($to);
         }
         else{
             return back();

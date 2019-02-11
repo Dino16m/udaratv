@@ -90,6 +90,7 @@ class uploadController extends Controller
         if($json->haveLink!=false && $json->extLink!='default'){
           $videoDetails['extLink'] = $json->extLink;
         }
+        $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['tags']=$json->tags;
         $videoDetails['image']= $image = $request->file('image'.$videoID);
         $videoDetails['image_ext']= $image->getClientOriginalExtension();
@@ -133,6 +134,7 @@ class uploadController extends Controller
         if($json->haveLink!=false && $json->extLink!='default'){
           $videoDetails['extLink'] = $json->extLink;
         }
+        $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['number_of_seasons']= $json->seasonNumber;
         $videoDetails['should_touch_season']= $json->seasonChanged;
         $videoDetails['episodeNumber']= $json->episodeNumber;
@@ -174,6 +176,7 @@ class uploadController extends Controller
         if($json->haveLink!=false && $json->extLink!='default'){
           $videoDetails['extLink'] = $json->extLink;
         }
+        $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['imdb_link']= $json->imdbLink;
         $videoDetails['image']= $request->file('image'.$videoID);
         $videoDetails['first_letter_of_name']=substr($file_name,0 ,1);
@@ -209,6 +212,7 @@ class uploadController extends Controller
         if($json->haveLink!=false && $json->extLink!='default'){
           $videoDetails['extLink'] = $json->extLink;
         }
+        $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['quality'] = $json->quality;
         $videoDetails['type'] = $json->type;
         array_push($status, $this::handleOldMovies($videoDetails));
@@ -236,7 +240,7 @@ class uploadController extends Controller
         return $name.' is of a file type that is not featured here yet, please contact Admin';
       }
       $file_name=$name.'-(UdaraTv.com)'.'.'.$ext;
-      $file_path=$reqs.$file_name;
+      $file_path= $details['shouldpull'] ? $reqs.$file_name : $extLink;
       $storage_path= $reqs;
       $details['file_path'] = $file_path;
       $image = $details['image'];
@@ -245,9 +249,10 @@ class uploadController extends Controller
       $image_link = url($this::imageUploadLocation().$image_name);
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
-      
-      if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink )){
-        return  $file_name.' couldn\'t be uploaded';
+      if($details['shouldpull'] == true){
+        if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink )){
+           return  $file_name.' couldn\'t be uploaded';
+        }
       }
       $model = allmovies::create($details);
       $movie = $model->add($tags);
@@ -276,12 +281,14 @@ class uploadController extends Controller
       if(!$movie){return $name.' has an error in the type designated for it, we have no record of the name and type';}
       $model= $movie['model'];
       $image_path = $model->image_link;
-      $file_name=$name.'-'.$quality.'-(UdaraTv.com)'.'.$ext';
+      $file_name=$name.'-'.$quality.'-(UdaraTv.com)'.'.'.$ext;
       $storage_path=$movie['path'];
       $should_show=$details['should_show'];
-      $file_path= $movie['path'].stripslashes($file_name);
-      if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
-        return  $file_name.' couldn\'t be uploaded';
+      $file_path= $details['shouldpull']?  $movie['path'].stripslashes($file_name) : $extLink ;
+      if($details['shouldpull'] == true){
+        if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
+          return  $file_name.' couldn\'t be uploaded';
+        }
       }
       $model->touch();
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
@@ -318,9 +325,11 @@ class uploadController extends Controller
       $storage_path =$upload_path;
       $file_name= $name.'-'.$quality.'-S'.$season.'-E'.$episode.'-(UdaraTv.com)'.'.'.$ext;
       $image_path = $series->image_link;
-      $file_path= $upload_path.'/'.stripslashes($file_name);
+      $file_path= $details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
+      if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
         return  $file_name.' couldn\'t be uploaded';
+        }
       }
      if( $details['should_touch_season'] == 1) {
       $series->update(['number_of_seasons'=>$season]);
@@ -347,7 +356,7 @@ class uploadController extends Controller
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
       $tmpExt= $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $ext = $tmpExt ? $ext  : $Details['ext'];
-      $videoDetails['tags'] = is_array($tags) ? $tags: json_decode($tags);
+      $videoDetails['tags'] = $tags = is_array($tags) ? $tags: json_decode($tags);
       $videoDetails['fileName']=$file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.                                                        $videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
       $videoDetails['series_path']=$upload_path;
@@ -357,10 +366,12 @@ class uploadController extends Controller
         }}
       $video = $Details['video'];
       // Attempt to upload the video
-      if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
-        return  $file_name.' couldn\'t be uploaded';
+      if($Details['shouldpull']==true){
+         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
+            return  $file_name.' couldn\'t be uploaded';
+         }
       }
-      $videoDetails['file_path']= $upload_path.'/'.stripslashes($file_name);
+      $videoDetails['file_path']= $Details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
       $videoDetails['image_name']=$image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
       $image_link = url($this::imageUploadLocation().$image_name);
       // Attempt to upload the image 

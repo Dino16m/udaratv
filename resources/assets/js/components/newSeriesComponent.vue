@@ -54,8 +54,13 @@
 				</div>
     			<label for="newSeriesextLink" v-if='newSeriesData.haveLink'>External Link</label>
     			<input type="text" class="form-control" id="newSeriesextLink" v-if='newSeriesData.haveLink' v-model='newSeriesData.extLink' placeholder="default link">
+    			<div class="custom-control custom-switch">
+    			<input type="checkbox" v-model="newSeriesData.shouldpull" v-if='newSeriesData.haveLink' class="custom-control-input" id="customSwitch2">
+ 				<label class="custom-control-label" v-if='newSeriesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
+ 				</div>
   			 </div>
   			  <ul class="nav d-flex justify-content-center">
+
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
     		    <li><a class="nav-item flex-md-column  md-3 btn btn-primary" v-on:click="addfiles( 'video')">addVideo</a></li>
     		 	<li> <a class="nav-item flex-md-column  md-3 btn btn-secondary" v-on:click="addfiles('image')">addImage</a> </li>
@@ -68,7 +73,7 @@
 export default{
 	data(){
 		return{
-		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'', type:'', imdbLink:'', desc:'', name:'', haveLink: false, extLink:'default', file:[] ,image:[] },
+		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'', shouldpull: false, type:'', imdbLink:'', desc:'', name:'', haveLink: false, extLink:'default', file:[] ,image:[] },
 		newSeriesfiles:[ ],
 		allFiles: [],
 		allImages:[],
@@ -132,7 +137,7 @@ export default{
 				
 			},
 			submit(){
-				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'', type:'',imdbLink:'',haveLink: false, extLink:'default', desc:'', name:'', file:[],image:[] };
+				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'', type:'',imdbLink:'',haveLink: false, extLink:'default', desc:'', name:'', file:[],image:[] , shouldpull: false};
 					if(this.isEmpty(this.newSeriesData)){
 						this.$emit('emptyForm');
 

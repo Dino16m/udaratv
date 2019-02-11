@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<meta name="og:image" property="og:image" content="image_url">
 		 <div class=" img pt-4 mt-4">
            <div class=" img pt-4 mt-4">
             <img :src="image_url"  class="img-fluid w-50 h-50 border rounded border-light" :alt="alt">

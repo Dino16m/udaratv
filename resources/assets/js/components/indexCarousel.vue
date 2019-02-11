@@ -1,49 +1,25 @@
 <template>
-
-	<!--Carousel Wrapper-->
-    <div id="carousel-example-2" class="carousel slide carousel-fade" data-ride="carousel">
-
-        <!--Indicators-->
-        <ol class="carousel-indicators" >
-            <li data-target="#carousel-example-2" v-for="(video, key) in videos" v-bind:class='active(false, key)' v-bind:data-slide-to="key" ></li>
-        </ol>
-        <!--/.Indicators-->
-        <!--Slides-->
-          <div class="carousel-inner" role="listbox">
-            <div v-bind:class="active(true, key)" v-for='(video, key) in videos'>
-                <div class="view">
-                    <img class="d-block w-100 img-fluid" v-bind:src="video.imageurl" v-bind:alt="video.name">
-                    <div class="mask rgba-black-light"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive"><a v-bind:href="video.url">{{video.name}} </a></h3>
-                </div>
-            </div>
-   		   </div>
-   	    <!--/.Slides-->
-   	     <!--Controls-->
-        <a class="carousel-control-prev" href="#carousel-example-2" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carousel-example-2" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-        <!--/.Controls-->
-
+<div class="owl-carousel owl-theme">
+    <div class="item" v-for="(video, key) in videos" style="height:260px">
+        <img class="d-block h-100" v-bind:src="video.imageurl" v-bind:alt="video.name">
+             <h3 class="h3-responsive text-uppercase"><a class="name text-primary" v-bind:href="video.url">{{video.name}} </a></h3> 
     </div>
-    <!--/.Carousel Wrapper-->
-    <!--carousel end-->
+</div>
+
+
+
+
+
 </template>
-<script>
+<script>    
 export default{
 props:{
 	videodetails: Array
 },
 data(){
 	return{
-		videos: this.videodetails
+		videos: this.videodetails,
+        nottest: false
 	}
 },
 methods:{
