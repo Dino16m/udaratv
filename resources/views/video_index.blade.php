@@ -22,8 +22,8 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
     <meta name="og:type" property="og:type" content="website">
-    <meta name="og:title" property="og:title" content="Udara Tv - index of videos of $type">
-    <meta name="og:description" property="og:description" content="download movie {{$name}} ">
+    <meta name="og:title" property="og:title" content="Udara Tv - index of videos of {{$type}}">
+    <meta name="og:description" property="og:description" content="download movies of {{$type}} ">
     <meta name="og:image" property="og:image" content="{{url('public/images/udaralogo.png')}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
      <!-- Global site tag (gtag.js) - Google Analytics -->
