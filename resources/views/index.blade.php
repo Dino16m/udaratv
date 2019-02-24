@@ -59,7 +59,8 @@ $lacarousel=json_encode($carousel);
     <meta name="og:description" property="og:description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$pageMeta}}">
     <meta name="og:image" property="og:image" content="{{url('public/images/udaralogo.png')}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
-
+    <meta name="msvalidate.01" content="4933F6D223E4EF9F7C3F176449B05D99" />
+    <meta name="yandex-verification" content="27a757e33b722ff5" />
     <title>Udara Tv - download nollywood Movies and series, download hollywood movies and series</title>
      <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
@@ -78,7 +79,7 @@ $lacarousel=json_encode($carousel);
     <!--end of ad-->
 </head>
 <body style="max-width: 100%">
-<div id="app" class="w-100"> 
+<div id="app">
 <!--nav-bar-start-->
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top justify-content-between">
         <a class="navbar-brand" href="{{url('/')}}"><img src="public/images/udaralogo.png" alt="udaratv" height="40px"></a>
@@ -314,15 +315,14 @@ $lacarousel=json_encode($carousel);
                     <div class="col-12 padding">
                         <h2>Join Our Twitter and Facebook Community</h2>
                     </div>
-                    <div class="col-12 social padding">
+              
+
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
 
                     </div>
                 </div>
-            </div>
-
-        </div>
+                    </div>
         <hr class="light">
         <!-- Footer Links -->
         <div class="container text-center text-md-left">
