@@ -138,7 +138,6 @@ $lacarousel=json_encode($carousel);
     <main role="main" class="container">
 
 
-
         <div class="starter-template">
             <h2 class="headit">Recently updated</h2>
             <hr class="">
@@ -167,13 +166,13 @@ $lacarousel=json_encode($carousel);
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div id="home" class="container tab-pane fade"><br>
-                        <div class="container">
+                        <div class="container w-100">
                             <!--here-->
                             <h1 class="my-4 text-center text-lg-left">
                                 <p class="text-center">Download latest Tvseries.</p>
                             </h1>
                             <br>
-                            <ul class="list-group bg-dark" >
+                            <ul class="list-group bg-dark w-100" >
                             @foreach($series as $serie)
                                 <tab-component-text type='series' videourl='{{$serie["link"]}}' episode='{{$serie["episode"]}}' season='{{$serie["season"]}}' videoname='{{$serie["name"]}}' timestamp='{{$serie["updatedAt"]}}'></tab-component-text>  
                             @endforeach 
