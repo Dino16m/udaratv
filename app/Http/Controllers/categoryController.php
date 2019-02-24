@@ -429,6 +429,9 @@ class categoryController extends Controller
        $SeasonId = Validator::sanitize($SeasonId);
        $seasonId = strtolower($SeasonId);
        $episodes = episodes::where('season_id', $seasonId)->orderBy('episode_name', 'desc')->get();
+       //this second sorting is necessary because the episode_name column is a varchar not an int, therefore numbers like 11 come before 9, this sorting changes that
+       $sorted = $episodes->sortByDesc('episode_name');
+       $episodes = $sorted;
        return count($episodes) < 1 ? false : $episodes;
     }
     /**
