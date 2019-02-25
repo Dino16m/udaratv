@@ -10,7 +10,7 @@
      </div>
 
           <div class="w-100 bg-light justify-content-center shadow border border-dark bg-dark"  :class="{'d-none': nodisplay, 'd-flex': clicked }">
-           		<div class="shadow z-ind align-bottom shadow border border-dark matte " style="z-index: 1">
+           		<div class="shadow z-ind align-bottom shadow border border-dark matte " style="z-index: 3">
            			<ul v-if='hasresult' class="list-group no-pad search-parent w-searchresult">
            				<li class="list-group-item shadow border border-secondary dropdown-item no-pad search-item" v-for="(result, key) in results">
 							<a class="matte dropdown-item-text text-white  shadow w-searchresult" :href="results[key].link" > {{result.name}} </a>

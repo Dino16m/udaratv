@@ -69,7 +69,7 @@
 			categories: this.thiscategories,
 			videodetails: this.thisvideodetails,
 			sortedvideos: [],
-			series: ['naijaseries', 'series', 'hollywoodseries'],
+			series: ['naijaseries', 'series', 'hollywoodseries', ],
 			movies: ['naija', 'hollywood', 'comedy', 'bollywood']
 		}
 		},

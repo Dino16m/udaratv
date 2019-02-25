@@ -59,6 +59,18 @@
                     <a class="nav-link" href="<?php echo url('type/naijaseries')?>">Nollywood-TvSeries</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian Series</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
+                </li>
+                <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                      Genres
@@ -142,10 +154,16 @@
                             <a href="{{url('type/nollywoodmovies')}}">NollyWood Movies</a>
                         </li>
                         <li>
-                            <a href="{{url('type/nollywoodseries')}}">Nollywood Tvseries</a>
+                            <a href="{{url('type/asianseries')}}">Asian Tvseries</a>
                         </li>
                         <li>
-                            <a href="#!">Request!</a>
+                            <a href="{{url('type/animeseries')}}">Anime Tvseries</a>
+                        </li>
+                        <li>
+                            <a href="{{url('type/animemovies')}}">Anime</a>
+                        </li>
+                        <li>
+                            <a href="#Request">Request!</a>
                         </li>
                     </ul>
 

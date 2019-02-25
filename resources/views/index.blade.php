@@ -55,8 +55,8 @@ $lacarousel=json_encode($carousel);
     <meta name="author" content="">
     <meta name="csrf-token" content="{{csrf_token()}}" >
     <meta name="og:type" property="og:type" content="website">
-    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series">
-    <meta name="og:description" property="og:description" content="Hollywood movies download, Tv series download, Nollywood movies download, UdaraTv.com, {{$pageMeta}}">
+    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series, Anime, Asian movies and series, bollywoodmovies and series">
+    <meta name="og:description" property="og:description" content="Hollywood movies download, Tv series download, Nollywood movies download,  Anime, Asian movies and series, bollywoodmovies and series UdaraTv.com, {{$pageMeta}}">
     <meta name="og:image" property="og:image" content="{{url('public/images/udaralogo.png')}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
     <meta name="msvalidate.01" content="4933F6D223E4EF9F7C3F176449B05D99" />
@@ -103,6 +103,18 @@ $lacarousel=json_encode($carousel);
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="types/nollywoodseries">Nollywood TvSeries</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="types/asianseries">Asian TvSeries</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="types/asianmovies">Asian Movies</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="types/animemovies">anime Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="types/animeseries">anime</a>
                 </li>
                 <li class="nav-item">
                    <div class="dropdown">
@@ -253,6 +265,13 @@ $lacarousel=json_encode($carousel);
                         <a class="nav-link  bg-dark" data-toggle="tab" href="#nollywoodmovies">Nollywood Movies</a>
                     </li>
                     <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#asianmovies">Asian/Korean Movies</a>
+                    </li>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#asianseries">Asian/Korean series</a>
+                    </li>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#animemovies">Anime Movies</a>
                     </li>
                 </ul>
 
@@ -298,6 +317,38 @@ $lacarousel=json_encode($carousel);
                             <categorylist videotype="nollywoodmovies"> </categorylist>
                         </div>
                     </div>
+                    <div id="asianmovies" class="container w-100 tab-pane fade"><br>
+                        <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Asian/Korean/Japanese movies by first letter of name.</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="asianmovies"> </categorylist>
+                        </div>
+                        <div id="asianseries" class="container w-100 tab-pane fade"><br>
+                        <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Asian/Korean/Japanese/Chinese Series eg Glass.</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="asianseries"> </categorylist>
+                        </div>
+                        <div id="animeseries" class="container w-100 tab-pane fade"><br>
+                        <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Anime Series eg Naruto, .</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="animeseries"> </categorylist>
+                        </div>
+                        <div id="animemovies" class="container w-100 tab-pane fade"><br>
+                        <div class="container">
+                            <h1 class="my-4 text-center text-lg-left">
+                                <p class="text-center"> Download Anime by name.</p>
+                            </h1>
+                            <br>
+                            <categorylist videotype="animemovies"> </categorylist>
+                        </div>
                    
                 </div>
             </div>
@@ -343,7 +394,7 @@ $lacarousel=json_encode($carousel);
                             <a href="{{url('types/nollywoodseries')}}">Nollywood Tvseries</a>
                         </li>
                         <li>
-                            <a href="#!">Request!</a>
+                            <a href="#Request">Request!</a>
                         </li>
                     </ul>
 
@@ -367,6 +418,9 @@ $lacarousel=json_encode($carousel);
                         </li>
                         <li>
                             <a href="{{url('types/bollywoodmovies')}}">Bollywood movies</a>
+                        </li>
+                        <li>
+                            <a href="{{url('types/anime')}}">Anime</a>
                         </li>
 
                     </ul>

@@ -68,6 +68,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('types/nollywoodseries')}}">Nollywood TvSeries</a>
                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
+                </li>
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -138,6 +150,12 @@
                         </li>
                         <li>
                             <a href="{{url('types/hollywoodseries')}}">Tvseries</a>
+                        </li>
+                        <li>
+                            <a href="{{url('types/animemovies')}}">Anime</a>
+                        </li>
+                         <li>
+                            <a href="{{url('types/animeseries')}}">Anime Series</a>
                         </li>
                         <li>
                             <a href="#!">Request!</a>

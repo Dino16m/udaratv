@@ -11,6 +11,8 @@
     				<option value="nollywoodmovies"> NollyWood Movies</option>
     				<option value="hollywoodmovies"> HollyWood Movies</option>
     				<option value="bollywoodmovies"> BollyWood Movies</option>
+    				<option value="animemovies"> Anime Movies</option>
+    				<option value="asianmovies"> Asian Movies</option>
     			</select>
   			  </div>
   			  <div class="form-group">

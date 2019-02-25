@@ -11,6 +11,8 @@
     				<option value="nollywoodseries"> NollyWood Series</option>
     				<option value="hollywoodseries"> HollyWood Series</option>
     				<option value="bollywoodseries"> BollyWood Series</option>
+    				<option value="animeseries"> Anime Series</option>
+    				<option value="asianseries"> Asian series </option>
     			</select>
   			  </div>
   			  <div class="form-group">

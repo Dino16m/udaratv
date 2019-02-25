@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="og:type" property="og:type" content="website">
-    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series, movie {{$name}}">
+    <meta name="og:title" property="og:title" content="Udara Tv - download nollywood Movies and series, download hollywood movies and series, Anime, Asian/Korean/Japanese/Chinese Movies movie {{$name}}">
     <meta name="og:description" property="og:description" content="download movie {{$name}} ">
     <meta name="og:image" property="og:image" content="{{$image_link}}">
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
@@ -67,6 +67,18 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo url('type/naijaseries')?>">Nollywood-TvSeries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
@@ -159,7 +171,13 @@
                             <a href="{{url('type/nollywoodseries')}}">Nollywood Tvseries</a>
                         </li>
                         <li>
-                            <a href="#!">Request!</a>
+                            <a href="{{url('type/animeseries')}}">Anime series</a>
+                        </li>
+                        <li>
+                            <a href="{{url('type/animemovies')}}">Anime </a>
+                        </li>
+                        <li>
+                            <a href="#Request">Request!</a>
                         </li>
                     </ul>
 
