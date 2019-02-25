@@ -44,7 +44,7 @@ $lacarousel=json_encode($carousel);
         }
 
         .starter-template {
-            padding: 3rem 1.5rem;
+            padding: 2rem 0.5rem;
             text-align: center;
         }
     </style>
@@ -235,7 +235,7 @@ $lacarousel=json_encode($carousel);
         </div>
 </section>
     <hr class="underline">
-
+ <div id="ENGAGEYA_WIDGET_125611" class="starter-template"></div>
 <section>
     <main role="main" class="container w-100">
 
@@ -272,6 +272,9 @@ $lacarousel=json_encode($carousel);
                     </li>
                     <li class="nav-item flex-item">
                         <a class="nav-link  bg-dark" data-toggle="tab" href="#animemovies">Anime Movies</a>
+                    </li>
+                    <li class="nav-item flex-item">
+                        <a class="nav-link  bg-dark" data-toggle="tab" href="#animeseries">Anime Series</a>
                     </li>
                 </ul>
 
@@ -325,6 +328,7 @@ $lacarousel=json_encode($carousel);
                             <br>
                             <categorylist videotype="asianmovies"> </categorylist>
                         </div>
+                    </div>
                         <div id="asianseries" class="container w-100 tab-pane fade"><br>
                         <div class="container">
                             <h1 class="my-4 text-center text-lg-left">
@@ -333,6 +337,7 @@ $lacarousel=json_encode($carousel);
                             <br>
                             <categorylist videotype="asianseries"> </categorylist>
                         </div>
+                        </div>
                         <div id="animeseries" class="container w-100 tab-pane fade"><br>
                         <div class="container">
                             <h1 class="my-4 text-center text-lg-left">
@@ -340,6 +345,7 @@ $lacarousel=json_encode($carousel);
                             </h1>
                             <br>
                             <categorylist videotype="animeseries"> </categorylist>
+                        </div>
                         </div>
                         <div id="animemovies" class="container w-100 tab-pane fade"><br>
                         <div class="container">
@@ -351,14 +357,12 @@ $lacarousel=json_encode($carousel);
                         </div>
                    
                 </div>
-            </div>
         </div>
 </section>
 
 <hr class="underline">
  <!-- Footer -->
      <footer class="page-footer  font-small ">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">
