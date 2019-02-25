@@ -111,10 +111,10 @@ $lacarousel=json_encode($carousel);
                     <a class="nav-link" href="types/asianmovies">Asian Movies</a>
                 </li>
                  <li class="nav-item">
-                    <a class="nav-link" href="types/animemovies">anime Movies</a>
+                    <a class="nav-link" href="types/animemovies">Anime</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="types/animeseries">anime</a>
+                    <a class="nav-link" href="types/animeseries">Anime Series</a>
                 </li>
                 <li class="nav-item">
                    <div class="dropdown">
