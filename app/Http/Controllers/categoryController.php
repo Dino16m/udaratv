@@ -184,6 +184,63 @@ class categoryController extends Controller
         return view('categories')->with(['categories'=>$categoryArray, 'type'=>$type, 'cat'=> $category, 'paginator'=>$paginator]);
     }
 
+    /**
+    *@param Request
+    */
+    public function suggest(Request $request)
+    {   
+        $type = $request->get('type');
+        $Name = $request->get('name');
+        $name = Validator::sanitize($Name);
+        
+        if (Constants::inSeries($type)) {
+            $typeSuggestion = series::where('type', $type)->take(10)->get(['image_link', 'name', 'type']);
+            $tags = series::where('name', $name)->first()->tags()->get(['tag']);
+            $typeSuggestion = $typeSuggestion->isEmpty() ? collect([]) : $typeSuggestion;
+
+        }
+        elseif(Constants::inMovie($type)){
+            $typeSuggestion = allmovies::where('type',$type)->take(10)->get(['image_link', 'name', 'type']);
+            $tags = allmovies::where('name', $name)->first()->tags()->get(['tag']);
+            $typeSuggestion = $typeSuggestion->isEmpty() ? collect([]) : $typeSuggestion;
+            
+        }
+        else{ $typeSuggestion = collect([]); }
+        if ($tags->isEmpty() && $typeSuggestion->isEmpty()) {
+            return response()->json([], 204);
+        }
+        $tagSuggestion = collect([]);
+        foreach ($tags as $tag) {
+            $thisTag = $this->getTags($tag->tag,true);
+            if(!$thisTag){ continue; }
+            $tagSuggestion = $thisTag->merge($tagSuggestion);
+        }
+        $Suggest = array_merge($tagSuggestion->toArray(),$typeSuggestion->toArray());
+        $suggest = collect($Suggest);
+        $suggestions = [];
+        $i=0;
+        foreach ($suggest as $sug) {
+            $link = $this->makeLink($sug['name'], $sug['type']);
+            if (!$link) {
+                continue;
+            }
+            $suggestions[$i]=
+            [
+                'name'=>$sug['name'],
+                'link'=>$link,
+                'image_link'=>$sug['image_link']
+            ];
+            $i++;
+        }
+        return response()->json($suggestions);
+    }
+
+    /**
+    *@status deprecated
+    *@param Request
+    *@param Type || the movie type
+    *@param QualityId || used to mark the particular video as downloaded 
+    */
     public function download(Request $request, $Type, $QualityId)
     {
         $Path = $request->get('file');
@@ -212,6 +269,7 @@ class categoryController extends Controller
         return ($name && Storage::exists($path)) ? Storage::download($path, $name, $headers) : back();
         
     }
+
     public function getMovieIndex($Type, $Name)
     {
         $models=$this->getMovieModel($Type, $Name);
@@ -219,7 +277,7 @@ class categoryController extends Controller
         $name = Validator::makeInsane($name);
         $Type= Validator::sanitize($Type);
         $type = strtolower($Type);
-        if(!$models)
+        if($models == false)
         {
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
@@ -237,8 +295,9 @@ class categoryController extends Controller
                 'parent_id'=>$model->allmovies_id
             ];
         }
-        return view('movie_index')->with(['qualities'=>$qualityArray, 'name'=>$name, 'desc'=>$movie->short_description,'image_link'=>$movie->image_link, 'imdb_link'=>$movie->imdb_link,  'run_time'=>$movie->run_time,  'views'=>$movie->views, 'id'=>$movie->id ]);
+        return view('movie_index')->with(['qualities'=>$qualityArray, 'name'=>$name, 'desc'=>$movie->short_description,'image_link'=>$movie->image_link, 'imdb_link'=>$movie->imdb_link,  'run_time'=>$movie->run_time, 'type'=>$type,  'views'=>$movie->views, 'id'=>$movie->id ]);
     }
+
     /**
     * any view called by this method must implemment a form of replacement
     * of spaces in strings to underscores
@@ -322,7 +381,12 @@ class categoryController extends Controller
         $Episode = ( Validator::isInt($request->get('E')) && $request->get('E') !==null) ? Validator::sanitize($request->get('E')) : 'none';
         $id = Validator::sanitize($Id);
         $name = Validator::sanitize($Name);
-        $qualities = seriesquality::where('episodes_id', $id)->get(['id', 'file_path', 'quality', 'number_downloaded', ]);
+        $qualities = seriesquality::where('episodes_id', $id)->get(['id', 'file_path', 'quality', 'number_downloaded','series_id' ]);
+        if ($qualities->isEmpty() || $qualities==null) {
+            return view('movie_not_found')->with(['movie_name'=>$name]);
+        }
+        $seriesId = $qualities[0]->series_id;
+        $type = series::find($seriesId)->type;
         $ArrQuality =[];
         //any view handling this should add a type of series to the episode link
         foreach ($qualities as $quality) {
@@ -332,7 +396,7 @@ class categoryController extends Controller
                 'link'=>url('download/series/'.$quality->id.'?file='.$quality->file_path)
             ];
         }
-        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality, 'season'=>$Season,'episode'=>$Episode,'name'=>$name]) : view('movie_not_found')->with(['movie_name'=>$name]);
+        return $qualities->isNotEmpty() ? view('episode_page')->with(['qualities'=>$ArrQuality,'type'=>$type , 'season'=>$Season,'episode'=>$Episode,'name'=>$name]) : view('movie_not_found')->with(['movie_name'=>$name]);
         //return view('episode_page')->with(['qualities'=>$qualities]);
     }
     /**
@@ -352,13 +416,27 @@ class categoryController extends Controller
         {
            return false;
         }
-        $movies = allmovies::where('name', $name)->where('type', $type)->first();
+        $movies = allmovies::where('type', $type)->where('name', $name)->first();
         if(empty($movies) || $movies==null){
             return false;
         }
         $qualities= $movies->quality()->get();
         return ($qualities->isNotEmpty() && !empty($movies)) ? ['qualities'=>$qualities, 'movie'=>$movies] : false;
     }
+
+    private function makeLink($Name, $type)
+    {
+        $name = preg_replace('/\s+/', '_', $Name);
+        if(Constants::inSeries($type)){
+           return  url('series/'.$type.'/'.$name);
+        }
+        else if (Constants::inMovie($type)) {
+           return url('movies/'.$type.'/'.$name);
+        }
+        else{ return false;}
+
+    }
+
     private function getVideos($type)
     {
         if(Constants::inSeries($type))
@@ -512,10 +590,10 @@ class categoryController extends Controller
            return $models->isNotEmpty() ? $models : false;    
     }
 
-    private function getTags($tag)
+    private function getTags($tag, $api = false)
     {
-        $tagModels = tags::where('tag', $tag)->get();
-        if(empty($tagModels)){
+        $tagModels = $api===true? tags::where('tag', $tag)->take(10)->get() : tags::where('tag', $tag)->get();
+        if(empty($tagModels) && $api === false){
             return view('movie_not_found')->with(['movie_name'=>$tag]);
         }
         $counter = 0;

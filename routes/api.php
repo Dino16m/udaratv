@@ -26,3 +26,5 @@ Route::post('uploader/newMovie', 'uploadController@addNewMovie');
 Route::post('uploader/updateMovie', 'uploadController@updateExistingMovie');
 
 Route::get('search', 'categoryController@search');
+
+Route::get('suggest', 'categoryController@suggest');

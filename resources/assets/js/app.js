@@ -32,6 +32,7 @@ Vue.component('new-series', require('./components/newSeriesComponent.vue'));
 Vue.component('new-movies', require('./components/newMoviesComponent.vue'));
 Vue.component('old-series', require('./components/updateSeriesComponent.vue'));
 Vue.component('old-movies', require('./components/updateMoviesComponent.vue'));
+Vue.component('suggestions', require('./components/suggestions.vue'));
 
 Vue.directive('click-outside', {
     bind: function(el, binding, vnode){

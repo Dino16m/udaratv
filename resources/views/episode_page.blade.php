@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url('public/css/app.css')}}">
     <link rel="stylesheet" href="<?php echo url('public/css/style.css')?>" type="text/css">
     <link rel="stylesheet" href="<?php echo url('public/css/style2.css')?>" type="text/css">
+    <link rel="stylesheet" href="{{url('public/css/owl.carousel.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('public/css/owl.theme.default.css')}}" type="text/css">
     <style type="text/css">
         body {
             padding-top: 2rem;
@@ -111,9 +113,10 @@
      </ul>
      @endforeach
 
- <section class="container justify-content-center">
-
+ <section class=" justify-content-center w-100">
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>
+        <hr class="clearfix w-100">
+        <suggestions api="{{url('api/suggest')}}" name="{{$name}}" type='{{$type}}'></suggestions>
     </section>
 
     <br>
@@ -263,5 +266,30 @@
             __engWidget('createWidget',{wwei:'ENGAGEYA_WIDGET_125611',pubid:191419,webid:195234,wid:125611});
         </script>
     <!--end of ad-->
+<script type="text/javascript" src="{{url('public/js/owl.carousel.js')}}"></script>
+<script>
+   $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:false,
+        dots:false,
+        autoplay:true,
+        autoHeight:true,
+    
+    responsive:{
+        0:{
+            items:2
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:5
+        }
+    }
+    })  
+   
+    
+</script>
 </body>
 </html>

@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url('public/css/app.css')}}">
     <link rel="stylesheet" href="<?php echo url('public/css/style.css')?>" type="text/css">
     <link rel="stylesheet" href="<?php echo url('public/css/style2.css')?>" type="text/css">
+    <link rel="stylesheet" href="{{url('public/css/owl.carousel.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('public/css/owl.theme.default.css')}}" type="text/css">
     <style type="text/css">
         body {
             padding-top: 2rem;
@@ -112,10 +114,10 @@
          <li class="list-group-item justify-content-between align-items-center  p-3 bg-primary text-center"> <a href="{{$quality['link']}}" class=" font-weight-bolder text-capitalize text-dark"> {{$name}} - {{$quality['quality']}}  [has been downloaded {{$quality['views']}} time(s)]</a></li>
      </ul>
      @endforeach
-
- <section class="container justify-content-center">
-
+ <section class=" justify-content-center w-100">
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>
+        <hr class="clearfix w-100">
+        <suggestions api="{{url('api/suggest')}}" name="{{$name}}" type='{{$type}}'></suggestions>
     </section>
 
     <br>
@@ -259,6 +261,30 @@
     </footer> 
 </div>
 <script type="text/javascript" src="<?php echo url('public/js/app.js')?>"></script>
-
+<script type="text/javascript" src="{{url('public/js/owl.carousel.js')}}"></script>
+<script>
+   $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:false,
+        dots:false,
+        autoplay:true,
+        autoHeight:true,
+    
+    responsive:{
+        0:{
+            items:2
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:5
+        }
+    }
+    })  
+   
+    
+</script>
 </body>
 </html>
