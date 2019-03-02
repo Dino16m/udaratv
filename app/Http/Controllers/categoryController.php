@@ -194,13 +194,13 @@ class categoryController extends Controller
         $name = Validator::sanitize($Name);
         
         if (Constants::inSeries($type)) {
-            $typeSuggestion = series::where('type', $type)->take(10)->get(['image_link', 'name', 'type']);
+            $typeSuggestion = series::where('type', $type)->inRandomOrder()->take(10)->get(['image_link', 'name', 'type']);
             $tags = series::where('name', $name)->first()->tags()->get(['tag']);
             $typeSuggestion = $typeSuggestion->isEmpty() ? collect([]) : $typeSuggestion;
 
         }
         elseif(Constants::inMovie($type)){
-            $typeSuggestion = allmovies::where('type',$type)->take(10)->get(['image_link', 'name', 'type']);
+            $typeSuggestion = allmovies::where('type',$type)->inRandomOrder()->take(10)->get(['image_link', 'name', 'type']);
             $tags = allmovies::where('name', $name)->first()->tags()->get(['tag']);
             $typeSuggestion = $typeSuggestion->isEmpty() ? collect([]) : $typeSuggestion;
             
@@ -217,6 +217,7 @@ class categoryController extends Controller
         }
         $Suggest = array_merge($tagSuggestion->toArray(),$typeSuggestion->toArray());
         $suggest = collect($Suggest);
+        $suggest->shuffle();
         $suggestions = [];
         $i=0;
         foreach ($suggest as $sug) {
@@ -592,7 +593,7 @@ class categoryController extends Controller
 
     private function getTags($tag, $api = false)
     {
-        $tagModels = $api===true? tags::where('tag', $tag)->take(10)->get() : tags::where('tag', $tag)->get();
+        $tagModels = $api===true? tags::where('tag', $tag)->inRandomOrder()->take(10)->get() : tags::where('tag', $tag)->get();
         if(empty($tagModels) && $api === false){
             return view('movie_not_found')->with(['movie_name'=>$tag]);
         }
