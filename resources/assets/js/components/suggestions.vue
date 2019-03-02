@@ -3,7 +3,7 @@
 		<h2 class=" text-white text-capitalize p-2 d-block flex-row w-100 justify-content-between align-items-center text-center bg-secondary" v-if="hasContent">You may also like to watch these</h2><br>
 		<div class="owl-carousel owl-theme" >
     		<div class="item" v-for="(video, key) in videos" style="height:200px">
-    			<h3 class="h3-responsive text-capitalize align-items-center text-center" ><a  class="text-info  text-nowrap shadow text-center " v-bind:href="video.link">{{video.name}} </a></h3> 
+    			<h3 class="h3-responsive text-capitalize align-items-center text-center"><a  class="text-info shadow text-center " v-bind:href="video.link">{{video.name}} </a></h3> 
         		<img class="d-block h-100" v-bind:src="video.image_link" v-bind:alt="video.name">
     		</div>
 		</div>
@@ -39,6 +39,22 @@
 						 {"name":"","link":"http:","image_link":"3"},
 						 {"name":"","link":"http:","image_link":"3"},
 						 {"name":"placeholder3","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
+						 {"name":"","link":"http:","image_link":"3"},
 						 {"name":"","link":"http:","image_link":"3"},
 						 {"name":"","link":"http:","image_link":"3"},
 						 {"name":"","link":"http:","image_link":"3"},
