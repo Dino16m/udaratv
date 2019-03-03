@@ -45,7 +45,7 @@
                 <div class="col w-100 desc-mobile">
                 	<div class="d-flex flex-column mx-auto mb-3">
                 		<hr class="light w-100">
-                		 <div class=" p-2 text-center text-nowrap">
+                		 <div class=" p-2 text-centerp">
                             <p class="field">Genres: <span v-html="Genre"></span></p>
                             <p class="field"> <strong class="text-danger">IMDB:</strong><a :href="v_imdb_link">{{v_imdb_link}}</a> </p>
                             <p class="field">Casts: <p> </p></p>
