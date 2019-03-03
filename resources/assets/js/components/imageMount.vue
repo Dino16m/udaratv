@@ -20,10 +20,10 @@
          	<p class="field">Number of Views: {{v_views}} </p>
 	   </div>
 
-            <div class="container" v-if='isHome'>
-                <div class="row h-100 w-100">
+            <div class="container w-100" v-if='isHome'>
+                <div class="row h-100 w-100 desc-lg">
                     <div class="d-flex flex-row mx-auto mb-3">
-                        <div class="col-sm-6  description">
+                        <div class="col-sm-6 text-right description ">
                             <p>
                                 {{desc}}
                             </p>
@@ -31,8 +31,8 @@
                             
                         </div>
 
-                        <div class=" col-sm-6">
-                            <p class="field">Genres:<a href="makeUrl('/genre/crime')">Crime</a>,<a href="makeUrl('/genre/thriller')">Thriller</a></p>
+                        <div class=" col-sm-6 text-left text-nowrap">
+                            <p class="field">Genres: <span v-html="Genre"></span></p>
                             <p class="field"> <strong class="text-danger">IMDB:</strong><a :href="v_imdb_link">{{v_imdb_link}}</a> </p>
                             <p class="field">Casts: <p> </p></p>
                             <p class="field">Run Time: {{v_run_time}}</p>
@@ -41,9 +41,31 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="shadow">
-            <hr>
+
+                <div class="col w-100 desc-mobile">
+                	<div class="d-flex flex-column mx-auto mb-3">
+                		<hr class="light w-100">
+                		 <div class=" p-2 text-center text-nowrap">
+                            <p class="field">Genres: <span v-html="Genre"></span></p>
+                            <p class="field"> <strong class="text-danger">IMDB:</strong><a :href="v_imdb_link">{{v_imdb_link}}</a> </p>
+                            <p class="field">Casts: <p> </p></p>
+                            <p class="field">Run Time: {{v_run_time}}</p>
+                            <p class="field">views:{{v_views}}</p>
+                            <p class="field" v-if="v_is_series">seasons:<span>{{number_of_seasons}}</span></p>
+                        </div>
+
+            			<hr class="underline w-100">
+          
+                		<div class="p-2 text-justify  ">
+                            <p>
+                                {{desc}}
+                            </p>
+                            <br>
+                            
+                        </div>
+                	</div>
+                </div>
+
             </div>
     </div>
 </div>
@@ -96,6 +118,10 @@
 			},
 			season:{
 				type:String
+			},
+			tags:{
+				required: true,
+				type: String
 			}
 		},
 		data(){
@@ -113,9 +139,11 @@
 				v_number_of_episodes: this.number_of_episodes,
 				v_is_series: this.isseries,
 				url: this.base_url,
+				tagUrl : this.base_url + '/tags/',
 				Season: this.season,
 				Episode: this.episode,
-				isHome: this.ishome
+				isHome: this.ishome,
+				Genre: ''
 			}
 		},
 		methods:{
@@ -125,11 +153,28 @@
 				let json = JSON.stringify(ArrToStore);
 				localStorage.setItem(storageKey, json);
 			},
+			makeGenre(){
+				if(this.tags === 'none'){
+					return '';
+				}
+				let tags = JSON.parse(this.tags);
+				let genre= '';
+				for (var i = 0; i < tags.length; i++) {
+					let tag = tags[i];
+						let comma = tags.length-1 == i ? '':',';
+						genre += this.makeHref(tag.tag)+comma;
+				}
+				
+				this.Genre = genre;
+				return;
+
+			},
 			notEpisodePage(){
 				return (this.Episode == null && this.Season == null) ? true : false;
 			},
-			makeUrl(url){
-				return this.url + url;
+			makeHref(tag){
+				let Tag = tag.trim();
+				return '<a href="' + this.tagUrl+Tag + '">'+Tag+'</a>'
 			},
 			episodes(){
 				return this.v_number_of_episodes !== null? true:false;
@@ -157,6 +202,7 @@
 			}
 		},
 		created(){
+			this.makeGenre();
 			if(this.needed || !this.isHome){
 				this.getSavedData();
 			}

@@ -285,6 +285,7 @@ class categoryController extends Controller
         $qualityArray=[];
         $qualities=$models['qualities'];
         $movie= $models['movie'];
+        $tags = $models['tags']->isNotEmpty() ? $models['tags']->toJson() : 'none';
         foreach($qualities as $model)
         {
             $qualityArray[$model->quality]=[
@@ -296,7 +297,7 @@ class categoryController extends Controller
                 'parent_id'=>$model->allmovies_id
             ];
         }
-        return view('movie_index')->with(['qualities'=>$qualityArray, 'name'=>$name, 'desc'=>$movie->short_description,'image_link'=>$movie->image_link, 'imdb_link'=>$movie->imdb_link,  'run_time'=>$movie->run_time, 'type'=>$type,  'views'=>$movie->views, 'id'=>$movie->id ]);
+        return view('movie_index')->with(['qualities'=>$qualityArray, 'name'=>$name, 'desc'=>$movie->short_description,'image_link'=>$movie->image_link, 'imdb_link'=>$movie->imdb_link,  'run_time'=>$movie->run_time, 'type'=>$type,  'views'=>$movie->views, 'id'=>$movie->id, 'tags'=>$tags ]);
     }
 
     /**
@@ -313,6 +314,7 @@ class categoryController extends Controller
         $list = $this->getSeasonsList($Type, $Name);
         $models = $list['seasons'];
         $series = $list['series'];
+        $tags = $list['tags']->isNotEmpty() ? $list['tags']->toJson() : 'none';
         $type = Validator::sanitize($Type);
         if(!$models)
         {
@@ -337,7 +339,7 @@ class categoryController extends Controller
                     'path'=>url('series/'.$type.'/'. $urlName .'?page=')
                             ];
         $paginator=json_encode($Paginator);
-        return view('series_index')->with(['name'=>$urlName,'desc'=>$series->short_description, 'seasons'=>$seasons,'image_link'=>$series->image_link, 'imdb_link'=>$series->imdb_link, 'paginator'=>$paginator, 'run_time'=>$series->run_time, 'number_of_seasons'=>$series->number_of_seasons, 'views'=>$series->views, 'id'=>$series->id]);
+        return view('series_index')->with(['name'=>$urlName,'desc'=>$series->short_description, 'seasons'=>$seasons,'image_link'=>$series->image_link, 'imdb_link'=>$series->imdb_link, 'paginator'=>$paginator, 'run_time'=>$series->run_time, 'number_of_seasons'=>$series->number_of_seasons, 'views'=>$series->views, 'id'=>$series->id, 'tags'=>$tags]);
     
     }
     public function getEpisodesIndex($seasonId, $Name, $Season)
@@ -387,7 +389,8 @@ class categoryController extends Controller
             return view('movie_not_found')->with(['movie_name'=>$name]);
         }
         $seriesId = $qualities[0]->series_id;
-        $type = series::find($seriesId)->type;
+        $series = series::find($seriesId);
+        $type = $series->type;
         $ArrQuality =[];
         //any view handling this should add a type of series to the episode link
         foreach ($qualities as $quality) {
@@ -421,8 +424,9 @@ class categoryController extends Controller
         if(empty($movies) || $movies==null){
             return false;
         }
+        $tags = $movies->tags()->get(['tag']);
         $qualities= $movies->quality()->get();
-        return ($qualities->isNotEmpty() && !empty($movies)) ? ['qualities'=>$qualities, 'movie'=>$movies] : false;
+        return ($qualities->isNotEmpty() && !empty($movies)) ? ['qualities'=>$qualities, 'movie'=>$movies, 'tags'=>$tags] : false;
     }
 
     private function makeLink($Name, $type)
@@ -481,12 +485,13 @@ class categoryController extends Controller
         return false;
        }
        $series = series::where('type', $type)->where('name', $name)->first(['imdb_link', 'image_link','views', 'run_time', 'number_of_seasons', 'short_description', 'id']);
+       $tags = $series->tags()->get(['tag']);
        if(empty($series) || $series==null){
             return false;
         }
        $Seasons = $series->seasons()->orderBy('season_name', 'desc')->paginate(10);
        //$Seasons->withPath('series/'.$type.'/'. $Name);
-       return ($Seasons->isNotEmpty() && !empty($series)) ? ['seasons'=>$Seasons, 'series'=>$series]: false;
+       return ($Seasons->isNotEmpty() && !empty($series)) ? ['seasons'=>$Seasons, 'series'=>$series, 'tags'=>$tags]: false;
     }
     private function getSearch($Name)
     {
