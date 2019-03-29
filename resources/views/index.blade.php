@@ -61,6 +61,7 @@ $lacarousel=json_encode($carousel);
     <link rel="icon" href="<?php echo url('public/images/udaralogo.png')?>">
     <meta name="msvalidate.01" content="4933F6D223E4EF9F7C3F176449B05D99" />
     <meta name="yandex-verification" content="27a757e33b722ff5" />
+    <meta name="propeller" content="7462e67733b4e3fe4a001c8a7b7bfe29">
     <title>Udara Tv - download nollywood Movies and series, download hollywood movies and series</title>
      <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132811731-1"></script>
