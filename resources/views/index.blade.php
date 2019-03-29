@@ -74,6 +74,7 @@ $lacarousel=json_encode($carousel);
     <!--End of google analytics-->
    <!--ad network-->
         <?php echo include_once (base_path('resources/views/pa_antiadblock_2523772.php')); ?>
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
     <!--end of ad-->
 </head>
 <body style="max-width: 100%">
