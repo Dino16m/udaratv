@@ -72,9 +72,7 @@ $lacarousel=json_encode($carousel);
         gtag('config', 'UA-132811731-1');
     </script>
     <!--End of google analytics-->
-   <!--ad network-->
-        <?php echo include_once (dirname(__FILE__) . '/pa_antiadblock_2523772.php'); ?>
-    <!--end of ad-->
+  
 </head>
 <body style="max-width: 100%">
 <div id="app">
