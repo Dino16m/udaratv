@@ -107,7 +107,9 @@
 
     </div>
     <!--jumbotron end-->
-
+    <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
     <section class="container justify-content-center">
 
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>

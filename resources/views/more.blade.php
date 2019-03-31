@@ -120,6 +120,9 @@ foreach ($recents as $recent) {
 
 <!--nav-bar-end-->
 <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
+<!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
 <section>
     <main role="main" class="container">
 
@@ -200,6 +203,9 @@ foreach ($recents as $recent) {
                    
                 </div>
             </div>
+            <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
 </section> 
  <!-- Footer -->
      <footer class="page-footer  font-small ">

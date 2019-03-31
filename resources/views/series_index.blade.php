@@ -103,6 +103,9 @@
     </nav>
 <!--nav-bar-end-->
  <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
+ <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
  <main role="main" class="container ">
         <div class="card">
 
@@ -127,7 +130,9 @@
 
     <!-- Footer -->
     <footer class="page-footer  font-small  pt-4">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
+        <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">

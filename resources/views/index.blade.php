@@ -74,7 +74,7 @@ $lacarousel=json_encode($carousel);
     <!--End of google analytics-->
    <!--ad network-->
         <?php echo include_once (base_path('resources/views/pa_antiadblock_2523772.php')); ?>
-        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+        
     <!--end of ad-->
 </head>
 <body style="max-width: 100%">
@@ -102,18 +102,6 @@ $lacarousel=json_encode($carousel);
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="types/nollywoodseries">Nollywood TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="types/asianseries">Asian TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="types/asianmovies">Asian Movies</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="types/animemovies">Anime</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="types/animeseries">Anime Series</a>
                 </li>
                 <li class="nav-item">
                    <div class="dropdown">
@@ -149,7 +137,9 @@ $lacarousel=json_encode($carousel);
 <section>
     <main role="main" class="container">
 
-
+    <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
         <div class="starter-template">
             <h2 class="headit">Recently updated</h2>
             <hr class="">
@@ -234,7 +224,9 @@ $lacarousel=json_encode($carousel);
         </div>
 </section>
     <hr class="underline">
- <div id="ENGAGEYA_WIDGET_125611" class="starter-template"></div>
+ <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
 <section>
     <main role="main" class="container w-100">
 

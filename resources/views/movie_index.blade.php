@@ -105,6 +105,9 @@
     </nav>
     <!--nav-bar-end-->
     <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
+    <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
      <image-mount :reuse=false :ishome=true :isseries=false  views="{{$views}}" image_link="{{$image_link}}" tags='{{$tags}}' name="{{$name}}" base_url="{{url('/')}}" imdb_link="{{$imdb_link}}" desc="{{$desc}}" run_time="{{$run_time}}" ></image-mount>
      @foreach($qualities as $quality)
      <ul class="card list-group d-flex bg-dark shadow rounded-top">
@@ -123,7 +126,9 @@
 
     <!-- Footer -->
     <footer class="page-footer  font-small  pt-4">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
+        <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">

@@ -67,18 +67,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo url('types/nollywoodseries')?>">Nollywood-TvSeries</a>
                 </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
-                </li>
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -110,7 +98,9 @@
          <li class="list-group-item justify-content-between align-items-center  p-3 bg-primary text-center"> <a href="{{$quality['link']}}" class=" font-weight-bolder text-capitalize text-dark"> {{$name}} - {{$quality['quality']}} -Season-{{$season}}-Episode-{{$episode}} [has been downloaded {{$quality['views']}} time(s)]</a></li>
      </ul>
      @endforeach
-
+     <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
  <section class=" justify-content-center w-100">
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>
         <hr class="clearfix w-100">
@@ -122,7 +112,9 @@
 
     <!-- Footer -->
     <footer class="page-footer  font-small  pt-4">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
+        <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">

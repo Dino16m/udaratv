@@ -83,18 +83,6 @@ for($i = 0; $i<$catlength; $i++)
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo url('types/nollywoodseries')?>">Nollywood-TvSeries</a>
                 </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
-                </li>
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -129,6 +117,9 @@ for($i = 0; $i<$catlength; $i++)
 
     </div>
     <!--jumbotron end-->
+     <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
      <div class="pt-4 container-fluid">
         @foreach($categories as $category)
         <p class="text-center shadow"><a href="{{$category['link']}}">{{$category['name']}}</a></p>
@@ -137,7 +128,9 @@ for($i = 0; $i<$catlength; $i++)
     </div>
      <!-- Footer -->
      <footer class="page-footer  font-small ">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
+        <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">

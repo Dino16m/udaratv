@@ -2,8 +2,11 @@
 	<div>
 		<meta name="og:image" property="og:image" content="image_url">
 		 <div class=" img pt-4 mt-4">
-           <div class=" img pt-4 mt-4">
-            <img :src="image_url"  class="img-fluid w-50 h-50 border rounded border-light" :alt="alt">
+           <div class=" img pt-4 mt-4 mobile-only">
+            <img :src="image_url"  class=" img-fluid w-50 h-50 border rounded border-light" :alt="alt">
+         </div>
+         <div class=" img pt-4 mt-4 pc-only"  style="height:270px; width:200px; margin:auto;">
+            <img :src="image_url"  class=" img-fluid w-100 h-100 border rounded border-light" :alt="alt">
          </div>
          <br>
          <h3 class="text-center">{{Name}}</h3>

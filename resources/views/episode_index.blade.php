@@ -65,18 +65,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo url('types/nollywoodseries')?>">Nollywood-TvSeries</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
-                </li>
                 
                 <li class="nav-item">
                    <div class="dropdown">
@@ -115,6 +103,9 @@
         <br>
     </main>
     <!-- /.container -->
+    <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
       <section class="container justify-content-center">
 
         <div class="back guru"><a href="javascript:history.go(-1)">Back</a></div>
@@ -125,7 +116,9 @@
 
     <!-- Footer -->
     <footer class="page-footer  font-small  pt-4">
-        <div id="ENGAGEYA_WIDGET_125611"></div>
+        <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+        <!--end of ad-->
         <div class="col-lg-12">
             <div class="container-fluid padding">
                 <div class="row text-center padding">

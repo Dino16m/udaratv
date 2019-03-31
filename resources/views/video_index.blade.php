@@ -104,6 +104,9 @@
 
 <!--nav-bar-end-->
  <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
+ <!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
 <!--jumbotron-->
 
     <div class="jumbotron jumbotron-fluid text-white bg-dark w-100">
@@ -112,6 +115,9 @@
         </div>
     </div>
 <!--jumbotron end-->
+<!--ad network-->
+        <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
+    <!--end of ad-->
 <ul>
 @foreach($videos as $video)
     <li  class="list-group-item d-flex justify-content-between align-items-center shadow p-3 bg-dark text-capitalize" style="list-style-image: url('public/css/Youtube.svg')">
