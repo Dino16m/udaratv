@@ -21,6 +21,12 @@ class Constants {
     public const imageUploadLocation = '/public/images/'; 
     public const isSeries = ['naijaseries','bollywoodseries','animeseries','asianseries','series', 'hollywoodseries', 'nollywoodseries'];
     public const rawStoragePath= '/storage/app/raw/';
+    public const compressionDirectory ='/videos/compressing/';
+
+    public static function waterMark()
+    {
+     return base_path('/public/watermark.png');
+    }
 
     public static function getTmp(){
         return '/var/tmp/';

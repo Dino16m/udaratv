@@ -14,9 +14,11 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import VueRouter from 'vue-router';
 import axios from 'axios';
 //import VueAxios from 'vue-axios';
 Vue.use(axios);
+Vue.use(VueRouter);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('index-carousel', require('./components/indexCarousel.vue'));
@@ -33,6 +35,13 @@ Vue.component('new-movies', require('./components/newMoviesComponent.vue'));
 Vue.component('old-series', require('./components/updateSeriesComponent.vue'));
 Vue.component('old-movies', require('./components/updateMoviesComponent.vue'));
 Vue.component('suggestions', require('./components/suggestions.vue'));
+Vue.component('request', require('./components/request.vue'));
+
+const routes = [
+{
+    path:'/request', component: Vue.component('request', require('./components/request.vue'))
+}];
+ const router = new VueRouter({routes});
 
 Vue.directive('click-outside', {
     bind: function(el, binding, vnode){
@@ -52,6 +61,7 @@ Vue.directive('click-outside', {
 
 const app = new Vue({
     el: '#app',
+    router,
     created(){
     	
     }, 

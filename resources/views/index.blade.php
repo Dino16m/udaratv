@@ -101,9 +101,6 @@ $lacarousel=json_encode($carousel);
                     <a class="nav-link" href="types/nollywoodmovies">Nollywood Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="types/nollywoodseries">Nollywood TvSeries</a>
-                </li>
-                <li class="nav-item">
                    <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                      Genres
@@ -122,18 +119,23 @@ $lacarousel=json_encode($carousel);
                 <li class="nav-item">
                     <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#/request"><button class="btn btn-success" type="button">Request</button></a>
+                </li>
             </ul>
            <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
     <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
 <!--nav-bar-end--> 
+
+<router-view api="{{url('api/subscribe')}}" v-bind:isroute=true v-bind:isfinal=false> </router-view>
+<div class="float-button d-block mobile-only"> <a class="w-100 h-100 mx-auto my-auto d-block" href="#/request"><img class="rounded-circle h-100 w-100" src="{{url('public/css/udara.jpg')}}"></a> </div>
 <div class="container mt-4">
         <div class="row">
                  <index-carousel v-bind:videodetails="{{$lacarousel}}" > </index-carousel>
          </div>
      </div>
-
 <section>
     <main role="main" class="container">
 
@@ -141,6 +143,8 @@ $lacarousel=json_encode($carousel);
         <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
     <!--end of ad-->
         <div class="starter-template">
+            <span class="nspan pc-only">Did you know you can request for movies, click on the green request button now </span>
+            <span class="nspan-mobile mobile-only">Did you know you can request for movies, touch the Udara fruit at the bottom now </span>
             <h2 class="headit">Recently updated</h2>
             <hr class="">
 
@@ -255,18 +259,6 @@ $lacarousel=json_encode($carousel);
                     <li class="nav-item flex-item">
                         <a class="nav-link  bg-dark" data-toggle="tab" href="#nollywoodmovies">Nollywood Movies</a>
                     </li>
-                    <li class="nav-item flex-item">
-                        <a class="nav-link  bg-dark" data-toggle="tab" href="#asianmovies">Asian/Korean Movies</a>
-                    </li>
-                    <li class="nav-item flex-item">
-                        <a class="nav-link  bg-dark" data-toggle="tab" href="#asianseries">Asian/Korean series</a>
-                    </li>
-                    <li class="nav-item flex-item">
-                        <a class="nav-link  bg-dark" data-toggle="tab" href="#animemovies">Anime Movies</a>
-                    </li>
-                    <li class="nav-item flex-item">
-                        <a class="nav-link  bg-dark" data-toggle="tab" href="#animeseries">Anime Series</a>
-                    </li>
                 </ul>
 
                 <!-- Tab panes -->
@@ -311,43 +303,6 @@ $lacarousel=json_encode($carousel);
                             <categorylist videotype="nollywoodmovies"> </categorylist>
                         </div>
                     </div>
-                    <div id="asianmovies" class="container w-100 tab-pane fade"><br>
-                        <div class="container">
-                            <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center"> Download Asian/Korean/Japanese movies by first letter of name.</p>
-                            </h1>
-                            <br>
-                            <categorylist videotype="asianmovies"> </categorylist>
-                        </div>
-                    </div>
-                        <div id="asianseries" class="container w-100 tab-pane fade"><br>
-                        <div class="container">
-                            <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center"> Download Asian/Korean/Japanese/Chinese Series eg Glass.</p>
-                            </h1>
-                            <br>
-                            <categorylist videotype="asianseries"> </categorylist>
-                        </div>
-                        </div>
-                        <div id="animeseries" class="container w-100 tab-pane fade"><br>
-                        <div class="container">
-                            <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center"> Download Anime Series eg Naruto, .</p>
-                            </h1>
-                            <br>
-                            <categorylist videotype="animeseries"> </categorylist>
-                        </div>
-                        </div>
-                        <div id="animemovies" class="container w-100 tab-pane fade"><br>
-                        <div class="container">
-                            <h1 class="my-4 text-center text-lg-left">
-                                <p class="text-center"> Download Anime by name.</p>
-                            </h1>
-                            <br>
-                            <categorylist videotype="animemovies"> </categorylist>
-                        </div>
-                   
-                </div>
         </div>
 </section>
 
@@ -360,15 +315,17 @@ $lacarousel=json_encode($carousel);
                     <div class="col-12 padding">
                         <h2>Join Our Twitter and Facebook Community</h2>
                     </div>
-              
-
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
+                   <div class=" col-12 mx-auto social padding">
+                        <a href="https://www.facebook.com/udaraTV/"><i class="fab mx-auto   fa-facebook"></i></a> 
+                        <a href="" ><i class="fab mx-auto d-none fa-twitter"></i></a>
+                        <a href="https://chat.whatsapp.com/I6UY1Q7m4Eu05oUqLA76s6" ><i class="fab mx-auto fa-whatsapp"></i></a>
+                    </div>
 
                     </div>
                 </div>
                     </div>
         <hr class="light">
+
         <!-- Footer Links -->
         <div class="container text-center text-md-left">
 
@@ -477,6 +434,8 @@ $lacarousel=json_encode($carousel);
          <div class="footer-copyright text-center py-3"><a class="navbar-brand" href="#"><img src="{{url('public/images/udaralogo.png')}}" alt="udaratv" height="40px"></a>© 2018 Copyright:
             <a href='{{url("/")}}'>UdaraTv.com</a>
         </div>
+         <div class="text-center d-block  text-white "><img src="https://uzucorp.com/uzu.jpg" class="rounded-circle uzu" alt="uzucorp.com" height="40px" width="40px">      Rapidly developed by <a href="https://uzucorp.com/">Uzucorp</a> </div>
+        
         <!-- Copyright -->
 
     </footer>

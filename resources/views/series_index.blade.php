@@ -65,21 +65,6 @@
                     <a class="nav-link" href="<?php echo url('types/naija')?>">Nollywood-Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo url('type/naijaseries')?>">Nollywood-TvSeries</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianseries')}}">Asian TvSeries</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/asianmovies')}}">Asian Movies</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animemovies')}}">anime Movies</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('types/animeseries')}}">anime</a>
-                </li>
-                <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle bg-dark" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                      Genres
@@ -97,12 +82,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#/request"><button class="btn btn-success" type="button">Request</button></a>
+                </li>
             </ul>
            <search-bar searchapi="{{url('api/search')}}"></search-bar>
         </div>
     </nav>
 <!--nav-bar-end-->
  <div class="bg-dark searchbar"> <search-bar searchapi="{{url('api/search')}}"></search-bar> </div>
+ <router-view api="{{url('api/subscribe')}}" v-bind:isroute=true v-bind:isfinal=false> </router-view>
+<div class="float-button d-block mobile-only"> <a class="w-100 h-100 mx-auto my-auto d-block" href="#/request"><img class="rounded-circle h-100 w-100" src="{{url('public/css/udara.jpg')}}"></a> </div>
  <!--ad network-->
         <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
     <!--end of ad-->
@@ -139,10 +129,10 @@
                     <div class="col-12">
                         <h2>Join Our Twitter and Facebook Community</h2>
                     </div>
-                    <div class="col-12 social padding">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-
+                    <div class=" col-12 mx-auto social padding">
+                        <a href="https://www.facebook.com/udaraTV/"><i class="fab mx-auto   fa-facebook"></i></a> 
+                        <a href="" ><i class="fab mx-auto d-none fa-twitter"></i></a>
+                        <a href="https://chat.whatsapp.com/I6UY1Q7m4Eu05oUqLA76s6" ><i class="fab mx-auto fa-whatsapp"></i></a>
                     </div>
                 </div>
             </div>
@@ -260,6 +250,8 @@
          <div class="footer-copyright text-center py-3"><a class="navbar-brand" href="#"><img src="{{url('public/images/udaralogo.png')}}" alt="udaratv" height="40px"></a>© 2018 Copyright:
             <a href='{{url("/")}}'>UdaraTv.com</a>
         </div>
+        <div class="text-center d-block  text-white "><img src="https://uzucorp.com/uzu.jpg" class="rounded-circle uzu" alt="uzucorp.com" height="40px" width="40px">      Rapidly developed by <a href="https://uzucorp.com/">Uzucorp</a> </div>
+        
         <!-- Copyright -->
 
     </footer> 

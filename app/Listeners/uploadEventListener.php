@@ -7,7 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\recently_updated as Recents;
 use App\Constants;
-//use App\Jobs\mailSubscribers as mailer;
+use App\Jobs\mailSubscribers as mailer;
 
 class uploadEventListener
 {
@@ -29,6 +29,7 @@ class uploadEventListener
      */
     public function handle(uploadEvent $event)
     {
+
         $model=$event->update;
         $update=[];
         $update['video_name']=$model['name'];
@@ -51,7 +52,8 @@ class uploadEventListener
         if ($this->recentIsUnique($update, $type))
         {
             $recent = Recents::create($update);
-            //dispatch(new mailer(['link'=>$video_link, 'name'=>$model['name'], 'type'=>$type]));
+            dispatch(new mailer(['link'=>$video_link, 'name'=>$model['name'], 'type'=>$type]));
+            
         }
 
     }

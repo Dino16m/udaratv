@@ -29,13 +29,15 @@ class Validator {
     {
       return (is_int($var) || ctype_digit($var));
     }
+
+
     public static function isEmptyString($var)
     {
       return(empty($var) && $var!='0');
     }
     public static function isValid($value){
          if(isset($value)){
-             return $this::sanitize($value);
+             return self::sanitize($value);
          }
          else{return null;}
      }
