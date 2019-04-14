@@ -11,6 +11,7 @@ use \App\Validator;
 use \App\allmovies;
 use \App\seasons;
 use App\Constants;
+use App\Services\uploadService;
 use Illuminate\Http\File;
 
 
@@ -27,6 +28,8 @@ class uploadController extends Controller
     private const imageUploadLocation = Constants::imageUploadLocation; 
     private const  supportedVideoTypes = Constants::supportedVideoTypes;
     private const  isMovie = Constants::ismovie;
+    private $uploadService;
+    private $tempPath;
     /**
     * this method returns the basepath of the videoUploadLocation constant
     * @return file_path
@@ -37,6 +40,11 @@ class uploadController extends Controller
     private function esc(){
       return " \"";
     }
+    private function cleanUp()
+    {
+       $tempFile  = $this->tempPath;
+       unlink($tempFile);
+    }
     /**
     * this method returns the basepath of the imageUploadLocation constant
     * @return file_path
@@ -44,6 +52,16 @@ class uploadController extends Controller
     private function imageUploadLocation(){
       return $this::imageUploadLocation;
     }
+
+   /**
+   * the controller's constructor
+   * @param uploadService
+   **/
+   public function _construct(uploadService $uploadService)
+   {
+    $this->uploadService = $uploadService;
+   }
+
     /**
     * @return view of upload
     **/
@@ -92,6 +110,7 @@ class uploadController extends Controller
         }
         $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['tags']=$json->tags;
+        $videoDetails['compressed']=1;
         $videoDetails['image']= $image = $request->file('image'.$videoID);
         $videoDetails['image_ext']= $image->getClientOriginalExtension();
         $videoDetails['first_letter_of_name']=substr($file_name, 0, 1);
@@ -135,6 +154,7 @@ class uploadController extends Controller
           $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['shouldpull'] = $json->shouldpull;
+        $videoDetails['compressed']=1;
         $videoDetails['number_of_seasons']= $json->seasonNumber;
         $videoDetails['should_touch_season']= $json->seasonChanged;
         $videoDetails['episodeNumber']= $json->episodeNumber;
@@ -178,6 +198,7 @@ class uploadController extends Controller
         }
         $videoDetails['shouldpull'] = $json->shouldpull;
         $videoDetails['imdb_link']= $json->imdbLink;
+        $videoDetails['compressed']=1;
         $videoDetails['image']= $request->file('image'.$videoID);
         $videoDetails['first_letter_of_name']=substr($file_name,0 ,1);
         array_push($status, $this::handleNewMovies($videoDetails));
@@ -213,6 +234,7 @@ class uploadController extends Controller
           $videoDetails['extLink'] = $json->extLink;
         }
         $videoDetails['shouldpull'] = $json->shouldpull;
+        $videoDetails['compressed']=1;
         $videoDetails['quality'] = $json->quality;
         $videoDetails['type'] = $json->type;
         array_push($status, $this::handleOldMovies($videoDetails));
@@ -251,8 +273,10 @@ class uploadController extends Controller
       $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink )){
+           $this->cleanuP();
            return  $file_name.' couldn\'t be uploaded';
         }
+        $this->cleanuP();
       }
       $model = allmovies::create($details);
       $movie = $model->add($tags);
@@ -287,8 +311,10 @@ class uploadController extends Controller
       $file_path= $details['shouldpull']?  $movie['path'].stripslashes($file_name) : $extLink ;
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
+          $this->cleanuP();
           return  $file_name.' couldn\'t be uploaded';
         }
+        $this->cleanuP();
       }
       $model->touch();
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
@@ -309,6 +335,7 @@ class uploadController extends Controller
       $details = $Details;
       $video=$details['video'];
       $extLink= $details['extLink'] ==null? false : $details['extLink'];
+      $details['extLink'] = $extLink;
       $name= $details['name'];
       $quality=$details['quality'];
       $episode= $details['episodeNumber'];
@@ -316,6 +343,7 @@ class uploadController extends Controller
       $should_show=$details['should_show'];
       $tmpExt= $ext= ($extLink == false)? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $ext= $tmpExt ? $ext : $details['ext'];
+      $details['ext'] = $ext;
       $type = $details['type'];
       $series= series::where('type',$type)->where('name', $name)->first();
       if($series==null){
@@ -323,13 +351,15 @@ class uploadController extends Controller
       }
       $upload_path=$series->series_path;
       $storage_path =$upload_path;
-      $file_name= $name.'-'.$quality.'-S'.$season.'-E'.$episode.'-(UdaraTv.com)'.'.'.$ext;
+      $file_name= $details['file_name'] = $name.'-'.$quality.'-S'.$season.'-E'.$episode.'-(UdaraTv.com)'.'.'.$ext;
       $image_path = $series->image_link;
       $file_path= $details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
+        $this->cleanuP();
         return  $file_name.' couldn\'t be uploaded';
         }
+        $this->cleanuP();
       }
      if( $details['should_touch_season'] == 1) {
       $series->update(['number_of_seasons'=>$season]);
@@ -354,8 +384,10 @@ class uploadController extends Controller
       $type = $videoDetails['type'];
       $tags = $videoDetails['tags'];
       $extLink= $Details['extLink'] ==null? false : $Details['extLink'];
+      $Details['extLink'] = $extLink; 
       $tmpExt= $ext= $extLink ==false? $Details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
       $ext = $tmpExt ? $ext  : $Details['ext'];
+      $Details['ext'] = $ext;
       $videoDetails['tags'] = $tags = is_array($tags) ? $tags: json_decode($tags);
       $videoDetails['fileName']=$file_name = $videoDetails['name'].'-S'.$videoDetails['number_of_seasons'].'-E'.                                                        $videoDetails['episodeNumber'].'-(UdaraTv.com)'.'.'.$ext;
       $upload_path= $this::videoUploadLocation().'series/'.stripslashes($videoDetails['name']);
@@ -368,8 +400,10 @@ class uploadController extends Controller
       // Attempt to upload the video
       if($Details['shouldpull']==true){
          if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
+            $this->cleanuP();
             return  $file_name.' couldn\'t be uploaded';
          }
+         $this->cleanuP();
       }
       $videoDetails['file_path']= $Details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
       $videoDetails['image_name']=$image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
@@ -384,8 +418,10 @@ class uploadController extends Controller
        event( new uploadEvent(['name'=>$videoDetails['name'], 'type'=>$type, 'episode'=>$videoDetails['episodeNumber'], 'image_link'=>$videoDetails['image_link'], 
         'should_show'=>'1',
         'season'=>$videoDetails['number_of_seasons']]));
+     
       return $file_name.' uploaded successfully';
      }
+     
      return $file_name.' not uploaded';
     }
     /**
@@ -406,7 +442,8 @@ class uploadController extends Controller
         else 
           {
           $base = base_path($filePath);
-          return $file->move($base, $filename);
+          
+          return file_exists($base) ? true : $file->move($base, $filename);
         }
       }
       if($extLink!=null && $extLink!=false){
@@ -418,7 +455,7 @@ class uploadController extends Controller
 	      $stream = curl_exec($curl);
  	      curl_close($curl);
 
-        $tmpPath = Constants::getTmp().$filename;
+        $this->tempPath = $tmpPath = Constants::getTmp().$filename;
         $newFile = file_put_contents($tmpPath, $stream);
         $File = new File($tmpPath);
         return Storage::disk('ext0')->putFileAs($filePath, $File, $filename, 'public');
