@@ -52,7 +52,7 @@ class uploadEventListener
         if ($this->recentIsUnique($update, $type))
         {
             $recent = Recents::create($update);
-            dispatch(new mailer(['link'=>$video_link, 'name'=>$model['name'], 'type'=>$type]));
+            //dispatch(new mailer(['link'=>$video_link, 'name'=>$model['name'], 'type'=>$type]));
             
         }
 
