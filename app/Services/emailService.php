@@ -15,7 +15,7 @@ class emailService
     private $sent;
     public function __construct($details)
     {
-        $this->name = $detais['name'];
+        $this->name = $details['name'];
         $this->link = $details['link'];
         $this->type = $details['type'];
         $this->sent = [];
