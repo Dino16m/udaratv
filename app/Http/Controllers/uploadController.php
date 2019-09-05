@@ -270,13 +270,13 @@ class uploadController extends Controller
       $image_name = Validator::sanitize(preg_replace('/\s+/', '_',  $name.'_image.'.$image_ext));
       $image_link = url($this::imageUploadLocation().$image_name);
       $imageUploadStatus = $this::fileUpload($image_name, $this::imageUploadLocation(), $details['image'], false);
-      $details['image_link'] = $imageUploadStatus==true ? $image_link: $details['imdb_link'];
+      $details['image_link'] = $imageUploadStatus? $image_link: $details['imdb_link'];
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink )){
-           $this->cleanuP();
+           $this->cleanUp();
            return  $file_name.' couldn\'t be uploaded';
         }
-        $this->cleanuP();
+        $this->cleanUp();
       }
       $model = allmovies::create($details);
       $movie = $model->add($tags);
@@ -311,10 +311,10 @@ class uploadController extends Controller
       $file_path= $details['shouldpull']?  $movie['path'].stripslashes($file_name) : $extLink ;
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $storage_path, $video, true, $extLink)){
-          $this->cleanuP();
+          $this->cleanUp();
           return  $file_name.' couldn\'t be uploaded';
         }
-        $this->cleanuP();
+        $this->cleanUp();
       }
       $model->touch();
       $moviequality=$model->quality()->firstOrCreate(['quality'=>$details['quality'],'file_path'=>$file_path,'number_downloaded'=>0]);
@@ -356,10 +356,10 @@ class uploadController extends Controller
       $file_path= $details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
       if($details['shouldpull'] == true){
         if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
-        $this->cleanuP();
+        $this->cleanUp();
         return  $file_name.' couldn\'t be uploaded';
         }
-        $this->cleanuP();
+        $this->cleanUp();
       }
      if( $details['should_touch_season'] == 1) {
       $series->update(['number_of_seasons'=>$season]);
@@ -400,10 +400,10 @@ class uploadController extends Controller
       // Attempt to upload the video
       if($Details['shouldpull']==true){
          if(!$this::fileUpload($file_name, $upload_path, $video, true, $extLink)){
-            $this->cleanuP();
+            $this->cleanUp();
             return  $file_name.' couldn\'t be uploaded';
          }
-         $this->cleanuP();
+         $this->cleanUp();
       }
       $videoDetails['file_path']= $Details['shouldpull'] ? $upload_path.'/'.stripslashes($file_name) : $extLink;
       $videoDetails['image_name']=$image_name =stripslashes(preg_replace('/\s+/', '_', $videoDetails['name'].'_image.'.$videoDetails['image_ext']));
@@ -443,7 +443,7 @@ class uploadController extends Controller
           {
           $base = base_path($filePath);
           
-          return file_exists($base) ? true : $file->move($base, $filename);
+          return file_exists($base.$filePath) ? true : $file->move($base, $filename);
         }
       }
       if($extLink!=null && $extLink!=false){
