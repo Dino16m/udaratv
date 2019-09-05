@@ -20,4 +20,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+    #Handle timeout in php
+    php_value upload_max_filesize 100000
+    php_value max_execution_time 600
 </IfModule>
