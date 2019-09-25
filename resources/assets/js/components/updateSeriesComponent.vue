@@ -48,9 +48,20 @@
     			<label for="oldSeriesextLink" v-if='oldSeriesData.haveLink'>External Link</label>
     			<input type="text" class="form-control" id="oldSeriesextLink" v-if='oldSeriesData.haveLink' v-model='oldSeriesData.extLink' placeholder="default link">
     			<div class="custom-control custom-switch">
-    			<input type="checkbox" v-model="oldSeriesData.shouldpull" v-if='oldSeriesData.haveLink' class="custom-control-input" id="customSwitch2">
- 				<label class="custom-control-label" v-if='oldSeriesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
+    				<input type="checkbox" v-model="oldSeriesData.shouldpull" v-if='oldSeriesData.haveLink' class="custom-control-input" id="customSwitch2">
+ 					<label class="custom-control-label" v-if='oldSeriesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
  				</div>
+				<div class="form-group">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" v-model="oldSeriesData.shouldnotify" class="custom-control-input" id="notifytelegram">
+ 					 <label class="custom-control-label" for="notifytelegram">Should we send to telegram?</label>
+				</div>
+				<div class='form-group' v-if='oldSeriesData.shouldnotify'>
+					<label for="trailerlink" >External Link</label>
+					<input type="text" class="form-control" id="trailerlink" v-model='oldSeriesData.trailerLink' placeholder="trailer link">
+				</div>
+
+				</div>
   			 </div>
   			  <ul class="nav d-flex justify-content-center">
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
@@ -64,7 +75,8 @@
 	export default{
 		data(){
 			return{
-				oldSeriesData: {episodeNumber:'', seasonNumber: '',  quality:'', type:'', should_show:false,shouldpull: false, season_change:false, haveLink: false, extLink:'default', name:'', file:[] },
+				oldSeriesData: {episodeNumber:'', seasonNumber: '',  quality:'',
+				shouldnotify: false, trailerLink: '', type:'', should_show:false, shouldpull: false, season_change:false, haveLink: false, extLink:'default', name:'', file:[] },
 				allFiles:[],
 			}
 		},
@@ -107,7 +119,8 @@
 				 this.$refs.oldSeriesFiles.click() 
 			},
 			submit(){
-				let Empty = {episodeNumber:'', seasonNumber: '',  quality:'', type:'',shouldpull:false, should_show:false,haveLink: false, extLink:'default', season_change:false, name:'', file:[]};
+				let Empty = {episodeNumber:'', seasonNumber: '',  quality:'', type:'',
+				shouldnotify: false, trailerLink: '', shouldpull:false, should_show:false,haveLink: false, extLink:'default', season_change:false, name:'', file:[]};
 				if(this.isEmpty(this.oldSeriesData)){
 					this.$emit('emptyForm');
 				}

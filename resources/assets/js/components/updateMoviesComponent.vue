@@ -36,6 +36,16 @@
  				<label class="custom-control-label" v-if='oldMoviesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
  				</div>
   			 </div>
+			   <div class="form-group">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" v-model="oldMoviesData.shouldnotify" class="custom-control-input" id="notifytelegram">
+ 					 <label class="custom-control-label" for="notifytelegram">Should we send to telegram?</label>
+				</div>
+				<div class='form-group' v-if='oldMoviesData.shouldnotify'>
+					<label for="trailerlink" >External Link</label>
+					<input type="text" class="form-control" id="trailerlink" v-model='oldMoviesData.trailerLink' placeholder="trailer link">
+				</div>
+			</div>
   			  <div class="custom-control custom-checkbox">
  				 <input type="checkbox" class="custom-control-input" v-model='oldMoviesData.should_show' id="customCheck1">
   				 <label class="custom-control-label" for="customCheck1">Should this update be triggered as new Update in HomePage?</label>
@@ -52,7 +62,8 @@
 	export default{
 		data(){
 			return{
-				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[], shouldpull: false, haveLink: false, extLink:'default'},
+				oldMoviesData: {quality:'', type:'', should_show:false, season_change:false, name:'', file:[], 
+				shouldnotify: false, trailerLink: '', shouldpull: false, haveLink: false, extLink:'default'},
 				allFiles:[],
 			}
 		},
@@ -95,7 +106,8 @@
 				 this.$refs.oldMoviesFiles.click() 
 			},
 			submit(){
-				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'', shouldpull : false, haveLink: false, extLink:'default',file:[]};
+				let Empty= {quality:'', type:'', should_show:false, season_change:false, name:'',
+					shouldnotify: false, trailerLink: '', shouldpull : false, haveLink: false, extLink:'default',file:[]};
 				if(this.isEmpty(this.oldMoviesData)){
 					this.$emit('emptyForm');
 				}

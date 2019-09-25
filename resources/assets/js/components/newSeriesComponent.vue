@@ -61,6 +61,17 @@
  				<label class="custom-control-label" v-if='newSeriesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
  				</div>
   			 </div>
+			   <div class="form-group">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" v-model="newSeriesData.shouldnotify" class="custom-control-input" id="notifytelegram">
+ 					 <label class="custom-control-label" for="notifytelegram">Should we send to telegram?</label>
+				</div>
+				<div class='form-group' v-if='newSeriesData.shouldnotify'>
+					<label for="trailerlink" >External Link</label>
+					<input type="text" class="form-control" id="trailerlink" v-model='newSeriesData.trailerLink' placeholder="trailer link">
+				</div>
+
+			</div>
   			  <ul class="nav d-flex justify-content-center">
 
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
@@ -75,7 +86,8 @@
 export default{
 	data(){
 		return{
-		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'', shouldpull: false, type:'', imdbLink:'', desc:'', name:'', haveLink: false, extLink:'default', file:[] ,image:[] },
+		newSeriesData: {episodeNumber:'', seasonNumber: '', runTime:'', quality:'', tags:'',
+				shouldnotify: false, trailerLink: '', shouldpull: false, type:'', imdbLink:'', desc:'', name:'', haveLink: false, extLink:'default', file:[] ,image:[] },
 		newSeriesfiles:[ ],
 		allFiles: [],
 		allImages:[],
@@ -139,7 +151,8 @@ export default{
 				
 			},
 			submit(){
-				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'', type:'',imdbLink:'',haveLink: false, extLink:'default', desc:'', name:'', file:[],image:[] , shouldpull: false};
+				let Empty = {episodeNumber:'', seasonNumber: '', runTime:'', quality:'',tags:'',
+				shouldnotify: false, trailerLink: '', type:'',imdbLink:'',haveLink: false, extLink:'default', desc:'', name:'', file:[],image:[] , shouldpull: false};
 					if(this.isEmpty(this.newSeriesData)){
 						this.$emit('emptyForm');
 

@@ -20,8 +20,8 @@ class emailService
         $this->type = $details['type'];
         $this->sent = [];
         $this->details = $details;
-        return $this;
     }
+
     public function handle()
     {
         return  $this->handleMail();

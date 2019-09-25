@@ -52,9 +52,19 @@
     			<div class="custom-control custom-switch">
     			<input type="checkbox" v-model="newMoviesData.shouldpull" v-if='newMoviesData.haveLink' class="custom-control-input" id="customSwitch2">
  				<label class="custom-control-label" v-if='newMoviesData.haveLink' for="customSwitch2">should we pull this links's content to our servers?</label>
- 				</div>
+ 				</div> 
   			 </div>
+			<div class="form-group">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" v-model="newMoviesData.shouldnotify" class="custom-control-input" id="notifytelegram">
+ 					 <label class="custom-control-label" for="notifytelegram">Should we send to telegram?</label>
+				</div>
+				<div class='form-group' v-if='newMoviesData.shouldnotify'>
+					<label for="trailerlink" >External Link</label>
+					<input type="text" class="form-control" id="trailerlink" v-model='newMoviesData.trailerLink' placeholder="trailer link">
+				</div>
 
+			</div>
   			  <ul class="nav d-flex justify-content-center">
   			  	<li> <a class="nav-item flex-md-column  md-3 btn btn-danger" v-on:click="submit()"> upload </a> </li>
     		    <li><a class="nav-item flex-md-column  md-3 btn btn-primary" v-on:click="addfiles( 'video')">addVideo</a></li>
@@ -68,7 +78,8 @@
 export default{
 	data(){
 		return{
-		newMoviesData: {runTime:'', quality:'', tags:'', type:'', imdbLink:'', desc:'', name:'', file:[] ,image:[], haveLink: false, shouldpull: false, extLink:'default' },
+		newMoviesData: {runTime:'', quality:'', tags:'', type:'', imdbLink:'', desc:'', name:'', file:[] ,image:[], haveLink: false, shouldpull: false, shouldnotify: false, trailerLink: '',
+					 extLink:'default' },
 		allFiles: [],
 		allImages:[],
 		}
@@ -130,7 +141,8 @@ export default{
 				
 			},
 			submit(){
-				let Empty= {runTime:'', quality:'',tags:'', type:'',imdbLink:'',shouldpull: false, desc:'', name:'', haveLink: false, extLink:'default' ,file:[],image:[] };
+				let Empty= {runTime:'', quality:'',tags:'', type:'',imdbLink:'',
+				shouldnotify: false, trailerLink: '', shouldpull: false, desc:'', name:'', haveLink: false, extLink:'default' ,file:[],image:[] };
 				if(this.isEmpty(this.newMoviesData)){
 					this.$emit('emptyForm');
 				}

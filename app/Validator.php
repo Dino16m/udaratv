@@ -7,7 +7,7 @@
  */
 
 namespace App;
-
+use App\Constants;
 /**
  * Description of Validator
  *
@@ -25,6 +25,12 @@ class Validator {
           return $input;
           
       }
+    public static function isValidExtension($ext)
+    {
+      if(!in_array($ext, Constants::unAllowedExtensions) && strlen($ext)>0) return true;
+      return false;
+
+    }
     public static function  isInt($var)
     {
       return (is_int($var) || ctype_digit($var));

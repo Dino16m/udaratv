@@ -20,82 +20,107 @@ class UploadTest extends TestCase
     {
         $this->assertTrue(true);
     }
-    
+ 
     public function testNewSeriesUpload()
     {
         Storage::fake('public');
         $video = UploadedFile::fake()->create('001jenifa.mp4', 500);
         $image = UploadedFile::fake()->image('jenifa.jpg');
-        $response = $this->json('POST', 'uploader/newSeries', [
-            'age'=>'new',
+        $response = $this->json('POST','http://localhost/uploader/newSeries', [
             'files'=> [ $video],
-            'data001'=>[ 
-                    
+            'image001'=> $image,
+            'data001'=>json_encode([ 
                         'quality'=> 'mp4',
                         'type'=>'naijaseries',
                         'seasonNumber'=>'1',
                         'episodeNumber'=>'1',
                         'desc'=>'jinifa ko, omotoson, swagger ole tun',
-                        'imdblink'=>'imdb.com/jenifa',
-                        'image'=>$image       
-                    ]
+                        'imdbLink'=>'imdb.com/jenifa',
+                        'tags'=>['action', 'suspense', 'romance'],
+                        'runTime'=>'100mins',
+                        'extLink' => 't.me',
+                        'haveLink'=>true,
+                        'trailerLink' => 'youtube.com',
+                        'shouldpull' => false,
+                        'shouldnotify' =>false
+
+                    ])
            
         ]);
-        $response->assertJson([['jenifa.mp4.mp4 uploaded successfully']]);
+        $response->assertJson([['jenifa-mp4-S1-E1-(UdaraTv.com).me uploaded successfully']]);
     }
     
-
-   
     public function testSeriesUpdate()
     {
         Storage::fake('public');
         $video = UploadedFile::fake()->create('002jenifa.mp4', 500);
-        $response = $this->json('POST', 'uploader/updateSeries', [
+        $response = $this->json('POST', 'http://localhost/uploader/updateSeries', [
             'age'=>'old',
             'files'=>[$video],
-            'data002'=>[
+            'data002'=>json_encode([
                     'should_show'=> 1,
                     'quality'=>'HD',
+                    'type'=>'naijaseries',
                     'seasonNumber'=> '1',
                     'seasonChanged'=>0,
-                    'episodeNumber'=>'2'
-                        ]
+                    'episodeNumber'=>'2',
+                    'runTime'=>'100mins',
+                    'extLink' => 't.me',
+                    'haveLink'=>true,
+                    'trailerLink' => 'youtube.com',
+                    'shouldpull' => false,
+                    'shouldnotify' =>false
+                        ])
         ]);
-        $response->assertJson([['jenifa.mp4.mp4 updated successfully']]);
+        $response->assertJson([['jenifa-HD-S1-E2-(UdaraTv.com).me updated successfully']]);
     }
     public function testNewMovieUpload()
     {
         Storage::fake('public');
         $video = UploadedFile::fake()->create('001Avengers infinity war.mp4', 500);
         $image = UploadedFile::fake()->image('Avengers.jpg');
-        $response = $this->json('POST', 'uploader/newMovie',[
+        $response = $this->json('POST', 'http://localhost/uploader/newMovie',[
             'age'=> 'new',
             'files'=>[$video],
-            'data001'=>[
-                'quality'=> 'HD',
-                'type'=>'hollywood',
+            'image001'=> $image,
+            'data001'=>json_encode([
+                'quality'=> 'HD',       
+                'type'=>'hollywoodmovies',
                 'desc'=> 'thanos and his fuckery',
                 'tags'=>['action', 'suspense', 'romance'],
-                'imdblink'=>' imdb/thanos/thor',
-                'image'=>$image
-            ]
+                'imdblink'=>' imdb/thanos/thor', 
+                'runTime'=>'100mins',
+                'extLink' => 't.me',
+                'haveLink'=>true,
+                'trailerLink' => 'youtube.com',
+                'shouldpull' => false,
+                'shouldnotify' =>false
+            ])
 
         ]);
-        $response->assertJson([['avengers infinity war.mp4.mp4 uploaded successfully']]);
+        $response->assertJson([['avengers infinity war-HD-(UdaraTv.com).me uploaded successfully']]);
     }
+
     public function testMovieUpdate()
     {
         Storage::fake('public');
         $video = UploadedFile::fake()->create('001Avengers infinity war.mp4', 500);
-        $response = $this->json('POST', 'uploader/updateMovie', [
+        $response = $this->json('POST', 'http://localhost/uploader/updateMovie', [
             'age'=>'old',
             'files'=>[$video],
-            'data001'=>[
+            'data001'=>json_encode([
                 'quality'=> 'Mp4',
-                'type'=>'hollywood',
-                'should_show'=>1
-                    ]
+                'type'=>'hollywoodmovies',
+                'should_show'=>1,
+                'runTime'=>'100mins',
+                'extLink' => 't.me',
+                'haveLink'=>true,
+                'trailerLink' => 'youtube.com',
+                'shouldpull' => false,
+                'shouldnotify' =>false
+                    ])
         ]);
-        $response->assertJson([['avengers infinity war.mp4.mp4 updated successfully']]);
+        $response->assertJson([['avengers infinity war-Mp4-(UdaraTv.com).me updated successfully']]);
     }
+
 }

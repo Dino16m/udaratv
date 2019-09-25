@@ -13,7 +13,7 @@ class SeriesQuality extends Migration
      */
     public function up()
     {
-        Schema::create('series_quality', function(Blueprint $table){
+        Schema::create('seriesquality', function(Blueprint $table){
           $table->increments('id');
           $table->integer('series_id');
           $table->integer('episodes_id');

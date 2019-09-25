@@ -20,9 +20,9 @@ class uploadEvent
      * @return void
      */
     public $update = array();
-    public function __construct($newSeries)
+    public function __construct($newVideos)
     {
-        $this->update= $newSeries;
+        $this->update= $newVideos;
     }
 
     /**
