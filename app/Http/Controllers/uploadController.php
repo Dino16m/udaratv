@@ -246,7 +246,7 @@ class uploadController extends Controller
       $episodeNumber = isset($details['episode_number']) ? $details['episode_number'] : '';
       $extLink = (!$details['ext_link']) ? false : $details['ext_link'];
       $provisionalExtension = ($extLink == false)? $details['ext'] : pathinfo(parse_url($extLink, PHP_URL_PATH), PATHINFO_EXTENSION);
-      $ext = Validator::isValidExt($provisionalExtension) ? $provisionalExtension : $details['ext'];
+      $ext = Validator::isValidExtension($provisionalExtension) ? $provisionalExtension : $details['ext'];
       $modelAndPath = $this->getVideoModelandPath($details['name'], $details['type'], $status);
       if(is_string($modelAndPath)) return $modelAndPath;
 
