@@ -485,11 +485,11 @@ class categoryController extends Controller
         return false;
        }
        $series = series::where('type', $type)->where('name', $name)->first(['imdb_link', 'image_link','views', 'run_time', 'number_of_seasons', 'short_description', 'id']);
-       $tags = $series->tags()->get(['tag']);
        if(empty($series) || $series==null){
             return false;
         }
-       $Seasons = $series->seasons()->orderBy('season_name', 'desc')->paginate(10);
+        $tags = $series->tags()->get(['tag']);
+        $Seasons = $series->seasons()->orderBy('season_name', 'desc')->paginate(10);
        //$Seasons->withPath('series/'.$type.'/'. $Name);
        return ($Seasons->isNotEmpty() && !empty($series)) ? ['seasons'=>$Seasons, 'series'=>$series, 'tags'=>$tags]: false;
     }
