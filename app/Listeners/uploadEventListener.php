@@ -65,7 +65,7 @@ class uploadEventListener
         if($should_notify)
         {
             array_push($this->messageBox,
-                 ['trailer_link'=>$model['trailer_link'], 'download_link' => $video_link, 
+                 ['trailer_link'=>$model['trailer_link'], 'download_link' => str_replace(' ', '_', $video_link), 
                     'video_name' => $update['video_name'],'type'=>$type, 'recipients'=>Constants::telegramRecipients]);
         }  
         if ($this->recentIsUnique($update, $type))

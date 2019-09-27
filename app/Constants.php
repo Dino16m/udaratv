@@ -27,6 +27,7 @@ class Constants {
     public const defaultPicture = 'public/udaralogo.png';
     public const telegramRecipients = ['successvisa','me',];
     public const unAllowedExtensions = ['com', 'jpg', 'jpeg', 'png', 'me', 'space'];
+    public const unixSpecialChars = ['&', ','];
 
     public static function waterMark()
     {

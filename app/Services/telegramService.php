@@ -82,6 +82,15 @@ class telegramService
 		$executor = env('EXECUTOR_PATH', 'python ');
 		$executable = env('EXECUTABLE_PATH', base_path('scripts/udaraTele.py'));
 		$cmd = escapeshellcmd("$executor $executable ") .$jsonArgs;
-		return  $cmd;
+		return  $this->sanitizeCmd($cmd);
+	}
+
+	private function sanitizeCmd($cmd)
+	{
+		foreach (Constants::unixSpecialChars as $key) {
+			$cmd = str_replace($key, "\$key", $cmd);
+		}
+		return $cmd;
+		
 	}
 }
