@@ -38,7 +38,7 @@ class uploadEventListener
             $this->handleVideos($model);
         }
         if(!empty($this->messageBox)){
-            dispatch(new telegramer($this->messageBox));
+            dispatch((new telegramer($this->messageBox))->delay(60));
         }
     }
 

@@ -3,6 +3,7 @@ namespace App\Services;
 use App\Constants;
 use App\series;
 use App\allmovies;
+use Log;
 
 class telegramService
 {
@@ -39,7 +40,14 @@ class telegramService
 		$cmd = $this->getShellCmd($Arguments);
 		$pydata = shell_exec($cmd);
 		$result = json_decode($pydata);
-		return $result->status ? true : false;
+		if($result){
+			$status = $result->status ? 'success' : 'fail';
+			Log::info("the status of this telegram dispatch is $status");
+		}
+		else{
+			Log::info("the telegram dispatch failed with error $pydata");
+		}
+		
 	}
 
 	private function escapeShellString($var)
