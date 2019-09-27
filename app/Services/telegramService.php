@@ -46,6 +46,7 @@ class telegramService
 		}
 		else{
 			Log::info("the telegram dispatch failed with error $pydata");
+			Log::info($cmd);
 		}
 		
 	}
