@@ -2,6 +2,8 @@ from telethon.sync import TelegramClient
 import json
 import sys
 from urllib.parse import unquote_plus
+import os
+script_path = os.path.dirname(os.path.abspath(__file__))
 
 
 api_id = 872129
@@ -33,6 +35,7 @@ def constructMessage(msg_dict):
 	return message
 
 def sendMessage(payload, session='dynasties'):
+	session = script_path + '/' + session + '.session'
 	with TelegramClient(session, api_id, api_hash) as client:
 		recipients = payload['recipients']
 		valid_recipients = getRecipients(client, recipients)
@@ -62,4 +65,4 @@ if __name__ == '__main__':
 		return_json = finalResolve({'status': False, 'error': 'invalid payload'})
 		print(return_json)
 	if len(sys.argv) > 1:
-		print(main())
+		print(main())  
