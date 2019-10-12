@@ -36,6 +36,7 @@ $lacarousel=json_encode($carousel);
     <link rel="stylesheet" href="public/css/style.css" type="text/css">
     <link rel="stylesheet" href="public/css/style2.css" type="text/css">
     <link rel="stylesheet" href="public/css/owl.carousel.css" type="text/css">
+    <link rel="stylesheet" href="public/css/animate.css" type="text/css">
     <link rel="stylesheet" href="public/css/owl.theme.default.css" type="text/css">
     <style type="text/css">
         body {
@@ -117,9 +118,6 @@ $lacarousel=json_encode($carousel);
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><button class="btn btn-danger my-2 my-sm-0" type="button">HOT!!</button></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#/request"><button class="btn btn-success" type="button">Request</button></a>
                 </li>
             </ul>
@@ -130,7 +128,7 @@ $lacarousel=json_encode($carousel);
 <!--nav-bar-end--> 
 
 <router-view api="{{url('api/subscribe')}}" v-bind:isroute=true v-bind:isfinal=false> </router-view>
-<div class="float-button d-block mobile-only"> <a class="w-100 h-100 mx-auto my-auto d-block" href="#/request"><img class="rounded-circle h-100 w-100" src="{{url('public/css/udara.jpg')}}"></a> </div>
+<div class="float-button d-block mobile-only"> <a class="w-60 h-60 mx-auto my-auto d-block" href="#/request"><img class="rounded-circle h-100 w-100" src="{{url('public/css/udara.jpg')}}"></a> </div>
 <div class="container mt-4">
         <div class="row">
                  <index-carousel v-bind:videodetails="{{$lacarousel}}" > </index-carousel>
@@ -143,8 +141,8 @@ $lacarousel=json_encode($carousel);
         <?php echo include_once (base_path('resources/views/pa_antiadblock_2523831.php')); ?>
     <!--end of ad-->
         <div class="starter-template">
-            <span class="nspan pc-only">Did you know you can request for movies, click on the green request button now </span>
-            <span class="nspan-mobile mobile-only">Did you know you can request for movies, touch the Udara fruit at the bottom now </span>
+            <span class="tlt letters pc-only"> You can request for movies!! click on the green request button</span>
+            <span class="tlt-mobile letters mobile-only">You can request for movies!! touch the fruit to try </span>
             <h2 class="headit">Recently updated</h2>
             <hr class="">
 
@@ -444,8 +442,21 @@ $lacarousel=json_encode($carousel);
 </div>
 
 <script type="text/javascript" src="public/js/app.js"></script>
+<script type="text/javascript" src="public/js/textillate.js"></script>
+<script type="text/javascript" src="public/js/lettering.js"></script>
 <script type="text/javascript" src="public/js/owl.carousel.js"></script>
 <script>
+   $('.tlt').textillate({ 
+			in: { effect: 'bounceInLeft', sequence: true },
+			out: { effect: 'rollOut', shuffle: true },
+			loop: true
+	});
+       $('.tlt-mobile').textillate({ 
+			in: { effect: 'bounceInDown', sequence: true },
+			out: { effect: 'hinge', shuffle: true },
+			loop: true
+	});
+
    $('.owl-carousel').owlCarousel({
     loop:true,
     margin:10,
